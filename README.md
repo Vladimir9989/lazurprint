@@ -1,2 +1,2 @@
-# lazurprint
+# lazurprint.ru
 Официальный сайт ООО ИПК Лазурь
