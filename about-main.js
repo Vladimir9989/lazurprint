@@ -1,0 +1,46 @@
+// кнопка коротко о нас
+const aboutModal = document.querySelector('.video-1');
+const aboutModal2 = document.querySelector('.video-2');
+const aboutModal3 = document.querySelector('.video-3');
+const aboutClose = document.querySelectorAll('.about__close');
+const aboutPlay = document.querySelector('.play-1');
+const aboutPlay2 = document.querySelector('.play-2');
+const aboutPlay3 = document.querySelector('.play-3');
+
+
+aboutPlay.addEventListener('click', () => {
+    aboutModal.classList.add('modal--active')
+})
+aboutPlay2.addEventListener('click', () => {
+    aboutModal2.classList.add('modal--active')
+})
+aboutPlay3.addEventListener('click', () => {
+    aboutModal3.classList.add('modal--active')
+})
+
+
+aboutClose.forEach(close => {
+    close.addEventListener('click', () => {
+        aboutModal.classList.remove('modal--active')
+        aboutModal2.classList.remove('modal--active')
+        aboutModal3.classList.remove('modal--active')
+    })
+})
+
+
+aboutModal.addEventListener('click', (e) => {
+    if (e.target === aboutModal) {
+        aboutModal.classList.remove('modal--active')
+    }
+})
+aboutModal2.addEventListener('click', (e) => {
+    if (e.target === aboutModal2) {
+        aboutModal2.classList.remove('modal--active')
+    }
+})
+aboutModal3.addEventListener('click', (e) => {
+    if (e.target === aboutModal3) {
+        aboutModal3.classList.remove('modal--active')
+    }
+})
+

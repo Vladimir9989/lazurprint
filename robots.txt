@@ -1,0 +1,5 @@
+User-agent: *
+
+Clean-param: path
+Host: lazurprint.ru
+Sitemap: http://lazurprint.ru/sitemap.xml
