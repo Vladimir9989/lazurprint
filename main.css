@@ -819,6 +819,10 @@ body {
   font-weight: 700;
 }
 
+.italic {
+  font-style: italic;
+}
+
 :root {
   --color-white: #fff;
   --color-black: #000;
@@ -1221,6 +1225,9 @@ body {
 }
 .hero__swiper-wrapper {
   box-sizing: border-box;
+}
+.hero__banner-slide {
+  text-align: center;
 }
 .hero__banner-text-cnt {
   box-sizing: border-box !important;
@@ -1734,7 +1741,6 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  background-image: url(images/img/background/about.webp);
   background-size: contain;
   background-repeat: no-repeat;
   background-position: right;
@@ -1752,12 +1758,73 @@ body {
 .about__text {
   max-width: 700px;
   font-size: 18px;
-  font-weight: 600;
   line-height: 32px;
   color: var(--color-night-rider);
   margin-bottom: 10px;
 }
 
+/* CSS */
+.about__play {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  backface-visibility: hidden;
+  background-color: #2f80ed;
+  border-radius: 10px;
+  border-style: none;
+  box-shadow: none;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 500;
+  height: 50px;
+  letter-spacing: normal;
+  line-height: 1.5;
+  outline: none;
+  overflow: hidden;
+  padding: 14px 30px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transform: translate3d(0, 0, 0);
+  transition: all 0.3s;
+  -moz-user-select: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.about__play:hover {
+  background-color: #1366d6;
+  box-shadow: rgba(0, 0, 0, 0.05) 0 5px 30px, rgba(0, 0, 0, 0.05) 0 1px 4px;
+  opacity: 1;
+  transform: translateY(0);
+  transition-duration: 0.35s;
+}
+
+.about__play:hover:after {
+  opacity: 0.5;
+}
+
+.about__play:active {
+  box-shadow: rgba(0, 0, 0, 0.1) 0 3px 6px 0, rgba(0, 0, 0, 0.1) 0 0 10px 0, rgba(0, 0, 0, 0.1) 0 1px 4px -1px;
+  transform: translateY(2px);
+  transition-duration: 0.35s;
+}
+
+.about__play:active:after {
+  opacity: 1;
+}
+
+@media (min-width: 768px) {
+  .about__play {
+    padding: 14px 22px;
+  }
+}
 .about__trigger {
   margin-right: 25px;
   font-size: 20px;
@@ -1775,31 +1842,7 @@ body {
   max-width: 400px;
 }
 
-.about__play {
-  display: inline-block;
-  font-size: 20px;
-  font-weight: 700;
-  position: relative;
-  border: 2px solid var(--color-blue);
-  padding: 10px 25px;
-  padding-right: 30px;
-  border-radius: 25px;
-  margin: 5px 0;
-  color: var(--color-blue);
-  transition: fill 0.5s ease-in-out, background 0.5s ease-in-out, color 0.5s ease-in-out, border-color 0.5s ease-in-out;
-}
-
 .about__play svg {
-  fill: var(--color-blue);
-}
-
-.about__play:hover {
-  background: var(--color-blue);
-  color: var(--color-white);
-}
-
-.about__play:hover svg {
-  transition: fill 0.5s ease-in-out;
   fill: var(--color-white);
 }
 
@@ -1984,6 +2027,19 @@ body {
   right: 16px;
   border-color: var(--color-white);
   transform: rotate(135deg);
+}
+
+.gallery__link {
+  border-radius: 6px;
+  border: 1px solid var(--color-white);
+  color: var(--color-white);
+  font-size: 16px;
+  padding: 10px;
+  background-color: transparent;
+  transition: background-color 0.3s ease-in-out;
+}
+.gallery__link:hover {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .gallery__right {
@@ -4515,27 +4571,38 @@ body {
   padding: 0;
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 @media (max-width: 1024px) {
   .forms__list {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-@media (max-width: 576px) {
-  .forms__list {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-.forms__item {
+@media (max-width: 410px) {
+  .forms__list {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+.forms__img-cnt img {
+  min-width: 150px;
+  height: 150px;
+  -o-object-fit: cover;
+  object-fit: cover;
+}
+.forms__text-cnt {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  justify-content: space-between;
+  padding-bottom: 15px;
+}
+.forms__item {
+  display: flex;
+  padding: 10px;
+  gap: 10px;
   transition: transform 0.3s ease;
   transition: all 0.3s ease-in-out;
   background-color: var(--color-meteor);
-  padding: 25px;
   border-radius: 10px;
   cursor: pointer;
 }
