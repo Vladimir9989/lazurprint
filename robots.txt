@@ -1,5 +1,8 @@
 User-agent: *
+Disallow:
 
-Clean-param: path
+Sitemap: https://lazurprint.ru/sitemap.xml
+
+# Yandex-specific directives
 Host: lazurprint.ru
-Sitemap: http://lazurprint.ru/sitemap.xml
+Clean-param: path
