@@ -1,8 +1,34 @@
+# Общие директивы для всех роботов
 User-agent: *
-Disallow:
+Disallow: 
 
 Sitemap: https://lazurprint.ru/sitemap.xml
 
-# Yandex-specific directives
+# Специфические директивы для Яндекса
+User-agent: Yandex
 Host: lazurprint.ru
 Clean-param: path
+
+# Специфические директивы для Google
+User-agent: Googlebot
+# Директивы для Google Merchant
+User-agent: Googlebot-Image
+User-agent: Googlebot-Video
+
+# Дополнительные параметры для Google
+Host: lazurprint.ru
+# Можно добавить конкретные директивы для Google
+# Например:
+# Disallow: /temp/
+# Disallow: /admin/
+
+# Параметры для Google Search Console
+Allow: /
+
+# Директивы для кэширования изображений
+User-agent: Googlebot-Image
+Allow: /images/
+
+# Директивы для видеоконтента
+User-agent: Googlebot-Video
+Allow: /video/
