@@ -1211,6 +1211,7 @@ body {
   box-sizing: border-box;
   width: 100%;
   background-color: var(--color-space-cadet);
+  text-align: center;
   padding-top: 80px;
 }
 @media (max-width: 1024px) {
@@ -1227,12 +1228,24 @@ body {
   box-sizing: border-box;
 }
 .hero__banner-slide {
+  box-sizing: border-box;
   text-align: center;
+  background-position: center;
+  background-size: cover;
+  max-width: 1100px;
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
+}
+@media (max-width: 1320px) {
+  .hero__banner-slide {
+    max-width: none;
+  }
+}
+.hero .swiper-slide-active {
+  opacity: 1;
 }
 .hero__banner-text-cnt {
-  box-sizing: border-box !important;
   display: block;
-  width: 75%;
   font-size: 24px;
   color: var(--color-white);
 }
@@ -4589,6 +4602,7 @@ body {
   height: 150px;
   -o-object-fit: cover;
   object-fit: cover;
+  border-radius: 5px;
 }
 .forms__text-cnt {
   display: flex;

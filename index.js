@@ -1,12 +1,26 @@
 // Swiper hero
 
 const heroBanner = new Swiper('.hero__banner', {
-    slidesPerView: 1,
-    spaceBetween: 20,
-    loop: true,
     autoplay: {
         delay: 4000,
     },
+    slidesPerView: 1.6,
+    spaceBetween: 20,
+    centeredSlides: true,
+    loop: true,
+    grabCursor: true,
+    breakpoints: {
+        1720: {
+            slidesPerView: 1.6,
+        },
+        1320: {
+            slidesPerView: 'auto',
+        },
+        300: {
+            centeredSlides: false,
+            slidesPerView: 'auto',
+        },
+      },
     pagination: {
         el: '.swiper-pagination-banner',
         dynamicBullets: true,
