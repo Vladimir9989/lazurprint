@@ -1,0 +1,19 @@
+.packaging {
+    padding-top: 100px;
+    &__img-cnt {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 50px;
+    }
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        font-weight: 700;
+        font-size: 18px;
+    }
+    &__descr {
+        font-weight: 700;
+        font-size: 18px;
+    }
+}

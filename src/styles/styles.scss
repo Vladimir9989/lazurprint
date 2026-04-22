@@ -1,0 +1,89 @@
+// @import 'swiper-bundle.min';
+@import 'choices.min';
+@import 'common';
+@import 'variables';
+@import 'mixin';
+@import 'fonts';
+@import 'header';
+@import 'hero';
+@import 'services';
+@import 'about';
+@import 'gallery';
+@import 'steps';
+@import 'socials';
+@import 'benefit';
+@import 'delivery';
+@import 'team';
+@import 'contacts';
+@import 'modal';
+@import 'media';
+@import 'museum';
+@import 'thanks';
+@import 'vacancy';
+@import 'news';
+@import 'work';
+@import 'consultation';
+@import 'counter';
+@import 'packaging';
+@import 'post-printing';
+@import 'staff';
+@import 'reviews';
+@import 'pm';
+@import 'partners';
+@import 'catalog-suvenir';
+@import 'equipment';
+@import 'forms';
+@import 'footer';
+
+// Анимации появления при скролле
+.fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    
+    &.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-in-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    
+    &.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.slide-in-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    
+    &.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.scale-in {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    
+    &.visible {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+// Задержка для анимаций
+@for $i from 1 through 6 {
+    .delay-#{$i} {
+        transition-delay: #{$i * 0.1}s;
+    }
+}
+

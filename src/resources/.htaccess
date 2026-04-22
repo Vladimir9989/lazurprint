@@ -1,0 +1,17 @@
+Options +FollowSymlinks
+RewriteEngine On
+RewriteBase /
+
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /index\.html\ HTTP/
+RewriteRule ^index\.html$ https://lazurprint.ru/ [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^(.*?)\/{2,}(.*?)$
+RewriteRule . %1/%2 [L,R=301]
+RewriteCond %{THE_REQUEST} //
+RewriteRule .* /$0 [R=301,L]
+
+RewriteCond %{HTTP_HOST} .
+RewriteCond %{HTTP_HOST} !^lazurprint.ru [NC]
+RewriteRule (.*) https://lazurprint.ru/$1 [R=301,L]
+
+

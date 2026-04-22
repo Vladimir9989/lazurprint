@@ -1,0 +1,110 @@
+.html {
+    height: 100%;
+}
+
+.vacancy__body {
+    height: 100%;
+}
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+.footer__vacancy {
+    flex: 0 0 auto;
+}
+.vacancy {
+    flex: 1 0 auto;
+    // height: 73vh;
+    padding: 110px 0 30px;
+    &__container {
+        max-width: 1000px;
+    }
+    &__btn-cnt {
+        padding: 30px 0;
+        border-bottom: 7px solid var(--color-dim-gray);
+        // margin-bottom: 50px;
+    }
+    &__nav-cnt {
+        @include listReset;
+        display: flex;
+    }
+    &__link-home {
+        color: var(--color-nobel);
+        border: 2px solid var(--color-dim-gray);
+        border-radius: 5px;
+        padding: 5px 10px;
+        transition: color .2s ease;
+        &:hover {
+            color: var(--color-dim-gray)
+        }
+    }
+    &__list {
+        @include listReset;
+        padding: 30px 0;
+    }
+    &__item {
+        border-top: 1px solid var(--color-vl-grey);
+        cursor: pointer;
+        &:last-child {
+            border-bottom: 1px solid var(--color-vl-grey);
+        }
+    }
+    &__item-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    &__name {
+        font-weight: 400;
+        color: var(--color-nero);
+    }
+    &__price {
+        font-weight: 700;
+        display: block;
+        text-align: right;
+        &::after {
+            content: '';
+            display: inline-block;
+            margin-left: 10px;
+            width: 10px;
+            height: 10px;
+            border-left: 2px solid #000;
+            border-bottom: 2px solid #000;
+            transform: rotate(-45deg) translateY(-35%);
+        }
+        &--active {
+            &::after {
+                transform: rotate(-225deg);
+            }
+        }
+    }
+    &__text {
+        overflow: hidden;
+        height: 0;
+        color: var(--color-nobel);
+        transition: all 4s ease;
+        &--active {
+            height: auto;
+            background-color: var(--color-white);
+            z-index: 1000;
+        }
+    }
+    &__descr-list {
+        @include listReset;
+    }
+    &__conditions {
+        background-color: var(--color-whisper);
+        color: var(--color-dim-gray);
+        border-radius: 10px;
+        padding: 40px;
+        font-size: 18px;
+    }
+    &__descr-require {
+        margin-bottom: 20px;
+    }
+    &__conditions-link {
+        color: var(--color-primary);
+        text-decoration: underline;
+    }
+}

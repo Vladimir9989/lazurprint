@@ -1,0 +1,138 @@
+.counter {
+    background: radial-gradient(86.02% 250.54% at 100% 50%, rgba(152, 219, 251, .4) 0%, rgba(18, 20, 34, 0) 100%), linear-gradient(0deg, rgba(24, 27, 43, .95), rgba(24, 27, 43, .95)), #3E77FB;
+    padding: 60px 0;
+    color: var(--color-galaxy);
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: 
+            radial-gradient(circle at 30% 50%, rgba(62, 119, 251, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 70% 80%, rgba(109, 226, 235, 0.08) 0%, transparent 50%);
+        pointer-events: none;
+    }
+    
+    &__container {
+        position: relative;
+        z-index: 1;
+    }
+    
+    &__title {
+        font-size: 30px;
+        font-weight: 800;
+        text-align: center;
+        margin-bottom: 50px;
+        color: #ffffff;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        position: relative;
+        display: inline-block;
+        left: 50%;
+        transform: translateX(-50%);
+        
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent 0%, #3E77FB 50%, transparent 100%);
+        }
+        
+        @include md {
+            font-size: 22px;
+            margin-bottom: 30px;
+        }
+    }
+    &__block {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 30px;
+        
+        @include xl {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        @include lm {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        @include sm {
+            gap: 15px;
+        }
+    }
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        padding: 30px 20px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+        
+        &:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(62, 119, 251, 0.2);
+            border-color: rgba(62, 119, 251, 0.3);
+        }
+        
+        @include sm {
+            padding: 20px 15px;
+        }
+    }
+    &__cnt {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        
+        @include sm {
+            gap: 2px;
+        }
+    }
+    &__out {
+        min-height: 60px;
+        font-size: 50px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #3E77FB 0%, #6de2eb 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 30px rgba(62, 119, 251, 0.3);
+        
+        @include md {
+            font-size: 40px;
+        }
+        @include sm {
+            min-height: 40px;
+            font-size: 30px;
+        }
+    }
+    &__desc {
+        min-height: 60px;
+        font-weight: 500;
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+        line-height: 1.5;
+        margin-top: 10px;
+        
+        @include lg {
+            min-height: 30px;
+        }
+        @include md {
+            min-height: 20px;
+            font-size: 14px;
+        }
+        @include sm {
+            font-size: 13px;
+        }
+    }
+}

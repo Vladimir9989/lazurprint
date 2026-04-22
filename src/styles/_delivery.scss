@@ -1,0 +1,77 @@
+/* delivery */
+.delivery {
+    background-image: url(images/img/background/Dostavka.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: top;
+    margin: 80px 0 40px;
+    padding: 40px 0 20px;
+    @include xl {
+        margin-top: 100px;
+    }
+    @include lm {
+        padding: 10px 0 20px;
+    }
+    @include md {
+        padding: 0 0 20px;
+    }
+}
+.delivery__container {
+    position: relative;
+    height: 90vh;
+    @include xl {
+        height: 70vh;
+    }
+    @include lg {
+        height: 60vh;
+    }
+    @include lm {
+        height: 40vh;
+    }
+    @include md {
+        height: 25vh;
+        padding-top: 5px;
+    }
+}
+
+// .delivery__container::before {
+//     content: '';
+//     position: absolute;
+//     top: 0;
+//     bottom: 0;
+//     right: 0;
+//     left: 0;
+//     background-image: url(images/img/background/Dostavka.jpg);
+//     background-repeat: no-repeat;
+//     background-size: cover;
+//     background-position: top;
+//     z-index: -1;
+//     opacity: 0.5;
+// }
+
+.delivery__title {
+    font-size: 48px;
+    font-weight: 600;
+    color: var(--color-night-rider);
+    margin-bottom: 20px;
+}
+
+.delivery__descr {
+    max-width: 700px;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.delivery__list {
+    padding-left: 20px;
+}
+
+.delivery__item {
+    max-width: 1080px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 32px;
+    color: var(--color-night-rider);
+    margin-bottom: 10px;
+}

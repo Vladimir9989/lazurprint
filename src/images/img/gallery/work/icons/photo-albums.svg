@@ -1,0 +1,44 @@
+<svg width="150" height="150" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Открытый фотоальбом с фотографиями -->
+    <g stroke="#1B3B6F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <!-- Левая страница альбома -->
+        <path d="M45 50 L75 50 L75 105 L45 105 Z" stroke-width="2.5"/>
+        
+        <!-- Правая страница альбома -->
+        <path d="M75 50 L105 50 L105 105 L75 105 Z" stroke-width="2.5"/>
+        
+        <!-- Корешок альбома (центр) -->
+        <path d="M75 50 L75 105" stroke-width="3"/>
+        
+        <!-- Фотография на левой странице (верхняя) -->
+        <rect x="50" y="55" width="20" height="15" stroke-width="2"/>
+        <circle cx="55" cy="60" r="2" fill="#1B3B6F" stroke="none"/>
+        <path d="M58 60 L65 60" stroke-width="2"/>
+        <path d="M58 64 L63 64" stroke-width="2"/>
+        
+        <!-- Фотография на левой странице (нижняя) -->
+        <rect x="50" y="75" width="20" height="15" stroke-width="2"/>
+        <circle cx="55" cy="80" r="2" fill="#1B3B6F" stroke="none"/>
+        <path d="M58 80 L65 80" stroke-width="2"/>
+        <path d="M58 84 L63 84" stroke-width="2"/>
+        
+        <!-- Фотография на правой странице (верхняя) -->
+        <rect x="80" y="55" width="20" height="15" stroke-width="2"/>
+        <circle cx="85" cy="60" r="2" fill="#1B3B6F" stroke="none"/>
+        <path d="M88 60 L95 60" stroke-width="2"/>
+        <path d="M88 64 L93 64" stroke-width="2"/>
+        
+        <!-- Фотография на правой странице (нижняя) -->
+        <rect x="80" y="75" width="20" height="15" stroke-width="2"/>
+        <path d="M85 80 L95 85" stroke-width="2"/>
+        <path d="M95 80 L85 85" stroke-width="2"/>
+        
+        <!-- Нижняя часть альбома (толщина страниц) -->
+        <path d="M45 105 C45 110, 75 112, 105 105" stroke-width="2.5"/>
+        <path d="M45 105 C45 108, 75 110, 105 105" stroke-width="2"/>
+        
+        <!-- Декоративные элементы - уголки страниц -->
+        <path d="M43 52 L47 52" stroke-width="2"/>
+        <path d="M103 52 L107 52" stroke-width="2"/>
+    </g>
+</svg>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <!-- Yandex.Metrika counter -->
+<script type="text/javascript" >
+    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+    m[i].l=1*new Date();
+    for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+    k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+ 
+    ym(95134814, "init", {
+         clickmap:true,
+         trackLinks:true,
+         accurateTrackBounce:true,
+         webvisor:true
+    });
+ </script>
+ <noscript><div><img src="https://mc.yandex.ru/watch/95134814" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Типография «Лазурь» предлагает печать учебников в Свердловске и других регионах. Профессиональное изготовление образовательных изданий любого тиража. Предлагаем качественную верстку, прочный переплет и четкую печать. Работаем с государственными и муниципальными организациями, частными компаниями, исследовательскими и учебными центрами. Гарантируем высокое качество и своевременное выполнение.">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="main.css">
+    <link rel="icon" href="images/img/favicon.ico">
+    <link rel="canonical" href="https://lazurprint.ru/textbook.html">
+    <script async defer src="inputmask.min.js"></script>
+    <script async defer src="just-validate.min.js"></script>
+    <script defer src="swiper-JS.js"></script>
+    <script defer src="work.js"></script>
+    <script defer src="app.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <title>Печать учебников в Свердловске – Оптовая печать учебников</title>
+</head>
+
+<body>
+    @@include('html/header.html', {})
+    @@include('html/main-button.html', {})
+    <main class="main">
+        <section class="textbook work-section" itemscope itemtype="https://schema.org/Product">
+            <div class="container textbook__container">
+                <div class="textbook__nav-cnt">
+                    <a href="index.html" class="textbook__nav-link">Главная /</a>
+                    <a href="textbook.html" class="textbook__nav-link">Печать учебников</a>
+                </div>
+                <div class="textbook__content" itemscope itemprop="offers" itemtype="https://schema.org/Offer">
+                    <h1 class="textbook__title" itemprop="name">
+                        Печать учебников
+                        <meta property="priceCurrency" content="RUB">
+                        <span itemprop="price" content="40">от 40 руб/зкз</span>
+                    </h1>
+                    <time datetime="2024-10-29">29 октября 2024</time>
+                    <p class="textbook__descr text desc" itemprop="description">
+                        <a itemprop="url" href="index.html" class="link">Типография “Лазурь”</a> на рынке
+                        полиграфических услуг с 1997 года. За это время мы успели заработать репутацию надежного
+                        партнера. Предлагаем выгодные условия сотрудничества для государственных и муниципальных
+                        организаций, частных компаний, исследовательских и учебных центров. Фирменная гарантия
+                        распространяется на весь ассортимент.
+                    </p>
+                    <a class="hero__btn btn-reset">Сделать заказ</a>
+                    <div class="textbook__img-cnt work-img">
+                        <img itemprop="image" src="images/img/gallery/work/work-textbook.jpg" alt="Брошюры">
+                    </div>
+                </div>
+            </div>
+        </section>
+        @@include('html/steps.html', {})
+        @@include('html/info.html', {})
+        @@include('html/consultation.html', {})
+        @@include('html/reviews.html', {})
+    </main>
+    @@include('html/footer.html', {})
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+</body>
+
+</html>

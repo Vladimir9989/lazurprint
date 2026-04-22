@@ -1,0 +1,64 @@
+.partners {
+    padding-top: 100px;
+
+    &__list {
+        @include listReset;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 30px;
+        margin-bottom: 30px;
+        @include xl {
+            grid-template-columns: repeat(4, 1fr);
+        }
+        @include lm {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        @include md {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    &__item {
+        height: 100%;
+    }
+    &__link {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+    }
+    &__img-cnt {
+        max-width: 250px;
+        & img {
+            object-fit: contain;
+        }
+        @include md {
+            max-width: none;
+            max-height: 180px;
+            overflow: hidden;
+        }
+    }
+    &__text-cnt {
+        display: flex;
+        gap: 32px;
+    }
+    &__text {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 20px;
+    }
+    &__text-link {
+        transition: all .2s ease-in;
+        @media (any-hover: hover) {
+            &:hover {
+                color: var(--color-accent);
+            }
+        }
+    }
+    &__name {
+        margin: 0;
+    }
+    &__btn {
+        font-weight: 700;
+    }
+}

@@ -1,0 +1,27 @@
+/* thanks.html */
+.page {
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.thanks__container {
+    text-align: center;
+    border: 2px solid #000;
+    padding: 40px;
+    border-radius: 20px;
+}
+.thanks__title {
+    margin-bottom: 10px;
+    font-size: 28px;
+}
+.thanks__text {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+.thanks__btn {
+    background-color: #000;
+    padding: 5px 25px;
+    color: #fff;
+    border-radius: 10px;
+}

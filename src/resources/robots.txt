@@ -1,0 +1,16 @@
+# Общие директивы для всех роботов
+User-agent: *
+Allow: /
+
+# Карта сайта
+Sitemap: https://lazurprint.ru/sitemap.xml
+
+# Специфические директивы для Яндекса
+User-agent: Yandex
+Host: lazurprint.ru
+Clean-param: path
+
+# Специфические директивы для Google
+User-agent: Googlebot, Googlebot-Image, Googlebot-Video
+Allow: /
+

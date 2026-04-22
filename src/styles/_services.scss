@@ -1,0 +1,67 @@
+.services {
+    color: var(--color-light-black);
+    &__title {
+        font-size: 24px;
+    }
+    &__list {
+        @include listReset;
+    }
+    &__item {
+        padding: 20px 0;
+        border-top: 2px solid var(--color-vl-grey);
+        cursor: pointer;
+        transition: transform .2s ease;
+        &:last-child {
+            border-bottom: 2px solid var(--color-vl-grey);;
+        }
+        & svg {
+            margin-left: auto;
+            flex-shrink: 0;
+            width: 50px;
+            height: 50px;
+            @include md {
+                width: 40px;
+                height: 40px;
+            }
+        }
+        @media (any-hover: hover) {
+            &:hover {
+              color: var(--color-nobel);
+            }
+            &:hover > .services__arrow {
+              fill: var(--color-nobel);
+            }
+          }
+    }
+    &__link {
+        display: flex;
+        gap: 50px;
+        @include md {
+            gap: 20px;
+          }
+    }
+    &__number {
+        font-size: 28px;
+        font-weight: 700;
+        @include md {
+            font-size: 20px;
+        }
+    }
+    &__subtitle {
+        font-size: 28px;
+        margin: 0;
+        @include md {
+            font-size: 20px;
+        }
+    }
+    &__descr {
+        font-size: 20px;
+        color: var(--color-nobel);
+        @include md {
+            font-size: 16px;
+        }
+    }
+    &__arrow {
+        align-self: center;
+    }
+}

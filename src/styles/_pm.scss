@@ -1,0 +1,85 @@
+.pm {
+    padding-top: 100px;
+    &__title {
+        margin: 10px 0 0;
+    }
+
+    &__list {
+        @include listReset;
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        color: var(--color-galaxy);
+        padding: 20px 0 50px;
+        @include lg {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        @include lm {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        @include sm {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+    &__item {
+        max-width: 280px;
+        display: flex;
+        flex-direction: column;
+    }
+    &__img-cnt {
+        display: block;
+    }
+    &__link {
+        display: block;
+    }
+    &__name {
+        line-height: 140%;
+        font-weight: 700;
+    }
+    &__btn-cnt {
+        display: flex;
+        justify-content: space-between;
+    }
+    &__btn {
+        display: block;
+        color: var(--color-white);
+        background-color: var(--color-galaxy);
+        padding: 5px 15px;
+    }
+    &__number {
+        margin-bottom: 5px;
+        flex-grow: 1;
+    }
+    &__mobi {
+        cursor: pointer;
+    }
+    &__module {
+        display: none;
+        position: absolute;
+        align-items: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        // height: 100vh;
+        padding-top: 90px;
+        background-color: var(--color-whisper);
+        &--active {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+    &__nav-cnt {
+        padding: 0 15px;
+    }
+    &__module-close {
+        padding: 5px 15px;
+        background-color: var(--color-galaxy);
+        color: var(--color-white);
+        font-weight: 700;
+        margin: 10px 0;
+        cursor: pointer;
+    }
+}

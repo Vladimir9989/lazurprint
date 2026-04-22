@@ -1,0 +1,20 @@
+/node_modules
+/dist
+/build
+
+# Большие видеофайлы
+src/images/img/video/museum/Soothing*.mp4
+src/images/img/video/museum/Видео+от+Олега*.mp4
+src/images/img/video/Photo-day*.mp4*
+# Видеофайлы (большие файлы, не подлежат Git)
+*.mp4
+*.MP4
+*.mov
+*.MOV
+*.avi
+*.AVI
+*.mkv
+*.MKV
+
+# Папка с видео
+src/images/img/video/

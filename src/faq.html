@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <!-- Yandex.Metrika counter -->
+<script type="text/javascript" >
+    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+    m[i].l=1*new Date();
+    for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+    k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+ 
+    ym(95134814, "init", {
+         clickmap:true,
+         trackLinks:true,
+         accurateTrackBounce:true,
+         webvisor:true
+    });
+ </script>
+ <noscript><div><img src="https://mc.yandex.ru/watch/95134814" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="Печать книг">
+    <meta name="description" content="Получите ответы на часто задаваемые вопросы о полиграфических услугах типографии «Лазурь»: особенности заказа, форматы файлов, сроки выполнения, условия оплаты и доставки. Узнайте о преимуществах работы с нами.">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="main.css">
+    <link rel="icon" href="images/img/favicon.ico">
+    <link rel="canonical" href="https://lazurprint.ru/faq.html">
+    <script async defer src="inputmask.min.js"></script>
+    <script async defer src="just-validate.min.js"></script>
+    <script defer src="swiper-JS.js"></script>
+    <script defer src="work.js"></script>
+    <script defer src="app.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <title>Часто задаваемые вопросы</title>
+</head>
+
+<body class="body">
+    @@include('html/header.html', {})
+    @@include('html/main-button.html', {})
+    <main class="main">
+        <section class="faq" style="padding-top: 110px;">
+            <div class="faq__container container">
+                <h1 class="faq__title">Часто задаваемые вопросы:</h1>
+                <ul class="vacancy__list">
+                    <li class="vacancy__item">
+                        <div class="vacancy__item-title">
+                            <h3 class="vacancy__name">Как оформить заказ?</h3>
+                            <span class="vacancy__price"></span>
+                        </div>
+                        <div class="vacancy__text desc">
+                            Вы связывайтесь с нашим менеджером или оставляете заявку, если у вас есть готовый макет
+                            отправляйте его на почту <a href="mailto:info@lazurprint.ru"
+                                class="link">info@lazurprint.ru</a>, в письме укажите что вам нужно, тираж, срок.
+                        </div>
+                    </li>
+                    <li class="vacancy__item">
+                        <div class="vacancy__item-title">
+                            <h3 class="vacancy__name">Если у меня уже есть макет, в каком формате его лучше вам
+                                отправить?</h3>
+                            <span class="vacancy__price"></span>
+                        </div>
+                        <div class="vacancy__text desc">
+                            Универсальный формат, с которым работать проще всего - PDF. Также мы работаем с форматами:
+                            cdr, tif, psd, ai, indd. Это значит, что вы можете представить макет, созданный в одной из
+                            программ: PhotoShop, Adobe Illustrator, InDesign и другие графические редакторы. И все же
+                            лучший вариант - pdf.
+                        </div>
+                    </li>
+                    <li class="vacancy__item">
+                        <div class="vacancy__item-title">
+                            <h3 class="vacancy__name">Вы занимаетесь цифровой или офсетной печатью?</h3>
+                            <span class="vacancy__price"></span>
+                        </div>
+                        <div class="vacancy__text desc">
+                            В нашей типографии развернуто полноценное цифровое и офсетное производство. Какой тип печати
+                            будет осуществляться, зависит от тиража и особенностей продукции. К примеру, большой тираж
+                            будет экономичнее печатать посредством офсета, для маленького больше подойдет цифра.
+                        </div>
+                    </li>
+                    <li class="vacancy__item">
+                        <div class="vacancy__item-title">
+                            <h3 class="vacancy__name">Как быстро я смогу получить заказ?</h3>
+                            <span class="vacancy__price"></span>
+                        </div>
+                        <div class="vacancy__text desc">
+                            Благодаря собственному производству и отлаженной логистике, типография «Лазурь» выполняет
+                            заказы в самые сжатые сроки. Сроки - зависят от тиража. Но так как у нас предприятие имеет
+                            возможность круглосуточной работы, и дублированное оборудование, то от двух суток
+                        </div>
+                    </li>
+                    <li class="vacancy__item">
+                        <div class="vacancy__item-title">
+                            <h3 class="vacancy__name">Почему цвет на экране компьютера или смартфона и после печати -
+                                разные?</h3>
+                            <span class="vacancy__price"></span>
+                        </div>
+                        <div class="vacancy__text desc">
+                            Дело в том, что при печати всегда применяется цветовая модель CMYK. На экранах же, где вы
+                            рассматриваете макет, применятся модель RGB. Палитру можно перевести в CMYK - тогда вы
+                            увидите цвет именно таким, каким он будет в итоге.
+                        </div>
+                    </li>
+                    <li class="vacancy__item">
+                        <div class="vacancy__item-title">
+                            <h3 class="vacancy__name">С какими парметрами надо будет определиться мне как заказчику?
+                            </h3>
+                            <span class="vacancy__price"></span>
+                        </div>
+                        <div class="vacancy__text desc">
+                            С видом продукции, форматом изделия, типом бумаги, тиражом, красочностью, способом
+                            скрепления и количеством страниц в одном экземпляре. Также имеет смысл поговорить о
+                            послепечатной обработке. Менеджер типографии поможет определиться с этими параметрами, если
+                            у вас нет четкого запроса.
+                        </div>
+                    </li>
+                    <li class="vacancy__item">
+                        <div class="vacancy__item-title">
+                            <h3 class="vacancy__name">Почему Вы уникальная типография?</h3>
+                            <span class="vacancy__price"></span>
+                        </div>
+                        <div class="vacancy__text desc">
+                            Мы предлагаем полный цикл полиграфических услуг – от разработки макета до изготовления и
+                            постпечатной обработки. Используем инновационные технологии и оборудование. Гибкая ценовая
+                            политика и лояльные условия сотрудничества.
+                        </div>
+                    </li>
+                    <li class="vacancy__item">
+                        <div class="vacancy__item-title">
+                            <h3 class="vacancy__name">Как оплатить заказ?</h3>
+                            <span class="vacancy__price"></span>
+                        </div>
+                        <div class="vacancy__text desc">
+                            Оплата - по счету или наличными через кассовый терминал . Для физических лиц предоплата
+                            100%. Для юридических лиц
+                            все согласно договору.
+                        </div>
+                    </li>
+                    <li class="vacancy__item">
+                        <div class="vacancy__item-title">
+                            <h3 class="vacancy__name">Сколько экземпляров я могу заказать?</h3>
+                            <span class="vacancy__price"></span>
+                        </div>
+                        <div class="vacancy__text desc">
+                            Минимальный объем заказа в нашей типографии от 1 экземпляра. Максимальный тирраж
+                            неограничен. Минимальная стоимость заказа от 1 000 рублей.
+                        </div>
+                    </li>
+                    <li class="vacancy__item">
+                        <div class="vacancy__item-title">
+                            <h3 class="vacancy__name">Как получить скидку?</h3>
+                            <span class="vacancy__price"></span>
+                        </div>
+                        <div class="vacancy__text desc">
+                            Скидки предоставляются постоянным клиентам при долгосрочной работе, при печати большого
+                            тиража, размеры скидок
+                            обговариваются индивидуально.
+                        </div>
+                    </li>
+                    <li class="vacancy__item">
+                        <div class="vacancy__item-title">
+                            <h3 class="vacancy__name">Могу ли я быстро повторить заказ?</h3>
+                            <span class="vacancy__price"></span>
+                        </div>
+                        <div class="vacancy__text desc">
+                            Все макеты клиентов храняться у нас на почте и диске, если вам потребовалось срочно заказать
+                            макеты, которые уже печатались в нашей типографии - свяжитесь с нажим менеджером, сообщите
+                            ему номер заказа, номер телефона, внесети оплату и повторим ваш заказ.
+                        </div>
+                    </li>
+                    <li class="vacancy__item">
+                        <div class="vacancy__item-title">
+                            <h3 class="vacancy__name">Насколько экологично ваше производство и продукция?</h3>
+                            <span class="vacancy__price"></span>
+                        </div>
+                        <div class="vacancy__text desc">
+                            Мы используем современные технологии и оборудование, отвечающие всем требованиям по защите
+                            окружающей среды. Часть продукции печатается на экологичных материалах. Производство
+                            находится рядом с лесом
+                        </div>
+                    </li>
+                    <li class="vacancy__item">
+                        <div class="vacancy__item-title">
+                            <h3 class="vacancy__name">Есть ли у вас доставка?</h3>
+                            <span class="vacancy__price"></span>
+                        </div>
+                        <div class="vacancy__text desc">
+                            Да, мы предлагаем доставку готовой продукции по всей России. Возможен самовывоз или отправка
+                            транспортными компаниями.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        @@include('html/steps.html', {})
+        @@include('html/info.html', {})
+        @@include('html/consultation.html', {})
+        @@include('html/reviews.html', {})
+    </main>
+    @@include('html/footer.html', {})
+    <div class="about__modal video-1">
+        <div class="about__video">
+            <svg class="about__close" width="16" height="16" viewBox="0 0 16 16" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M0.666641 15.3043L15.3333 3.17761e-05L16
+                        0.695679L1.33331 15.9999L0.666641 15.3043Z" fill="black"></path>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M0.666725 -2.96187e-06L15.3334 15.3042L14.6667
+                        15.9999L5.76143e-05 0.695644L0.666725 -2.96187e-06Z" fill="black"></path>
+            </svg>
+            <video class="video" controls src="images/img/video/video-6.mp4"></video>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+</body>
+
+</html>

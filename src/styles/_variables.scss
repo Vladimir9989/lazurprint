@@ -1,0 +1,64 @@
+$containerMaxWidth: 1430px;
+// $maxWidth: 1290px;
+$color-primary: #1a76d1;
+$color-primary-light: lighten($color-primary, 45%);
+$color-instagram: #E4405F;
+$color-text: #333;
+$color-text-light: #666;
+$color-white: #fff;
+$color-border: #eaeaea;
+$border-radius: 16px;
+$shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+$shadow-hover: 0 15px 40px rgba(26, 118, 209, 0.15);
+$transition: all 0.3s ease;
+
+
+
+:root {
+    --color-white: #fff;
+    --color-black: #000;
+    --color-light-black: #343434;
+    --color-night-rider: #333;
+    --color-vl-grey: #cacaca;
+    --color-bg-grey: #ecffff;
+    --color-whisper: #ececec;
+    --color-pink-swan: #b6b6b6;
+    --color-nobel: #999;
+    --color-dim-gray: #666;
+    --color-lime-green: #30bf39;
+    --color-pink-sw: #b7b7b7;
+    --color-dark-gray: #b0b0b0;
+    --color-can-can: #d88f99;
+    --color-whisp: #eaeaea;
+    --color-harley-davidson-orange: #d11616;
+    --color-nero: #161616;
+    --color-unactive: #bbb;
+    --color-primary: #3E77FB;
+    --color-accent: #0076bb;
+    --color-accent-dark: #005a8f;
+    --color-accent2: #50befd;
+    --color-blue: #0B6DB7;
+    --color-blue-hover: #02436e;
+    --color-meteor: #f7f2eb;
+    --color-sky: #d0e3ff;
+    --color-planetary: #334eac;
+    --color-venus: #bad6eb;
+    --color-universe: #7096d1;
+    --color-galaxy: #081f5c;
+    --color-milky-way: #ddd9f0;
+    --color-icons: #0d2652;
+    --color-space-cadet: #0f2753;
+    --color-light-blue: #86b9dc;
+}
+
+$breakpoint_xxl: 1320px;
+$breakpoint_xl: 1024px;
+$breakpoint_lg: 896px;
+$breakpoint_lm: 786px;
+$breakpoint_mg: 676px;
+$breakpoint_md: 576px;
+$breakpoint_sm: 410px;
+
+$font-family: "OpenSans", sans-serif;
+$second-family: "Muller", sans-serif;
+$bold-family: "PlayfairDisplay", sans-serif;

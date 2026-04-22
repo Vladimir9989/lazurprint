@@ -1,0 +1,93 @@
+@import 'variables';
+@mixin listReset {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+@mixin btnReset {
+    outline: none;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+@mixin before {
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+}
+
+@mixin after {
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+}
+
+@mixin xxl() {
+    @media (max-width: $breakpoint_xxl) {
+        @content;
+    }
+}
+@mixin xl() {
+    @media (max-width: $breakpoint_xl) {
+        @content;
+    }
+}
+@mixin lg() {
+    @media (max-width: $breakpoint_lg) {
+        @content;
+    }
+}
+@mixin lm() {
+    @media (max-width: $breakpoint_lm) {
+        @content;
+    }
+}
+@mixin mg() {
+    @media (max-width: $breakpoint_mg) {
+        @content;
+    }
+}
+@mixin md() {
+    @media (max-width: $breakpoint_md) {
+        @content;
+    }
+}
+@mixin sm() {
+    @media (max-width: $breakpoint_sm) {
+        @content;
+    }
+}
+
+@mixin adaptiv-value($property, $startSize, $minSize, $type) {
+    $addSize: $startSize - $minSize;
+    @if $type==1 {
+        // Только если меньше контейнера
+        #{$property}: $startSize;
+        @media (max-width: #{$containerMaxWidth}) {
+            #{$property}: calc(#{$minSize} + #{$addSize} * ((100vw - 320px) / #{$containerMaxWidth - 320}));
+        }
+    }
+    @if $type==2 {
+        // Только если больше контейнера
+        #{$property}: $startSize;
+        @media (max-width: #{$containerMaxWidth}) {
+            #{$property}: calc(#{$minSize} + #{$addSize} * ((100vw - 320px) / #{$containerMaxWidth - 320}));
+        }
+    } @else {
+        // Всегда
+        #{$property}: calc(#{$minSize} + #{$addSize} * ((100vw - 320px) / #{$containerMaxWidth - 320}));
+    }
+}

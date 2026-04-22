@@ -1,0 +1,14 @@
+.post-printing {
+    padding-top: 100px;
+    &__img-cnt {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 50px;
+    }
+    &__descr {
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 180%;
+        margin-bottom: 100px;
+    }
+}

@@ -1,0 +1,395 @@
+.news {
+  padding-top: 110px;
+  padding-bottom: 60px;
+
+  &__nav-cnt {
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #6c757d; // Серый цвет для разделителя
+
+    .news__nav-link {
+      color: #6c757d;
+      text-decoration: none;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: var(--color-pink-sw); // Цвет бренда при наведении
+        text-decoration: underline;
+      }
+
+      &--current {
+        color: #212529; // Темный цвет для текущей страницы
+        font-weight: 500;
+        pointer-events: none; // Не кликабельно
+        text-decoration: none;
+      }
+    }
+
+    &-separator {
+      margin: 0 5px;
+      color: #adb5bd;
+    }
+  }
+  &__wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  &__title {
+    margin: 20px 0 40px 0;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1.3;
+    color: #212529;
+
+    @include md {
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+  }
+  &__content {
+    min-height: 130px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    box-shadow: 0 0 10px 5px rgba(221, 221, 221, 1);
+  }
+  &__btn-cnt {
+    display: flex;
+  }
+  &__date-cnt {
+    display: flex;
+    justify-content: space-between;
+    margin-top: auto;
+  }
+  &__date,
+  &__price {
+    display: block;
+    color: var(--color-pink-sw);
+  }
+  &__block {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    & img {
+      margin-bottom: 32px;
+    }
+  }
+  &__block-list {
+    max-width: 600px;
+  }
+  &__list {
+    @include listReset;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    @include lg {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 25px;
+    }
+    @include md {
+      grid-template-columns: repeat(1, 1fr);
+      gap: 30px;
+    }
+  }
+  &__descrs {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+  }
+  &__descr {
+    font-size: 18px;
+    color: var(--color-dim-gray);
+    width: 60vw;
+    @include md {
+      width: 92%;
+    }
+  }
+  &__subtitle {
+    font-size: 22px;
+    margin: 20px 0;
+  }
+  &__text {
+    margin: 0;
+  }
+  &__img-cnt {
+    max-width: 400px;
+    display: flex;
+    // flex-direction: column;
+    align-items: self-start;
+    flex-wrap: wrap;
+    gap: 20px;
+    & span {
+      color: rgb(96, 105, 129);
+      font-size: 13px;
+      font-weight: 100;
+      line-height: 16px;
+    }
+    & video {
+      max-width: 500px;
+      max-height: 400px;
+    }
+    @include md {
+      & .news40-video-2 {
+        max-width: 300px;
+        max-height: 200px;
+      }
+    }
+  }
+  &__table {
+    border-collapse: collapse;
+    border: 1px solid gray;
+    text-align: center;
+    & td {
+      border: 1px solid gray;
+      min-width: 240px;
+      padding: 5px;
+      @include md {
+        min-width: 150px;
+      }
+      @include sm {
+        min-width: 110px;
+      }
+    }
+  }
+  &__cite {
+    display: block;
+    color: var(--color-dim-gray);
+    font-weight: 700;
+    line-height: 170%;
+    padding: 10px 0 10px 10px;
+    border-left: 2px solid var(--color-vl-grey);
+    margin-left: 10px;
+    width: 60vw;
+    @include md {
+      width: 92%;
+    }
+  }
+
+  // Стили для аккордеона художников
+  &__artist-block {
+    position: relative;
+  }
+
+  // Стили для описания художников
+  &__artist-descr {
+    max-height: 4.5em; // Примерно 3 строки (при line-height 1.5)
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    position: relative;
+
+    &.is-collapsed {
+      max-height: 4.5em;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2em;
+        background: linear-gradient(transparent, white);
+        pointer-events: none;
+      }
+    }
+
+    &.is-expanded {
+      max-height: 2000px;
+      
+      &::after {
+        content: none;
+      }
+    }
+  }
+
+  // Контейнер для ссылки
+  &__read-more-container {
+    margin-top: 8px;
+  }
+
+  // Ссылка "Читать дальше" / "Свернуть"
+  &__read-more-link {
+    display: inline-block;
+    color: var(--color-accent);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    text-decoration: none;
+    border-bottom: 1px dashed var(--color-accent);
+    padding-bottom: 1px;
+
+    &:hover {
+      color: var(--color-pink-sw);
+      border-bottom-color: var(--color-pink-sw);
+    }
+  }
+
+  &__iframe-container {
+    position: relative;
+    width: 60%;
+    padding-top: 33.79%;
+    overflow: hidden;
+    @include md {
+      width: 100%;
+      padding-top: 63.79%;
+    }
+    & iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  }
+}
+.articles__table {
+  border-collapse: collapse;
+  border: 1px solid gray;
+  & thead {
+    font-weight: 700;
+  }
+  & td {
+    border: 1px solid gray;
+    padding: 7px;
+  }
+}
+
+.articles49 {
+  img {
+    max-width: 500px;
+    @include md {
+      max-width: 100%;
+    }
+  }
+}
+.card {
+   border-radius: 24px; // Более современный радиус
+  background-color: #ffffff;
+  border: 1px solid #e9ecef; // Очень светлая граница вместо тени
+  transition: all 0.3s ease; // Плавный переход для hover
+  height: 100%; // Чтобы карточки в ряду были одной высоты
+
+   &:hover {
+    transform: translateY(-8px); // Эффект подъема
+    box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.15); // Мягкая тень при наведении
+    border-color: transparent; // Убираем границу, оставляя тень
+
+    .card__img {
+      transform: scale(1.05); // Увеличение картинки при наведении на карточку
+    }
+
+    .card__title {
+      color: var(--color-pink-sw); // Цвет бренда для заголовка при наведении
+    }
+  }
+  @include xl {
+    border-radius: 15px;
+    padding: 20px;
+  }
+  &__content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none; // Убираем подчеркивание у ссылки
+    color: inherit; // Наследуем цвет текста
+  }
+  &__title {
+    margin: 0 20px 12px 20px; // Отступы внутри карточки
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #212529;
+    transition: color 0.2s ease; // Плавное изменение цвета заголовка
+    flex-shrink: 0;
+  }
+  &__img-cnt {
+     width: 100%;
+    height: 340px; // Фиксированная высота для всех изображений
+    overflow: hidden; // Прячем части изображения, выходящие за пределы
+    border-radius: 24px 24px 0 0; // Скругляем только верхние углы
+    background-color: #f8f9fa; // Светлый фон на время загрузки изображения
+    flex-shrink: 0; // Запрещаем сжиматься
+    & img {
+       width: 100%;
+      height: 100%;
+      object-fit: cover; // Изображение заполняет контейнер, обрезаясь при необходимости
+      transition: transform 0.5s ease; // Плавное увеличение
+      display: block; // Убирает лишний пробел снизу
+    }
+  }
+  &__img-cnt--style img {
+    object-position: center;
+  }
+  &__style {
+    & img {
+      object-position: top;
+    }
+  }
+  &__date {
+    display: block;
+    margin: 20px 20px 8px 20px; // Отступы внутри карточки
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--color-pink-sw);
+    flex-shrink: 0;
+  }
+  &__desc {
+    margin: 0 20px 25px 20px; // Отступы внутри карточки
+    font-size: 16px;
+    line-height: 1.6;
+    color: #6c757d; // Более светлый цвет для описания
+    display: -webkit-box; // Для обрезки текста (если нужно)
+    -webkit-line-clamp: 4; // Ограничиваем до 4 строк
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex-grow: 1; // Описание занимает все доступное место, прижимая дату и заголовок вверх
+  }
+}
+.swiper-button-prev-news,
+.swiper-button-next-news {
+  position: static;
+  width: 50px;
+  height: 50px;
+}
+
+.img-modal {
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(1, 24, 78, 0.8);
+  position: fixed;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  z-index: 1000 !important;
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+  &__cnt img {
+    height: 80vh;
+    object-fit: contain;
+  }
+  &--active {
+    opacity: 1;
+    visibility: visible;
+
+    @include sm {
+      padding-top: 20px;
+    }
+  }
+}
+.img-modal__cnt {
+  overflow-y: auto;
+}

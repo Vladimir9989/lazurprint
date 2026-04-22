@@ -1,0 +1,267 @@
+.benefit {
+    padding: 100px 0 70px;
+    width: 100%;
+    background: linear-gradient(180deg, #ffffff 0%, #f0f5f9 100%);
+
+    @include md {
+        padding: 35px 0 80px;
+    }
+
+    &__container {
+        display: flex;
+
+        @include xl {
+            flex-direction: column-reverse;
+            gap: 30px;
+            align-items: center;
+        }
+    }
+
+
+    &__elem {
+        font-size: 18px;
+        line-height: 180%;
+        font-weight: 700;
+        color: var(--color-blue-hover);
+    }
+
+    &__left {
+        width: 33%;
+
+        @include xl {
+            width: 100%;
+        }
+    }
+
+    &__left-cnt {
+        // position: relative;
+        width: 228px;
+
+        @include sm {
+            width: 170px;
+        }
+    }
+
+    &-modal {
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(1, 24, 78, 0.8);
+        position: fixed;
+        overflow-x: hidden;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease-in-out;
+        z-index: 1000 !important;
+        box-sizing: border-box;
+        &__cnt img {
+            height: 80vh;
+            object-fit: contain;
+        }
+        &--active {
+            opacity: 1;
+            visibility: visible;
+            
+            @include sm {
+                padding-top: 20px;
+            }
+        }
+    }
+    &-modal__cnt {
+        overflow-y: auto;
+    }
+    &__right {
+        position: relative;
+        width: 67%;
+
+        @include xl {
+            width: 100%;
+        }
+    }
+
+    & .swiper-slide {
+        justify-content: center;
+    }
+
+    & .swiper-pagination1 {
+        left: -33%;
+        top: 107%;
+    }
+
+    & .swiper-pagination-bullet {
+        width: 10px;
+        height: 10px;
+
+        &-active {
+            background-color: var(--color-primary);
+        }
+    }
+
+    & .swiper-button-prev1 {
+        top: 110%;
+        left: 15%;
+        width: 35px;
+        height: 35px;
+
+        & svg {
+            fill: var(--color-primary);
+            transform: rotate(180deg);
+        }
+    }
+
+    & .swiper-button-next1 {
+        top: 110%;
+        left: 65%;
+        width: 35px;
+        height: 35px;
+
+        & svg {
+            fill: var(--color-primary);
+        }
+    }
+
+    &__content {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        margin-bottom: 60px;
+
+        @include lg {
+            margin-bottom: 30px;
+        }
+    }
+
+    &__title {
+        margin: 0;
+        font-weight: 700;
+        font-size: 36px;
+        line-height: 140%;
+        color: #000;
+
+        @include md {
+            font-size: 24px;
+        }
+
+        & span {
+            color: var(--color-planetary);
+        }
+    }
+
+    &__right-cnt {
+        width: 100%;
+        height: 300px;
+
+        @include md {
+            height: 210px;
+        }
+    }
+
+    & .swiper-button-prev2 {
+        position: static;
+        width: 40px;
+        height: 40px;
+
+        & svg {
+            fill: var(--color-primary);
+            transform: rotate(180deg);
+        }
+    }
+
+    & .swiper-button-next2 {
+        position: static;
+        width: 40px;
+        height: 40px;
+
+        & svg {
+            fill: var(--color-primary);
+        }
+    }
+
+    &__btn-cnt {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        padding-top: 20px;
+    }
+}
+
+.benefit-right {
+    position: relative;
+    overflow: hidden;
+
+    &__wrapper {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+        padding: 25px;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(62, 119, 251, 0.1);
+        margin-bottom: 15px;
+        
+        &:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 30px rgba(62, 119, 251, 0.15);
+            border-color: rgba(62, 119, 251, 0.3);
+        }
+    }
+
+    &__icon {
+        align-self: flex-start;
+        padding-right: 15px;
+        border-right: 1px solid rgba(62, 119, 251, 0.2);
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, rgba(62, 119, 251, 0.1) 0%, rgba(109, 226, 235, 0.1) 100%);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        
+        .benefit-right__wrapper:hover & {
+            background: linear-gradient(135deg, rgba(62, 119, 251, 0.2) 0%, rgba(109, 226, 235, 0.2) 100%);
+            transform: scale(1.1);
+        }
+
+        & svg path {
+            fill: #3E77FB;
+        }
+    }
+
+    &__title {
+        margin: 0;
+        margin-bottom: 10px;
+        font-weight: 700;
+        font-size: 20px;
+        color: #1a1a2e;
+        transition: color 0.3s ease;
+        
+        .benefit-right__wrapper:hover & {
+            color: #3E77FB;
+        }
+    }
+
+    &__descr {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.6;
+        color: rgba(24, 27, 43, .85);
+    }
+}
+
+// .swiper-slide-2 {
+//     height: calc((100%-140px) / 2);
+//     overflow: hidden;
+// }
