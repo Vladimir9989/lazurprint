@@ -129,19 +129,6 @@ observer.observe(elements);
 const heroTitle = document.querySelector('.hero__title--animation');
 const heroDescrCnt = document.querySelector('.hero__descr-cnt--animation');
 const heroBtn = document.querySelector('.hero__btn--animation');
-function animationTextHero() {
-    heroDescrCnt.classList.add('active');
-}
-// function animationTitleHero() {
-//     heroTitle.classList.add('active');
-// }
-function animationBtnHero() {
-    heroBtn.classList.add('active');
-}
-
-setTimeout(animationBtnHero, 200);
-setTimeout(animationTextHero, 150);
-// setTimeout(animationTitleHero, 100);
 
 const benefitSlide = document.querySelectorAll('.benefit__slide img');
 const tenderInfo = document.querySelector('.tender__info');
@@ -159,12 +146,6 @@ benefitSlide.forEach(item => {
     })
 });
 
-// tenderInfo.addEventListener('click', () => {
-//     benefitModalCnt.innerHTML = '';
-//     benefitModalCnt.insertAdjacentHTML('afterbegin', generateInfo());
-//     benefitModal.classList.add('benefit-modal--active');
-// })
-
 benefitModalClose.addEventListener('click', () => {
     benefitModal.classList.remove('benefit-modal--active');
 })
@@ -179,39 +160,6 @@ benefitModal.addEventListener('click', (e) => {
 function generateImg(src) {
     return `
         <img src="${src}" alt="Наши дипломы">
-    `
-}
-function generateInfo() {
-    return `
-        <div class="tender__content">
-            <p class="tender__desc desc text">
-                ООО Издательско-полиграфический комплекс "Лазурь" объявляет о проведении открытого тендера на
-                поставку  расходных материалов для полиграфии. Просим Вас предоставить свои ценовые предложения на
-                весь ассортимент поставляемой вами продукции, заверенные руководством компании, в срок до 1апреля
-                2025 г.  На основании ваших КП, нами будет произведен анализ и заключены договоры до 1апреля 2026
-                года.
-            </p>
-            <p class="tender__desc desc text">
-                Просьба, учесть условия поставки: автомобильным транспортом или транспортной компанией за счет
-                продавца на склад типографии, расположенный по адресу Свердловская обл., г.Реж, ул.П.Морозова, 61.
-            </p>
-            <p class="tender__desc desc text">
-                Условия оплаты: отсрочка платежа до 30 календарных дней.
-            </p>
-            <p class="tender__desc desc text">
-                Приветствуется технологическая поддержка.
-            </p>
-            <p class="tender__desc desc text">
-                Предложения направлять на адрес электронной почты: info@lazurprint.ru
-                Контактное лицо: Ефремова Яна, тел. +7(343)227-23-23 +7 922 149-00-97
-            </p>
-            <p class="tender__desc desc text">
-                С уважением к Вам и Вашему бизнесу, <br>
-                Генеральный директор ООО ИПК «Лазурь» <br>
-                Голендухин А.В. <br>
-            </p>
-        </div>
-        
     `
 }
 

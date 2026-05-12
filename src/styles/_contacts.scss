@@ -14,27 +14,27 @@ $contacts-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
 // Основная секция
 .contacts {
-    background-color: $contacts-bg;
+    background: linear-gradient(135deg, #f8f9ff 0%, #eef1ff 100%);
     position: relative;
     overflow: hidden;
 }
 
 // Верхняя часть с карточками
 .contacts__top {
-    padding: 80px 20px 60px;
+    padding: 30px 20px 60px;
     position: relative;
     
     @include xxl {
-        padding: 70px 20px 50px;
+        padding: 30px 20px 40px;
     }
     
     @include lg {
-        padding: 60px 15px 40px;
+        padding: 20px 15px 20px;
     }
     
-    @include md {
-        padding: 50px 15px 35px;
-    }
+    // @include md {
+    //     padding: 50px 15px 35px;
+    // }
 }
 
 // Заголовок

@@ -90,185 +90,141 @@
     @@include('html/main-button.html', {})
     <main class="main">
         <section class="hero">
+            <!-- Декоративные элементы фона -->
+            <div class="hero__deco-shape hero__deco-shape--top-right"></div>
+            <div class="hero__deco-shape hero__deco-shape--bottom-left"></div>
+
+            <!-- Верхний слайдер с баннерами (сохранён) -->
             <div class="hero__banner swiper">
                 <div class="hero__swiper-wrapper swiper-wrapper">
                     <div class="hero__banner-slide swiper-slide">
                         <a href="articles109.html" class="hero__banner-text-cnt">
                             <div class="hero__banner-text">
-                                <img loading="lazy" src="images/img/banner/Baners_Listovki_2x.jpg" alt="Баннер">
+                                <img loading="lazy" src="images/img/banner/Baners_Listovki_2x.jpg" alt="Листовки на заказ">
                             </div>
                         </a>
                     </div>
                     <div class="hero__banner-slide swiper-slide">
                         <a href="#" class="hero__banner-text-cnt">
                             <div class="hero__banner-text">
-                                <img loading="lazy" src="images/img/banner/Baners_flex copy.jpg" alt="Баннер">
+                                <img loading="lazy" src="images/img/banner/Baners_flex copy.jpg" alt="Баннер 2">
                             </div>
                         </a>
                     </div>
                     <div class="hero__banner-slide swiper-slide">
                         <a href="#" class="hero__banner-text-cnt">
                             <div class="hero__banner-text">
-                                <img loading="lazy" src="images/img/banner/Baners_flex@2x.jpg" alt="Баннер">
+                                <img loading="lazy" src="images/img/banner/Baners_flex@2x.jpg" alt="Баннер 3">
                             </div>
                         </a>
                     </div>
                     <div class="hero__banner-slide swiper-slide">
                         <a href="#" class="hero__banner-text-cnt banner-reklama">
                             <div class="hero__banner-text">
-                                <img loading="lazy" src="images/img/banner/banner-reklama.jpg" alt="Баннер">
+                                <img loading="lazy" src="images/img/banner/banner-reklama.jpg" alt="Рекламная продукция">
                             </div>
                         </a>
                     </div>
                     <div class="hero__banner-slide swiper-slide">
                         <a href="news15.html" class="hero__banner-text-cnt">
                             <div class="hero__banner-text">
-                                <img loading="lazy" src="images/img/banner/Baners_NEWS-1 copy 6.jpg" alt="Баннер">
+                                <img loading="lazy" src="images/img/banner/Baners_NEWS-1 copy 6.jpg" alt="Новости типографии">
                             </div>
                         </a>
                     </div>
                     <div class="hero__banner-slide swiper-slide">
                         <a href="#" class="hero__banner-text-cnt">
                             <div class="hero__banner-text">
-                                <img loading="lazy" src="images/img/banner/Baners_NEWS-1 copy 8.jpg" alt="Баннер">
+                                <img loading="lazy" src="images/img/banner/Baners_NEWS-1 copy 8.jpg" alt="Баннер 6">
                             </div>
                         </a>
                     </div>
                 </div>
                 <div class="hero__swiper-pagination-banner swiper-pagination-banner"></div>
             </div>
+
+            <!-- Основной контент hero-секции -->
             <div class="hero__container container">
-                <h1 class="hero__title hero__title--animation">
-                    Типография
-                </h1>
-                <div class="hero__descr-cnt hero__descr-cnt--animation">
-                    <p class="hero__descr">
-                        <span class="b">ООО ИПК “Лазурь”</span> представляет собственное производство и предлагает <span
-                            class="b">высококлассные полиграфические услуги</span>, уделяя внимание каждому клиенту.
-                    </p>
-                    <div class="hero__block">
-                        <div class="hero__left">
-                            <div class="hero__left-cnt swiper">
-                                <div class="swiper-wrapper">
-                                    <div class="hero__slide swiper-slide">
-                                        <a href="staff.html">
-                                            <img loading="lazy" src="images/img/staff/staff-6.jpg"
-                                                alt="Сотрудник на рабочем месте">
-                                        </a>
-                                    </div>
-                                    <div class="hero__slide swiper-slide">
-                                        <a href="staff.html">
-                                            <img loading="lazy" src="images/img/staff/staff-12.jpg"
-                                                alt="Сотрудник на рабочем месте">
-                                        </a>
-                                    </div>
-                                    <div class="hero__slide swiper-slide">
-                                        <a href="staff.html">
-                                            <img loading="lazy" src="images/img/staff/staff-13.jpg"
-                                                alt="Сотрудник на рабочем месте">
-                                        </a>
-                                    </div>
-                                    <div class="hero__slide swiper-slide">
-                                        <a href="staff.html">
-                                            <img loading="lazy" src="images/img/staff/staff-14.jpg"
-                                                alt="Сотрудник на рабочем месте">
-                                        </a>
-                                    </div>
-                                    <div class="hero__slide swiper-slide">
-                                        <a href="staff.html">
-                                            <img loading="lazy" src="images/img/staff/staff-21.jpg"
-                                                alt="Сотрудник на рабочем месте">
-                                        </a>
-                                    </div>
+                <div class="hero__content-grid">
+                    <!-- Левая колонка: заголовок, описание, кнопка -->
+                    <div class="hero__content-left">
+                        <h1 class="hero__title">
+                            Типография
+                        </h1>
+                        <p class="hero__subtitle">
+                            <span class="b">ООО ИПК "Лазурь"</span> — современная типография с 29-летним опытом
+                        </p>
+                        <p class="hero__descr">
+                            Мы предлагаем <span class="b">высококлассные полиграфические услуги</span>, уделяя внимание каждому клиенту.
+                            От листовок до книг в твёрдом переплёте — реализуем любые задачи с использованием современного оборудования.
+                        </p>
+                        <a href="#order" class="hero__btn">
+                            Сделать заказ
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <!-- Правая колонка: карточки преимуществ -->
+                    <div class="hero__content-right">
+                        <div class="hero__features">
+                            <!-- Карточка 1: Собственное производство -->
+                            <div class="hero__feature-card">
+                                <div class="hero__feature-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M3 21V9C3 8.46957 3.21071 7.96086 3.58579 7.58579C3.96086 7.21071 4.46957 7 5 7H19C19.5304 7 20.0391 7.21071 20.4142 7.58579C20.7893 7.96086 21 8.46957 21 9V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M3 9L12 2L21 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M12 22V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
                                 </div>
+                                <h3 class="hero__feature-title">Собственное производство</h3>
+                                <p class="hero__feature-desc">Полный цикл печати на современном оборудовании</p>
                             </div>
-                            <div class="hero__swiper-pagination-staff swiper-pagination-staff"></div>
-                        </div>
-                        <div class="hero__right">
-                            <div class="hero__right-cnt swiper">
-                                <div class="swiper-wrapper">
-                                    <div class="hero__news-slide swiper-slide">
-                                        <a href="news11.html" class="hero__news-content">
-                                            <div class="hero__news-img">
-                                                <img loading="lazy" src="images/img/news/news11-img-9.jpg"
-                                                    alt="Корпоративный календарь" class="card__img">
-                                            </div>
-                                            <div class="hero__news-text">
-                                                <div class="hero__news-subtitle">Завершение проекта: Корпоративный
-                                                    календарь ИПК Лазурь готов!</div>
-                                                <time class="news__date hero__news-date"
-                                                    datetime="2024-12-26">26 декабря 2024</time>
-                                                <button class="hero__btn-news">Подробнее</button>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="hero__news-slide swiper-slide">
-                                        <a href="news10.html" class="hero__news-content">
-                                            <div class="hero__news-img">
-                                                <img loading="lazy" src="images/img/news/news10-img-3.jpg"
-                                                    alt="Выставка в шанхае" class="card__img">
-                                            </div>
-                                            <div class="hero__news-text">
-                                                <div class="hero__news-subtitle">Успешное участие в выставке упаковки в
-                                                    Шанхае</div>
-                                                <time class="news__date hero__news-date" datetime="2024-12-24">24
-                                                    декабря 2024</time>
-                                                <button class="hero__btn-news">Подробнее</button>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="hero__news-slide swiper-slide">
-                                        <a href="news5.html" class="hero__news-content">
-                                            <div class="hero__news-img">
-                                                <img loading="lazy" src="images/img/news/news5-img-1.jpg"
-                                                    alt="фальцевальная машина" class="card__img">
-                                            </div>
-                                            <div class="hero__news-text">
-                                                <div class="hero__news-subtitle">В типографию пришла новая фальцевальная
-                                                    машина!</div>
-                                                <time class="news__date hero__news-date" datetime="2024-11-21">21 ноября
-                                                    2024</time>
-                                                <button class="hero__btn-news">Подробнее</button>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="hero__news-slide swiper-slide">
-                                        <a href="news8.html" class="hero__news-content">
-                                            <div class="hero__news-img">
-                                                <img loading="lazy" src="images/img/news/news8-img-1.jpg"
-                                                    alt="Автоматический пресс" class="card__img">
-                                            </div>
-                                            <div class="hero__news-text">
-                                                <div class="hero__news-subtitle">Автоматический пресс для плоской
-                                                    высечки MHK</div>
-                                                <time class="news__date hero__news-date" datetime="2024-12-4">4 декабря
-                                                    2024</time>
-                                                <button class="hero__btn-news">Подробнее</button>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="hero__news-slide swiper-slide">
-                                        <a href="news4.html" class="hero__news-content">
-                                            <div class="hero__news-img">
-                                                <img loading="lazy" src="images/img/partners/SP_02.png"
-                                                    alt="Новые горизонты с клубом «Прорыв»" class="card__img">
-                                            </div>
-                                            <div class="hero__news-text">
-                                                <div class="hero__news-subtitle">Новости нашей типографии: Новые
-                                                    горизонты с клубом «Прорыв»</div>
-                                                <time class="news__date hero__news-date" datetime="2024-11-14">14 ноября
-                                                    2024</time>
-                                                <button class="hero__btn-news">Подробнее</button>
-                                            </div>
-                                        </a>
-                                    </div>
+
+                            <!-- Карточка 2: 15 лет опыта -->
+                            <div class="hero__feature-card">
+                                <div class="hero__feature-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                        <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
                                 </div>
-                                <div class="hero__swiper-pagination-news swiper-pagination-news"></div>
+                                <h3 class="hero__feature-title">29 лет опыта</h3>
+                                <p class="hero__feature-desc">Успешно выполняем заказы с 1997 года</p>
+                            </div>
+
+                            <!-- Карточка 3: Современное оборудование -->
+                            <div class="hero__feature-card">
+                                <div class="hero__feature-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+                                        <path d="M9 9H15V15H9V9Z" fill="currentColor"/>
+                                        <path d="M9 1H5C3.89543 1 3 1.89543 3 3V7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                        <path d="M15 1H19C20.1046 1 21 1.89543 21 3V7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                        <path d="M9 23H5C3.89543 23 3 22.1046 3 21V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                        <path d="M15 23H19C20.1046 23 21 22.1046 21 21V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </div>
+                                <h3 class="hero__feature-title">Современное оборудование</h3>
+                                <p class="hero__feature-desc">Высокое качество печати и быстрое выполнение</p>
+                            </div>
+
+                            <!-- Карточка 4: Работаем по РФ -->
+                            <div class="hero__feature-card">
+                                <div class="hero__feature-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                        <path d="M2 12H22" stroke="currentColor" stroke-width="2"/>
+                                        <path d="M12 2C14.5013 4.73835 15.9228 8.29203 16 12C15.9228 15.708 14.5013 19.2616 12 22C9.49872 19.2616 8.07725 15.708 8 12C8.07725 8.29203 9.49872 4.73835 12 2Z" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                </div>
+                                <h3 class="hero__feature-title">Работаем по РФ</h3>
+                                <p class="hero__feature-desc">Доставка готовой продукции по всей России</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <a class="hero__btn hero__btn--animation btn-reset">Сделать заказ</a>
             </div>
         </section>
         <section class="work">
