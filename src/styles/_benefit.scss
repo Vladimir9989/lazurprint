@@ -157,7 +157,7 @@
 
     &__right-cnt {
         width: 100%;
-        height: 300px;
+        height: 360px;
 
         @include md {
             height: 210px;
@@ -208,6 +208,7 @@
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         border: 1px solid rgba(62, 119, 251, 0.1);
         margin-bottom: 15px;
+        flex-grow: 1 !important;
         
         &:hover {
             transform: translateX(10px);
