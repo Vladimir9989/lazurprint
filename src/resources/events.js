@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
             },
-            slidesPerView: 4,
+            slidesPerView: 1,
             spaceBetween: 20,
             breakpoints: {
                 768: {
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
             },
-            slidesPerView: 4,
+            slidesPerView: 1,
             spaceBetween: 20,
             breakpoints: {
                 768: {
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
             },
-            slidesPerView: 4,
+            slidesPerView: 1,
             spaceBetween: 20,
             breakpoints: {
                 768: {
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
             },
-            slidesPerView: 4,
+            slidesPerView: 1,
             spaceBetween: 20,
             breakpoints: {
                 768: {
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
             },
-            slidesPerView: 4,
+            slidesPerView: 1,
             spaceBetween: 20,
             breakpoints: {
                 768: {
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
             },
-            slidesPerView: 4,
+            slidesPerView: 1,
             spaceBetween: 20,
             breakpoints: {
                 768: {
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
             },
-            slidesPerView: 4,
+            slidesPerView: 1,
             spaceBetween: 20,
             breakpoints: {
                 768: {
@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
             },
-            slidesPerView: 4,
+            slidesPerView: 1,
             spaceBetween: 20,
             breakpoints: {
                 768: {
@@ -229,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
             },
-            slidesPerView: 4,
+            slidesPerView: 1,
             spaceBetween: 20,
             breakpoints: {
                 768: {
@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
             },
-            slidesPerView: 4,
+            slidesPerView: 1,
             spaceBetween: 20,
             breakpoints: {
                 768: {
@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
             },
-            slidesPerView: 4,
+            slidesPerView: 1,
             spaceBetween: 20,
             breakpoints: {
                 768: {
@@ -310,7 +310,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
             },
-            slidesPerView: 4,
+            slidesPerView: 1,
             spaceBetween: 20,
             breakpoints: {
                 768: {
@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
             },
-            slidesPerView: 4,
+            slidesPerView: 1,
             spaceBetween: 20,
             breakpoints: {
                 768: {
@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
             },
-            slidesPerView: 4,
+            slidesPerView: 1,
             spaceBetween: 20,
             breakpoints: {
                 768: {
@@ -529,6 +529,10 @@ document.addEventListener('DOMContentLoaded', function() {
     images.forEach(img => {
         img.addEventListener('click', function(e) {
             e.stopPropagation();
+            // Не открываем фото-модалку для видео-заглушек
+            if (e.target.closest('.events__video-thumb')) {
+                return;
+            }
             const sliderId = this.getAttribute('data-slider');
             const index = parseInt(this.getAttribute('data-index'), 10);
             
@@ -546,6 +550,49 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
+    });
+
+    // Переменные для видео-модалки
+    const videoModal = document.getElementById('eventsVideoModal');
+    const videoPlayer = document.getElementById('eventsVideoPlayer');
+
+    // Открытие видео при клике на заглушку
+    document.querySelectorAll('.events__video-thumb').forEach(function(thumb) {
+        thumb.addEventListener('click', function(e) {
+            // Не открываем фото-модалку при клике на видео-заглушку
+            e.stopPropagation();
+            
+            const videoSrc = this.getAttribute('data-video');
+            videoPlayer.src = videoSrc;
+            videoModal.classList.add('events__modal--open');
+            document.body.style.overflow = 'hidden';
+            videoPlayer.play();
+        });
+    });
+
+    // Закрытие видео-модалки
+    function closeVideoModal() {
+        videoModal.classList.remove('events__modal--open');
+        document.body.style.overflow = '';
+        videoPlayer.pause();
+        videoPlayer.src = '';
+    }
+
+    // Закрытие по крестику
+    videoModal.querySelector('.events__modal-close').addEventListener('click', closeVideoModal);
+
+    // Закрытие по клику на фон (пустое место вокруг видео)
+    videoModal.addEventListener('click', function(e) {
+        if (e.target === videoModal || e.target.classList.contains('events__video-container')) {
+            closeVideoModal();
+        }
+    });
+
+    // Закрытие по Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && videoModal.classList.contains('events__modal--open')) {
+            closeVideoModal();
+        }
     });
 
     // Обработчик клика по кнопке закрытия
