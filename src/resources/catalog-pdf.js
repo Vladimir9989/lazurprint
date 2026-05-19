@@ -54,8 +54,66 @@
         });
     }
 
-    async function generatePdf(button) {
+    function init() {
+        console.log('=== ИНИЦИАЛИЗАЦИЯ PDF-КНОПОК ===');
+        document.querySelectorAll('.catalog__pdf-btn[data-initialized]').forEach(b => b.remove());
+        
+        const sections = document.querySelectorAll('.catalog__section');
+        console.log('Найдено секций:', sections.length);
+        
+        sections.forEach(section => {
+            // Ищем все списки товаров в секции
+            const lists = section.querySelectorAll('.catalog__list');
+            
+            lists.forEach(list => {
+                const itemCount = list.querySelectorAll('.catalog-item').length;
+                if (itemCount === 0) return;
+                
+                // Ищем заголовок ПЕРЕД этим списком
+                let titleEl = list.previousElementSibling;
+                let categoryName = '';
+                
+                // Проверяем, является ли предыдущий элемент заголовком
+                if (titleEl && (titleEl.classList.contains('catalog__subtitle') ||
+                               titleEl.classList.contains('catalog__subtitle--style') ||
+                               titleEl.tagName === 'H2')) {
+                    // Заголовок найден
+                    if (titleEl.classList.contains('catalog__subtitle--style')) {
+                        const span = titleEl.querySelector('span');
+                        categoryName = span ? span.textContent.trim() : titleEl.textContent.trim();
+                    } else {
+                        categoryName = titleEl.textContent.trim();
+                    }
+                } else {
+                    // Заголовка нет — берём из атрибута секции
+                    categoryName = section.getAttribute('data-category-name') || 'Каталог';
+                    titleEl = null; // Заголовка нет
+                }
+                
+                console.log('Добавляю кнопку для:', categoryName, 'товаров:', itemCount);
+                
+                const btn = document.createElement('button');
+                btn.className = 'catalog__pdf-btn';
+                btn.setAttribute('data-initialized', 'true');
+                btn.setAttribute('data-category-name', categoryName);
+                btn.style.cssText = 'display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:#5da5db;color:white;border:none;border-radius:6px;font-size:13px;cursor:pointer;margin:5px 0 10px 0;';
+                btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M14 2H6C4.9 2 4 2.9 4 4v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6z" stroke="currentColor" stroke-width="2"/><path d="M14 2v6h6" stroke="currentColor" stroke-width="2"/><path d="M8 13h8" stroke="currentColor" stroke-width="2"/></svg> Скачать PDF';
+                
+                btn.addEventListener('click', function() {
+                    generatePdf(btn, list, categoryName);
+                });
+                
+                // Вставляем кнопку перед списком
+                list.parentNode.insertBefore(btn, list);
+            });
+        });
+        
+        console.log('=== ИНИЦИАЛИЗАЦИЯ ЗАВЕРШЕНА ===');
+    }
+
+    async function generatePdf(button, productsList, categoryName) {
         console.log('=== НАЧАЛО ГЕНЕРАЦИИ PDF ===');
+        console.log('Категория:', categoryName);
         
         if (typeof pdfMake === 'undefined') {
             console.error('pdfMake не найден');
@@ -63,15 +121,7 @@
             return;
         }
         
-        const titleEl = button.previousElementSibling;
-        if (!titleEl || !titleEl.classList.contains('catalog__subtitle')) {
-            alert('Ошибка: не найден заголовок категории');
-            return;
-        }
-        const categoryName = titleEl.textContent.trim();
-        
-        const list = button.nextElementSibling;
-        if (!list || !list.classList.contains('catalog__list')) {
+        if (!productsList || !productsList.classList.contains('catalog__list')) {
             alert('Ошибка: не найден список товаров');
             return;
         }
@@ -81,7 +131,7 @@
         button.disabled = true;
         
         try {
-            const items = list.querySelectorAll('.catalog-item');
+            const items = productsList.querySelectorAll('.catalog-item');
             const products = [];
             
             for (const item of items) {
@@ -95,7 +145,6 @@
                 
                 const cardContent = [];
                 
-                // Изображение с отступами
                 if (dataUrl) {
                     cardContent.push({
                         image: dataUrl,
@@ -114,7 +163,6 @@
                     });
                 }
                 
-                // Название с отступами
                 cardContent.push({
                     text: name.length > 50 ? name.substring(0, 47) + '...' : name,
                     fontSize: 8,
@@ -123,29 +171,11 @@
                     lineHeight: 1.2
                 });
                 
-                // Цена и артикул разнесены по краям
                 cardContent.push({
                     columns: [
-                        {
-                            text: price,
-                            fontSize: 9,
-                            bold: true,
-                            color: '#5da5db',
-                            width: 'auto',
-                            margin: [5, 0, 0, 0]
-                        },
-                        {
-                            text: '',
-                            width: '*'
-                        },
-                        {
-                            text: article,
-                            fontSize: 7,
-                            color: '#999',
-                            alignment: 'right',
-                            width: 'auto',
-                            margin: [0, 0, 5, 0]
-                        }
+                        { text: price, fontSize: 9, bold: true, color: '#5da5db', width: 'auto', margin: [5, 0, 0, 0] },
+                        { text: '', width: '*' },
+                        { text: article, fontSize: 7, color: '#999', alignment: 'right', width: 'auto', margin: [0, 0, 5, 0] }
                     ],
                     margin: [0, 2, 0, 0]
                 });
@@ -178,13 +208,12 @@
             }
             
             const content = [];
-            
             content.push({ text: categoryName, fontSize: 14, bold: true, color: '#5da5db', margin: [0, 0, 0, 5] });
             content.push({ canvas: [{ type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 1, lineColor: '#5da5db' }], margin: [0, 0, 0, 10] });
             content.push({ table: { widths: ['*', '*', '*'], body: tableBody }, layout: 'noBorders', margin: [0, 0, 0, 10] });
             content.push({ text: 'Цены актуальны на ' + getCurrentDate() + '. Сгенерировано в типографии Лазурь', fontSize: 7, color: '#666', alignment: 'center', margin: [0, 10, 0, 0] });
             
-            const docDefinition = { pageSize: 'A4', pageMargins: [30, 30, 30, 30], content: content, defaultStyle: { font: 'Roboto' } };
+            const docDefinition = { pageSize: 'A4', pageMargins: [20, 20, 20, 20], content: content, defaultStyle: { font: 'Roboto' } };
             
             pdfMake.createPdf(docDefinition).download(generateFileName(categoryName));
             console.log('=== PDF СОХРАНЁН ===');
@@ -196,30 +225,6 @@
             button.innerHTML = origText;
             button.disabled = false;
         }
-    }
-
-    function init() {
-        console.log('=== ИНИЦИАЛИЗАЦИЯ PDF-КНОПОК ===');
-        document.querySelectorAll('.catalog__pdf-btn[data-initialized]').forEach(b => b.remove());
-        const sections = document.querySelectorAll('.catalog__section');
-        sections.forEach(section => {
-            const subtitles = section.querySelectorAll('.catalog__subtitle');
-            subtitles.forEach(subtitle => {
-                const nextElement = subtitle.nextElementSibling;
-                if (nextElement && nextElement.classList.contains('catalog__list')) {
-                    const itemCount = nextElement.querySelectorAll('.catalog-item').length;
-                    if (itemCount === 0) return;
-                    const btn = document.createElement('button');
-                    btn.className = 'catalog__pdf-btn';
-                    btn.setAttribute('data-initialized','true');
-                    btn.style.cssText = 'display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:#5da5db;color:white;border:none;border-radius:6px;font-size:13px;cursor:pointer;margin:5px 0 10px 0;';
-                    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M14 2H6C4.9 2 4 2.9 4 4v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6z" stroke="currentColor" stroke-width="2"/><path d="M14 2v6h6" stroke="currentColor" stroke-width="2"/><path d="M8 13h8" stroke="currentColor" stroke-width="2"/></svg> Скачать PDF';
-                    btn.addEventListener('click', () => generatePdf(btn));
-                    subtitle.parentNode.insertBefore(btn, nextElement);
-                }
-            });
-        });
-        console.log('=== ИНИЦИАЛИЗАЦИЯ ЗАВЕРШЕНА ===');
     }
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
