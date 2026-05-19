@@ -524,3 +524,12 @@
 .events__video-modal .events__modal-close:hover {
     color: var(--events-accent, #c9a96e);
 }
+
+/* Стили для горизонтальных фото в слайдере моделей */
+.events__slider--models-horizontal .swiper-slide img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 8px;
+}

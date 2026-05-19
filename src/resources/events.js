@@ -325,6 +325,33 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Инициализация Swiper для слайдера Модели горизонтальные
+    if (document.querySelector('.events__slider--models-horizontal')) {
+        new Swiper('.events__slider--models-horizontal', {
+            loop: true,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev'
+            },
+            slidesPerView: 1,
+            spaceBetween: 20,
+            breakpoints: {
+                768: {
+                    slidesPerView: 2,
+                    spaceBetween: 20
+                },
+                1024: {
+                    slidesPerView: 2,
+                    spaceBetween: 30
+                }
+            }
+        });
+    }
+
     // Инициализация Swiper для слайдера Фуршет
     if (document.querySelector('.events__slider--banquet')) {
         new Swiper('.events__slider--banquet', {
