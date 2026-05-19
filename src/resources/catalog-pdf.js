@@ -95,26 +95,65 @@
                 
                 const cardContent = [];
                 
+                // Изображение с отступами
                 if (dataUrl) {
-                    cardContent.push({ image: dataUrl, width: 160, height: 120, alignment: 'center', margin: [0, 0, 0, 3] });
+                    cardContent.push({
+                        image: dataUrl,
+                        width: 150,
+                        height: 110,
+                        alignment: 'center',
+                        margin: [5, 5, 5, 3]
+                    });
                 } else {
-                    cardContent.push({ text: 'Нет фото', fontSize: 10, color: '#999', alignment: 'center', margin: [0, 20, 0, 20] });
+                    cardContent.push({
+                        text: 'Нет фото',
+                        fontSize: 10,
+                        color: '#999',
+                        alignment: 'center',
+                        margin: [0, 30, 0, 30]
+                    });
                 }
                 
-                cardContent.push({ text: name.length > 55 ? name.substring(0, 52) + '...' : name, fontSize: 8, color: '#333', margin: [0, 0, 0, 3] });
+                // Название с отступами
+                cardContent.push({
+                    text: name.length > 50 ? name.substring(0, 47) + '...' : name,
+                    fontSize: 8,
+                    color: '#333',
+                    margin: [5, 0, 5, 3],
+                    lineHeight: 1.2
+                });
                 
+                // Цена и артикул разнесены по краям
                 cardContent.push({
                     columns: [
-                        { text: price, fontSize: 9, bold: true, color: '#5da5db', width: 'auto' },
-                        { text: article, fontSize: 7, color: '#999', alignment: 'right', width: 'auto' }
+                        {
+                            text: price,
+                            fontSize: 9,
+                            bold: true,
+                            color: '#5da5db',
+                            width: 'auto',
+                            margin: [5, 0, 0, 0]
+                        },
+                        {
+                            text: '',
+                            width: '*'
+                        },
+                        {
+                            text: article,
+                            fontSize: 7,
+                            color: '#999',
+                            alignment: 'right',
+                            width: 'auto',
+                            margin: [0, 0, 5, 0]
+                        }
                     ],
-                    margin: [0, 0, 0, 0]
+                    margin: [0, 2, 0, 0]
                 });
                 
                 products.push({
                     stack: cardContent,
                     width: '33%',
-                    margin: [3, 3, 3, 3],
+                    margin: [4, 4, 4, 4],
                     border: [true, true, true, true],
                     borderColor: ['#e0e0e0', '#e0e0e0', '#e0e0e0', '#e0e0e0'],
                     fillColor: '#ffffff',
@@ -145,7 +184,7 @@
             content.push({ table: { widths: ['*', '*', '*'], body: tableBody }, layout: 'noBorders', margin: [0, 0, 0, 10] });
             content.push({ text: 'Цены актуальны на ' + getCurrentDate() + '. Сгенерировано в типографии Лазурь', fontSize: 7, color: '#666', alignment: 'center', margin: [0, 10, 0, 0] });
             
-            const docDefinition = { pageSize: 'A4', pageMargins: [15, 15, 15, 15], content: content, defaultStyle: { font: 'Roboto' } };
+            const docDefinition = { pageSize: 'A4', pageMargins: [30, 30, 30, 30], content: content, defaultStyle: { font: 'Roboto' } };
             
             pdfMake.createPdf(docDefinition).download(generateFileName(categoryName));
             console.log('=== PDF СОХРАНЁН ===');
