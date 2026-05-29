@@ -43,12 +43,16 @@ document.addEventListener('DOMContentLoaded', function() {
             slidesPerView: 1,
             spaceBetween: 20,
             breakpoints: {
-                768: {
+                370: {
                     slidesPerView: 2,
                     spaceBetween: 20
                 },
-                1024: {
+                768: {
                     slidesPerView: 3,
+                    spaceBetween: 20
+                },
+                1024: {
+                    slidesPerView: 4,
                     spaceBetween: 20
                 }
             }
@@ -82,32 +86,94 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Инициализация Swiper для слайдера музея Endograund
-    if (document.querySelector('.events__slider--endograund')) {
-        new Swiper('.events__slider--endograund', {
-            loop: true,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true
+    // Массив с информацией о картинах для слайдера endograund
+    const endograundPaintings = [
+        'Гущина Дарья Алексеевна — искусствовед, сотрудница музея Андеграунда',
+        'Полисский Николай (р. 1957). Общая тельняшка. 1996. Холст, масло. Санкт-Петербург',
+        'Юрий Галецкий (р. 1944). Кладбище кораблей. 1977. Холст, масло. Санкт-Петербург',
+        'Владимир Стерлигов (1904–1973). Ангел. 1954. Бумага, темпера. Санкт-Петербург',
+        'Фигурина Елена (р. 1955). Красная фигура. 2000. Холст, масло. Санкт-Петербург',
+        'Булатов Эрик (1933–2025). Слава КПСС. 1994. Цветной эстамп. Москва',
+        'Зверев Анатолий (1931–1986). Кони. 1984. Бумага, гуашь. Москва',
+        'Немухин Владимир (1925–2016). Бубновый валет. 1971. Бумага, акварель. Москва',
+        'Рабин Оскар (1928–2018). Пейзаж с мусором. 1990. Холст, масло, коллаж. Москва',
+        'Басанец Валерий (р. 1941). Сон. 1992. Холст, масло. Одесса',
+        'Рахманин Евгений (р. 1947). Одесский пейзаж. 1980-е гг. Бумага, акварель. Одесса',
+        'Арт-группа «Картинник». Крепче заваривай ча.., иначе – не отвеча...ю! 1990-е гг. Фанера, масло. Екатеринбург',
+        'Видунов Сергей (1946–2004). На пожар. 1999. Бумага, смешанная техника. Екатеринбург',
+        'Гаврилов Валерий (1948–1982). Рафаэль. 1970-е гг. Бумага, аэрограф. Екатеринбург',
+        'Гаврилов Валерий (1948–1982). Демон. 1970-е гг. Оргалит, масло. Екатеринбург',
+        'Дьяченко Валерий (р. 1939). Наша марка. 1980-е гг. Картон, масло. Екатеринбург',
+        'Еловой Олег (1967–2001). Кошки. 1997. Холст, масло. Екатеринбург',
+        'Жуков Владимир (1941–2023). Мадонна. 1977. Металл, эмаль. Екатеринбург',
+        'Лебедев Алексей (1938–2017). Ван Гог. 2000. Бумага, гуашь. Екатеринбург',
+        'Махотин Виктор (1946–2002). Утренняя звезда. 1996. Холст, масло. Екатеринбург',
+        'Павлов Валерий (р. 1949). Цветы проходящему. 1978. Холст, масло. Екатеринбург'
+    ];
+
+    const endograundInfoEl = document.getElementById('endograundInfo');
+    const endograundAuthorEl = endograundInfoEl ? endograundInfoEl.querySelector('.events__painting-author') : null;
+
+    // Инициализация слайдера endograund с обновлением подписи
+    // Инициализация слайдера endograund с обновлением подписи
+if (document.querySelector('.events__slider--endograund')) {
+    const endograundSwiper = new Swiper('.events__slider--endograund', {
+        loop: true,
+        centeredSlides: false, // Отключаем центрирование слайдов
+        pagination: {
+            el: '.events__slider--endograund .swiper-pagination',
+            clickable: true
+        },
+        navigation: {
+            nextEl: '.events__slider--endograund .swiper-button-next',
+            prevEl: '.events__slider--endograund .swiper-button-prev'
+        },
+        slidesPerView: 1,
+        spaceBetween: 20,
+        breakpoints: {
+            768: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+                centeredSlides: false
             },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev'
-            },
-            slidesPerView: 1,
-            spaceBetween: 20,
-            breakpoints: {
-                768: {
-                    slidesPerView: 2,
-                    spaceBetween: 20
-                },
-                1024: {
-                    slidesPerView: 3,
-                    spaceBetween: 20
-                }
+            1024: {
+                slidesPerView: 3,
+                spaceBetween: 20,
+                centeredSlides: false
             }
-        });
+        },
+        on: {
+            init: function() {
+                updateEndograundInfo(this.realIndex);
+                adjustSlidePosition(this); // Вызываем функцию позиционирования
+            },
+            slideChange: function() {
+                updateEndograundInfo(this.realIndex);
+                adjustSlidePosition(this); // Вызываем при смене слайда
+            },
+            resize: function() {
+                adjustSlidePosition(this); // Вызываем при изменении размера окна
+            }
+        }
+    });
+
+    // Функция для корректировки позиции слайда
+    function adjustSlidePosition(swiper) {
+        if (window.innerWidth < 768) {
+            const activeSlide = swiper.slides[swiper.activeIndex];
+            if (activeSlide) {
+                activeSlide.style.transform = 'translateX(0)';
+                activeSlide.style.marginLeft = '0';
+            }
+        }
     }
+
+    function updateEndograundInfo(index) {
+        if (endograundAuthorEl) {
+            endograundAuthorEl.textContent = endograundPaintings[index] || '';
+        }
+    }
+}
 
     // Инициализация Swiper для слайдера Ирбитского музея
     if (document.querySelector('.events__slider--irbit')) {
@@ -178,12 +244,16 @@ document.addEventListener('DOMContentLoaded', function() {
             slidesPerView: 1,
             spaceBetween: 20,
             breakpoints: {
-                768: {
+                370: {
                     slidesPerView: 2,
                     spaceBetween: 20
                 },
-                1024: {
+                768: {
                     slidesPerView: 3,
+                    spaceBetween: 20
+                },
+                1024: {
+                    slidesPerView: 4,
                     spaceBetween: 20
                 }
             }
@@ -232,12 +302,16 @@ document.addEventListener('DOMContentLoaded', function() {
             slidesPerView: 1,
             spaceBetween: 20,
             breakpoints: {
-                768: {
+                370: {
                     slidesPerView: 2,
                     spaceBetween: 20
                 },
-                1024: {
+                768: {
                     slidesPerView: 3,
+                    spaceBetween: 20
+                },
+                1024: {
+                    slidesPerView: 4,
                     spaceBetween: 20
                 }
             }
