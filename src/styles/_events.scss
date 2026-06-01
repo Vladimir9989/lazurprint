@@ -633,3 +633,59 @@
     padding: 3px;
     border: 3px solid var(--events-accent, #c9a96e);
 }
+
+/* Архив фотографий */
+.events__photo-archive {
+    margin: 60px 0;
+    padding: 40px;
+    background: #f8f8f8;
+    border-radius: 12px;
+    text-align: center;
+}
+.events__password-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 20px 0 10px;
+    flex-wrap: wrap;
+}
+.events__password-input {
+    padding: 12px 18px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    width: 250px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+.events__password-input:focus {
+    border-color: var(--events-accent, #c9a96e);
+}
+.events__password-btn {
+    padding: 12px 28px;
+    background: var(--events-accent, #c9a96e);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.events__password-btn:hover {
+    background: #b8924e;
+}
+.events__password-error {
+    display: none;
+    color: #d32f2f;
+    font-size: 14px;
+    width: 100%;
+    margin-top: 8px;
+}
+.events__password-error--visible {
+    display: block;
+}
+.events__archive-link {
+    margin-top: 20px;
+}

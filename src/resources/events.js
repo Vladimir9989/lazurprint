@@ -764,4 +764,35 @@ if (document.querySelector('.events__slider--endograund')) {
             closeModal();
         }
     });
+
+    // Проверка пароля для архива фотографий
+    const photoArchiveBtn = document.getElementById('photoArchiveBtn');
+    const photoArchivePassword = document.getElementById('photoArchivePassword');
+    const photoArchiveError = document.getElementById('photoArchiveError');
+    const photoArchiveLink = document.getElementById('photoArchiveLink');
+
+    if (photoArchiveBtn) {
+        photoArchiveBtn.addEventListener('click', function() {
+            const password = photoArchivePassword.value;
+            
+            if (password === 'Lazur29') {
+                photoArchiveError.classList.remove('events__password-error--visible');
+                photoArchiveLink.style.display = 'block';
+            } else {
+                photoArchiveError.classList.add('events__password-error--visible');
+                photoArchiveLink.style.display = 'none';
+            }
+        });
+    }
+
+    // Также открывать при нажатии Enter в поле ввода
+    if (photoArchivePassword) {
+        photoArchivePassword.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                if (photoArchiveBtn) {
+                    photoArchiveBtn.click();
+                }
+            }
+        });
+    }
 });
