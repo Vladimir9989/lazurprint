@@ -121,10 +121,18 @@
 .events__slider {
     margin: 30px 0;
     padding-bottom: 35px;
+    overflow: hidden;
+}
+
+.events__slider .swiper-wrapper {
+    align-items: flex-start;
 }
 
 .events__slider .swiper-slide {
     height: auto;
+    display: flex !important;
+    align-items: flex-start;
+    justify-content: flex-start;
 }
 
 .events__slider .swiper-slide img {
@@ -134,65 +142,46 @@
     display: block;
 }
 
-.events__slider--endograund .swiper-slide {
-    width: auto !important;
-    flex-shrink: 0;
+/* Слайдеры с изображениями разной ширины */
+.events__slider--endograund,
+.events__slider--installations,
+.events__slider--women,
+.events__slider--workshops,
+.events__slider--lazur-collection,
+.events__slider--noskova,
+.events__slider--vyatkin,
+.events__slider--banquet,
+.events__slider--guests {
+    .swiper-slide {
+        width: auto !important;
+        flex-shrink: 0;
+        max-width: calc(100% - 20px);
+        
+        @media (min-width: 768px) {
+            max-width: calc(50% - 10px);
+        }
+        
+        @media (min-width: 1024px) {
+            max-width: calc(33.333% - 13.333px);
+        }
+    }
+    
+    .swiper-slide img {
+        max-height: 350px;
+        width: auto !important;
+        object-fit: contain;
+    }
 }
 
-.events__slider--endograund .swiper-slide img {
-    max-height: 350px;
-    width: auto !important;
-    object-fit: contain;
-}
-.events__slider--installations .swiper-slide {
-    width: auto !important;
-    flex-shrink: 0;
-}
-
-.events__slider--installations .swiper-slide img {
-    max-height: 350px;
-    width: auto !important;
-    object-fit: contain;
-}
-.events__slider--women .swiper-slide {
-    width: auto !important;
-    flex-shrink: 0;
-}
-
-.events__slider--women .swiper-slide img {
-    max-height: 350px;
-    width: auto;
-    object-fit: contain;
-}
-.events__slider--workshops .swiper-slide {
-    width: auto !important;
-    flex-shrink: 0;
-}
-
-.events__slider--workshops .swiper-slide img {
-    max-height: 350px;
-    width: auto;
-    object-fit: contain;
-}
-.events__slider--lazur-collection .swiper-slide {
-    width: auto !important;
-    flex-shrink: 0;
-}
-
-.events__slider--lazur-collection .swiper-slide img {
-    max-height: 350px;
-    width: auto;
-    object-fit: contain;
-}
-.events__slider--noskova .swiper-slide {
-    width: auto !important;
-    flex-shrink: 0;
-}
-
-.events__slider--noskova .swiper-slide img {
-    max-height: 350px;
-    width: auto;
-    object-fit: contain;
+/* Особые настройки для слайдера endograund */
+.events__slider--endograund {
+    .swiper-wrapper {
+        justify-content: flex-start;
+    }
+    
+    .swiper-slide {
+        transition: transform 0.3s ease;
+    }
 }
 
 /* Slider navigation buttons */
@@ -640,53 +629,7 @@
 }
 
 /* Подсветка активного слайда */
-.events__slider--endograund .swiper-slide {
-    transition: border 0.3s;
-    border: 3px solid transparent;
-    border-radius: 8px;
-    box-sizing: border-box;
-}
-
 .events__slider--endograund .swiper-slide-active img {
     padding: 3px;
     border: 3px solid var(--events-accent, #c9a96e);
-}
-
-/* Исправление позиционирования активного слайда на мобильных */
-@media (max-width: 767px) {
-    .events__slider--endograund .swiper-slide {
-        display: flex;
-        justify-content: flex-start; /* Прижимаем содержимое влево */
-    }
-    
-    .events__slider--endograund .swiper-slide img {
-        margin-right: auto; /* Дополнительно прижимаем изображение влево */
-    }
-    
-    /* Убираем центрирование слайдов */
-    .events__slider--endograund .swiper-wrapper {
-        justify-content: flex-start;
-    }
-}
-
-/* Альтернативное решение - корректировка отступов */
-.events__slider--endograund .swiper-slide {
-    transition: border 0.3s;
-    border: 3px solid transparent;
-    border-radius: 8px;
-    box-sizing: border-box;
-    margin-right: 20px; /* Добавляем отступ справа вместо spaceBetween */
-}
-
-/* Убираем spaceBetween для мобильных через JS или медиа-запрос */
-@media (max-width: 767px) {
-    .events__slider--endograund {
-        padding-left: 0; /* Убираем внутренние отступы */
-    }
-    
-    /* Делаем слайды одинаковой ширины с контейнером */
-    .events__slider--endograund .swiper-slide {
-        width: 100% !important;
-        margin-right: 0;
-    }
 }

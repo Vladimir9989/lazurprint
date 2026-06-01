@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             slidesPerView: 1,
             spaceBetween: 20,
+            centeredSlides: false,
+            slidesOffsetBefore: 0,
+            slidesOffsetAfter: 0,
             breakpoints: {
                 768: {
                     slidesPerView: 2,
@@ -40,19 +43,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
             },
-            slidesPerView: 1,
+            slidesPerView: 'auto',
             spaceBetween: 20,
+            centeredSlides: false,
+            slidesOffsetBefore: 0,
+            slidesOffsetAfter: 0,
             breakpoints: {
                 370: {
-                    slidesPerView: 2,
+                    slidesPerView: 'auto',
                     spaceBetween: 20
                 },
                 768: {
-                    slidesPerView: 3,
+                    slidesPerView: 'auto',
                     spaceBetween: 20
                 },
                 1024: {
-                    slidesPerView: 4,
+                    slidesPerView: 'auto',
                     spaceBetween: 20
                 }
             }
@@ -73,6 +79,9 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             slidesPerView: 1,
             spaceBetween: 20,
+            centeredSlides: false,
+            slidesOffsetBefore: 0,
+            slidesOffsetAfter: 0,
             breakpoints: {
                 768: {
                     slidesPerView: 2,
@@ -117,62 +126,46 @@ document.addEventListener('DOMContentLoaded', function() {
     // Инициализация слайдера endograund с обновлением подписи
     // Инициализация слайдера endograund с обновлением подписи
 if (document.querySelector('.events__slider--endograund')) {
-    const endograundSwiper = new Swiper('.events__slider--endograund', {
-        loop: true,
-        centeredSlides: false, // Отключаем центрирование слайдов
-        pagination: {
-            el: '.events__slider--endograund .swiper-pagination',
-            clickable: true
-        },
-        navigation: {
-            nextEl: '.events__slider--endograund .swiper-button-next',
-            prevEl: '.events__slider--endograund .swiper-button-prev'
-        },
-        slidesPerView: 1,
-        spaceBetween: 20,
-        breakpoints: {
-            768: {
-                slidesPerView: 2,
-                spaceBetween: 20,
-                centeredSlides: false
-            },
-            1024: {
-                slidesPerView: 3,
-                spaceBetween: 20,
-                centeredSlides: false
-            }
-        },
-        on: {
-            init: function() {
-                updateEndograundInfo(this.realIndex);
-                adjustSlidePosition(this); // Вызываем функцию позиционирования
-            },
-            slideChange: function() {
-                updateEndograundInfo(this.realIndex);
-                adjustSlidePosition(this); // Вызываем при смене слайда
-            },
-            resize: function() {
-                adjustSlidePosition(this); // Вызываем при изменении размера окна
-            }
-        }
-    });
+   const endograundSwiper = new Swiper('.events__slider--endograund', {
+       loop: true,
+       centeredSlides: false,
+       slidesOffsetBefore: 0,
+       slidesOffsetAfter: 0,
+       pagination: {
+           el: '.events__slider--endograund .swiper-pagination',
+           clickable: true
+       },
+       navigation: {
+           nextEl: '.events__slider--endograund .swiper-button-next',
+           prevEl: '.events__slider--endograund .swiper-button-prev'
+       },
+       slidesPerView: 'auto',
+       spaceBetween: 20,
+       breakpoints: {
+           768: {
+               slidesPerView: 'auto',
+               spaceBetween: 20
+           },
+           1024: {
+               slidesPerView: 'auto',
+               spaceBetween: 20
+           }
+       },
+       on: {
+           init: function() {
+               updateEndograundInfo(this.realIndex);
+           },
+           slideChange: function() {
+               updateEndograundInfo(this.realIndex);
+           }
+       }
+   });
 
-    // Функция для корректировки позиции слайда
-    function adjustSlidePosition(swiper) {
-        if (window.innerWidth < 768) {
-            const activeSlide = swiper.slides[swiper.activeIndex];
-            if (activeSlide) {
-                activeSlide.style.transform = 'translateX(0)';
-                activeSlide.style.marginLeft = '0';
-            }
-        }
-    }
-
-    function updateEndograundInfo(index) {
-        if (endograundAuthorEl) {
-            endograundAuthorEl.textContent = endograundPaintings[index] || '';
-        }
-    }
+   function updateEndograundInfo(index) {
+       if (endograundAuthorEl) {
+           endograundAuthorEl.textContent = endograundPaintings[index] || '';
+       }
+   }
 }
 
     // Инициализация Swiper для слайдера Ирбитского музея
@@ -206,6 +199,9 @@ if (document.querySelector('.events__slider--endograund')) {
     if (document.querySelector('.events__slider--women')) {
         new Swiper('.events__slider--women', {
             loop: true,
+            centeredSlides: false,
+            slidesOffsetBefore: 0,
+            slidesOffsetAfter: 0,
             pagination: {
                 el: '.swiper-pagination',
                 clickable: true
@@ -214,15 +210,15 @@ if (document.querySelector('.events__slider--endograund')) {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
             },
-            slidesPerView: 1,
+            slidesPerView: 'auto',
             spaceBetween: 20,
             breakpoints: {
                 768: {
-                    slidesPerView: 2,
+                    slidesPerView: 'auto',
                     spaceBetween: 20
                 },
                 1024: {
-                    slidesPerView: 3,
+                    slidesPerView: 'auto',
                     spaceBetween: 20
                 }
             }
@@ -233,6 +229,9 @@ if (document.querySelector('.events__slider--endograund')) {
     if (document.querySelector('.events__slider--workshops')) {
         new Swiper('.events__slider--workshops', {
             loop: true,
+            centeredSlides: false,
+            slidesOffsetBefore: 0,
+            slidesOffsetAfter: 0,
             pagination: {
                 el: '.swiper-pagination',
                 clickable: true
@@ -241,19 +240,19 @@ if (document.querySelector('.events__slider--endograund')) {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
             },
-            slidesPerView: 1,
+            slidesPerView: 'auto',
             spaceBetween: 20,
             breakpoints: {
                 370: {
-                    slidesPerView: 2,
+                    slidesPerView: 'auto',
                     spaceBetween: 20
                 },
                 768: {
-                    slidesPerView: 3,
+                    slidesPerView: 'auto',
                     spaceBetween: 20
                 },
                 1024: {
-                    slidesPerView: 4,
+                    slidesPerView: 'auto',
                     spaceBetween: 20
                 }
             }
@@ -291,6 +290,9 @@ if (document.querySelector('.events__slider--endograund')) {
     if (document.querySelector('.events__slider--lazur-collection')) {
         new Swiper('.events__slider--lazur-collection', {
             loop: true,
+            centeredSlides: false,
+            slidesOffsetBefore: 0,
+            slidesOffsetAfter: 0,
             pagination: {
                 el: '.swiper-pagination',
                 clickable: true
@@ -299,19 +301,19 @@ if (document.querySelector('.events__slider--endograund')) {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
             },
-            slidesPerView: 1,
+            slidesPerView: 'auto',
             spaceBetween: 20,
             breakpoints: {
                 370: {
-                    slidesPerView: 2,
+                    slidesPerView: 'auto',
                     spaceBetween: 20
                 },
                 768: {
-                    slidesPerView: 3,
+                    slidesPerView: 'auto',
                     spaceBetween: 20
                 },
                 1024: {
-                    slidesPerView: 4,
+                    slidesPerView: 'auto',
                     spaceBetween: 20
                 }
             }
@@ -322,6 +324,9 @@ if (document.querySelector('.events__slider--endograund')) {
     if (document.querySelector('.events__slider--noskova')) {
         new Swiper('.events__slider--noskova', {
             loop: true,
+            centeredSlides: false,
+            slidesOffsetBefore: 0,
+            slidesOffsetAfter: 0,
             pagination: {
                 el: '.swiper-pagination',
                 clickable: true
@@ -330,15 +335,15 @@ if (document.querySelector('.events__slider--endograund')) {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
             },
-            slidesPerView: 1,
+            slidesPerView: 'auto',
             spaceBetween: 20,
             breakpoints: {
                 768: {
-                    slidesPerView: 2,
+                    slidesPerView: 'auto',
                     spaceBetween: 20
                 },
                 1024: {
-                    slidesPerView: 3,
+                    slidesPerView: 'auto',
                     spaceBetween: 20
                 }
             }
@@ -349,6 +354,9 @@ if (document.querySelector('.events__slider--endograund')) {
     if (document.querySelector('.events__slider--vyatkin')) {
         new Swiper('.events__slider--vyatkin', {
             loop: true,
+            centeredSlides: false,
+            slidesOffsetBefore: 0,
+            slidesOffsetAfter: 0,
             pagination: {
                 el: '.swiper-pagination',
                 clickable: true
@@ -357,15 +365,15 @@ if (document.querySelector('.events__slider--endograund')) {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
             },
-            slidesPerView: 1,
+            slidesPerView: 'auto',
             spaceBetween: 20,
             breakpoints: {
                 768: {
-                    slidesPerView: 2,
+                    slidesPerView: 'auto',
                     spaceBetween: 20
                 },
                 1024: {
-                    slidesPerView: 3,
+                    slidesPerView: 'auto',
                     spaceBetween: 20
                 }
             }
@@ -430,6 +438,9 @@ if (document.querySelector('.events__slider--endograund')) {
     if (document.querySelector('.events__slider--banquet')) {
         new Swiper('.events__slider--banquet', {
             loop: true,
+            centeredSlides: false,
+            slidesOffsetBefore: 0,
+            slidesOffsetAfter: 0,
             pagination: {
                 el: '.swiper-pagination',
                 clickable: true
@@ -438,15 +449,45 @@ if (document.querySelector('.events__slider--endograund')) {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
             },
-            slidesPerView: 1,
+            slidesPerView: 'auto',
             spaceBetween: 20,
             breakpoints: {
                 768: {
-                    slidesPerView: 2,
+                    slidesPerView: 'auto',
                     spaceBetween: 20
                 },
                 1024: {
-                    slidesPerView: 3,
+                    slidesPerView: 'auto',
+                    spaceBetween: 20
+                }
+            }
+        });
+    }
+
+    // Инициализация Swiper для слайдера Гости
+    if (document.querySelector('.events__slider--guests')) {
+        new Swiper('.events__slider--guests', {
+            loop: true,
+            centeredSlides: false,
+            slidesOffsetBefore: 0,
+            slidesOffsetAfter: 0,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev'
+            },
+            slidesPerView: 'auto',
+            spaceBetween: 20,
+            breakpoints: {
+                768: {
+                    slidesPerView: 'auto',
+                    spaceBetween: 20
+                },
+                1024: {
+                    slidesPerView: 'auto',
                     spaceBetween: 20
                 }
             }
