@@ -1,8 +1,8 @@
 .steps {
     overflow: hidden;
-    background: radial-gradient(86.02% 250.54% at 100% 50%, rgba(152, 219, 251, .4) 0%, rgba(18, 20, 34, 0) 100%), linear-gradient(0deg, rgba(24, 27, 43, .95), rgba(24, 27, 43, .95)), #3E77FB;
-    color: var(--color-white);
-    padding: 50px 0;
+    background: linear-gradient(180deg, #ffffff 0%, #f4f8ff 100%);
+    color: var(--color-galaxy);
+    padding: 80px 0;
     @include md {
         padding: 50px 0;
     }
@@ -20,11 +20,14 @@
     }
     &__title {
         display: inline-block;
-        font-weight: 700;
+        font-weight: 800;
         font-size: 36px;
         line-height: 140%;
         margin: 0;
         margin-bottom: 25px;
+        color: var(--color-galaxy);
+        text-transform: uppercase;
+        letter-spacing: 1px;
         @include md {
             font-size: 24px;
         }
@@ -40,27 +43,40 @@
             position: absolute;
             width: 75%;
             height: 2px;
-            border-bottom: 2px dashed var(--color-white);
-            opacity: 0.2;
-            top: 22px;
+            border-bottom: 2px dashed #3E77FB;
+            opacity: 0.3;
+            top: 26px;
             left: 75px;
             right: 55px;
         }
     }
 
+    &__subtitle {
+        font-weight: 700;
+        font-size: 18px;
+        margin-bottom: 8px;
+        color: var(--color-galaxy);
+    }
+
+    &__descr {
+        color: var(--color-dim-gray);
+        line-height: 1.5;
+    }
+
     &__num {
         position: relative;
         margin-bottom: 20px;
-        color: var(--color-nero);
+        color: var(--color-white);
         font-weight: 700;
-        font-size: 28px;
-        background: var(--color-white);
+        font-size: 26px;
+        background: linear-gradient(135deg, #3E77FB 0%, #6de2eb 100%);
+        box-shadow: 0 6px 16px rgba(62, 119, 251, 0.3);
         width: 54px;
         height: 54px;
         border-radius: 50%;
         line-height: 54px;
         text-align: center;
-        
+
     }
     &__btn-cnt {
         // position: absolute;
@@ -76,6 +92,10 @@
 .swiper-button-next5 {
     position: static;
     width: 50px;
-    height: 50px
+    height: 50px;
+
+    & svg path {
+        stroke: #3E77FB;
+    }
 }
 

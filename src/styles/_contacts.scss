@@ -5,10 +5,10 @@ $contacts-bg: #f8f9fa;
 $contacts-card-bg: #ffffff;
 $contacts-text-primary: #1a1a1a;
 $contacts-text-secondary: #555555;
-$contacts-accent: #95CC29;
-$contacts-accent-dark: #7ab822;
+$contacts-accent: #3E77FB;
+$contacts-accent-dark: #1a56db;
 $contacts-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-$contacts-shadow-hover: 0 12px 40px rgba(149, 204, 41, 0.18);
+$contacts-shadow-hover: 0 12px 40px rgba(62, 119, 251, 0.18);
 $contacts-radius: 20px;
 $contacts-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -55,7 +55,7 @@ $contacts-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         transform: translateY(-50%);
         width: 6px;
         height: 100%;
-        background: linear-gradient(180deg, $contacts-accent 0%, #7ab822 100%);
+        background: linear-gradient(180deg, $contacts-accent 0%, #6de2eb 100%);
         border-radius: 3px;
     }
     
@@ -124,7 +124,7 @@ $contacts-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(90deg, $contacts-accent 0%, #7ab822 100%);
+        background: linear-gradient(90deg, $contacts-accent 0%, #6de2eb 100%);
         transform: scaleX(0);
         transform-origin: left;
         transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -247,7 +247,7 @@ $contacts-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     width: 70px;
     height: 70px;
     margin-bottom: 10px;
-    filter: drop-shadow(0 4px 10px rgba(149, 204, 41, 0.3));
+    filter: drop-shadow(0 4px 10px rgba(62, 119, 251, 0.3));
     transition: $contacts-transition;
     
     // Делаем иконки цветными с использованием акцентного цвета
@@ -263,7 +263,7 @@ $contacts-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
 .contacts__link:hover .contacts__item-svg {
     transform: scale(1.1) rotate(5deg);
-    filter: drop-shadow(0 6px 15px rgba(149, 204, 41, 0.4));
+    filter: drop-shadow(0 6px 15px rgba(62, 119, 251, 0.4));
 }
 
 // Нижняя часть с картой и изображением
@@ -322,7 +322,7 @@ $contacts-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(135deg, rgba(149, 204, 41, 0.05) 0%, rgba(122, 184, 34, 0.05) 100%);
+        background: linear-gradient(135deg, rgba(62, 119, 251, 0.05) 0%, rgba(26, 86, 219, 0.05) 100%);
         pointer-events: none;
         z-index: 1;
     }
@@ -364,9 +364,9 @@ $contacts-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     //     right: 0;
     //     bottom: 0;
     //     background: linear-gradient(135deg, 
-    //         rgba(149, 204, 41, 0.15) 0%, 
-    //         rgba(122, 184, 34, 0.25) 50%,
-    //         rgba(149, 204, 41, 0.35) 100%);
+    //         rgba(62, 119, 251, 0.15) 0%, 
+    //         rgba(26, 86, 219, 0.25) 50%,
+    //         rgba(62, 119, 251, 0.35) 100%);
     //     z-index: 1;
     // }
     
@@ -377,9 +377,9 @@ $contacts-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         
         &::after {
             background: linear-gradient(135deg, 
-                rgba(149, 204, 41, 0.25) 0%, 
-                rgba(122, 184, 34, 0.35) 50%,
-                rgba(149, 204, 41, 0.45) 100%);
+                rgba(62, 119, 251, 0.25) 0%, 
+                rgba(26, 86, 219, 0.35) 50%,
+                rgba(62, 119, 251, 0.45) 100%);
         }
     }
 }
@@ -516,7 +516,7 @@ $contacts-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         right: 0;
         bottom: 0;
         background: radial-gradient(circle at 50% 0%, 
-            rgba(149, 204, 41, 0.08) 0%, 
+            rgba(62, 119, 251, 0.08) 0%, 
             transparent 70%);
         opacity: 0;
         transition: opacity 0.4s ease;

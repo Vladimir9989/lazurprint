@@ -1,66 +1,29 @@
-/* hero - редизайн */
+/* hero — светлый корпоративный редизайн */
 
 .hero {
     position: relative;
     color: var(--color-galaxy);
-    background: radial-gradient(86.02% 250.54% at 100% 50%, rgba(152, 219, 251, .4) 0%, rgba(60, 67, 117, 0) 100%), 
-                linear-gradient(180deg, rgb(40, 45, 83) 0%, rgb(43, 48, 78) 100%), 
-                #92b3ff;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: top;
+    background:
+        radial-gradient(60% 80% at 85% 0%, rgba(109, 226, 235, .18) 0%, rgba(255, 255, 255, 0) 60%),
+        radial-gradient(50% 70% at 10% 100%, rgba(62, 119, 251, .12) 0%, rgba(255, 255, 255, 0) 60%),
+        linear-gradient(180deg, #f4f8ff 0%, #ffffff 100%);
     overflow: hidden;
     padding-top: 80px;
-    padding-bottom: 60px;
+    padding-bottom: 70px;
 
-    // Геометрический паттерн на фоне (сетка)
+    // Тонкая сетка-паттерн на фоне
     &::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-image: 
-            linear-gradient(rgba(62, 119, 251, 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(62, 119, 251, 0.03) 1px, transparent 1px);
-        background-size: 60px 60px;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(62, 119, 251, 0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(62, 119, 251, 0.04) 1px, transparent 1px);
+        background-size: 56px 56px;
         pointer-events: none;
         z-index: 1;
-        mask-image: radial-gradient(circle at 50% 50%, black 40%, transparent 80%);
-        -webkit-mask-image: radial-gradient(circle at 50% 50%, black 40%, transparent 80%);
-    }
-
-    // Анимированные частицы
-    &::after {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        right: -50%;
-        bottom: -50%;
-        background-image: 
-            radial-gradient(circle at 20% 30%, rgba(62, 119, 251, 0.15) 0%, transparent 30%),
-            radial-gradient(circle at 80% 70%, rgba(109, 226, 235, 0.1) 0%, transparent 25%),
-            radial-gradient(circle at 40% 80%, rgba(62, 119, 251, 0.08) 0%, transparent 20%);
-        animation: particlesFloat 20s ease-in-out infinite;
-        pointer-events: none;
-        z-index: 1;
-    }
-
-    @keyframes particlesFloat {
-        0%, 100% {
-            transform: translate(0, 0) rotate(0deg);
-        }
-        25% {
-            transform: translate(2%, 2%) rotate(1deg);
-        }
-        50% {
-            transform: translate(-1%, 3%) rotate(-1deg);
-        }
-        75% {
-            transform: translate(1%, -2%) rotate(0.5deg);
-        }
+        mask-image: radial-gradient(circle at 50% 40%, black 35%, transparent 80%);
+        -webkit-mask-image: radial-gradient(circle at 50% 40%, black 35%, transparent 80%);
     }
 
     &__container {
@@ -71,10 +34,10 @@
         padding: 0 20px;
     }
 
-    // Двухколоночная сетка для контента
+    // Двухколоночная сетка
     &__content-grid {
         display: grid;
-        grid-template-columns: 1.2fr 1fr;
+        grid-template-columns: 1.15fr 1fr;
         gap: 60px;
         align-items: center;
 
@@ -84,48 +47,66 @@
 
         @include lg {
             grid-template-columns: 1fr;
-            gap: 40px;
+            gap: 36px;
         }
     }
 
-    // Левая колонка - заголовок и описание
     &__content-left {
         display: flex;
         flex-direction: column;
-        gap: 24px;
+        align-items: flex-start;
+        gap: 22px;
+    }
+
+    // Бейдж над заголовком
+    &__badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #2563eb;
+        background: rgba(62, 119, 251, 0.08);
+        border: 1px solid rgba(62, 119, 251, 0.18);
+        border-radius: 50px;
+        animation: fadeInUp 0.7s ease-out 0.1s both;
+
+        &::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #30bf39;
+            box-shadow: 0 0 0 4px rgba(48, 191, 57, 0.18);
+        }
     }
 
     &__title {
-        font-weight: 700;
-        font-size: clamp(36px, 5vw, 72px);
-        line-height: 1.1;
+        font-weight: 800;
+        font-size: clamp(34px, 4.8vw, 64px);
+        line-height: 1.08;
         margin: 0;
-        background: linear-gradient(135deg, #6de2eb 0%, #3E77FB 50%, #6de2eb 100%);
-        background-size: 200% auto;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        animation: gradientShift 8s ease infinite, titleSlideIn 1s ease-out 0.2s both;
         letter-spacing: -0.02em;
+        color: var(--color-galaxy);
+        animation: titleSlideIn 0.9s ease-out 0.15s both;
+
+        span {
+            background: linear-gradient(135deg, #3E77FB 0%, #6de2eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
         @include sm {
-            font-size: clamp(28px, 6vw, 42px);
-        }
-    }
-
-    @keyframes gradientShift {
-        0%, 100% {
-            background-position: 0% 50%;
-        }
-        50% {
-            background-position: 100% 50%;
+            font-size: clamp(28px, 7vw, 40px);
         }
     }
 
     @keyframes titleSlideIn {
         from {
             opacity: 0;
-            transform: translateY(-30px);
+            transform: translateY(-24px);
         }
         to {
             opacity: 1;
@@ -134,39 +115,40 @@
     }
 
     &__subtitle {
-        font-size: clamp(18px, 2.5vw, 24px);
+        font-size: clamp(18px, 2.2vw, 22px);
         line-height: 1.5;
-        color: rgba(255, 255, 255, 0.9);
+        color: var(--color-light-black);
         margin: 0;
         font-weight: 400;
-        animation: fadeInUp 0.8s ease-out 0.4s both;
+        animation: fadeInUp 0.8s ease-out 0.3s both;
 
         .b {
-            color: #6de2eb;
-            font-weight: 600;
+            color: var(--color-galaxy);
+            font-weight: 700;
         }
     }
 
     &__descr {
-        font-size: clamp(16px, 1.5vw, 18px);
-        line-height: 1.8;
-        color: rgba(255, 255, 255, 0.85);
+        font-size: clamp(16px, 1.4vw, 18px);
+        line-height: 1.7;
+        color: var(--color-dim-gray);
         margin: 0;
-        animation: fadeInUp 0.8s ease-out 0.5s both;
+        max-width: 560px;
+        animation: fadeInUp 0.8s ease-out 0.4s both;
 
         .b {
-            color: rgba(255, 255, 255, 0.95);
+            color: var(--color-light-black);
             font-weight: 600;
         }
 
         a {
-            color: #6de2eb;
+            color: #2563eb;
             text-decoration: none;
             border-bottom: 2px solid transparent;
             transition: border-color 0.3s ease;
 
             &:hover {
-                border-bottom-color: #6de2eb;
+                border-bottom-color: #2563eb;
             }
         }
     }
@@ -182,29 +164,38 @@
         }
     }
 
-    // Кнопка с glow-эффектом
+    // Группа кнопок
+    &__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-top: 6px;
+        animation: fadeInUp 0.8s ease-out 0.55s both;
+
+        @include sm {
+            width: 100%;
+        }
+    }
+
+    // Основная кнопка
     &__btn {
         display: inline-flex;
         align-items: center;
         gap: 12px;
-        padding: 18px 44px;
+        padding: 17px 38px;
         color: var(--color-white);
         background: linear-gradient(135deg, #3E77FB 0%, #1a56db 100%);
         border-radius: 50px;
-        font-size: 18px;
+        font-size: 17px;
         font-weight: 600;
         text-decoration: none;
         border: none;
         cursor: pointer;
         position: relative;
-        overflow: hidden;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 
-            0 4px 20px rgba(62, 119, 251, 0.4),
-            0 0 0 0 rgba(62, 119, 251, 0.5);
-        animation: fadeInUp 0.8s ease-out 0.7s both, buttonPulse 3s ease-in-out infinite;
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 8px 24px rgba(62, 119, 251, 0.28);
 
-        & svg {
+        svg {
             width: 20px;
             height: 20px;
             transition: transform 0.3s ease;
@@ -213,44 +204,57 @@
         @media (any-hover: hover) {
             &:hover {
                 transform: translateY(-3px);
-                box-shadow: 
-                    0 8px 30px rgba(62, 119, 251, 0.5),
-                    0 0 0 8px rgba(62, 119, 251, 0.1),
-                    0 0 0 16px rgba(62, 119, 251, 0.05);
+                box-shadow: 0 12px 32px rgba(62, 119, 251, 0.4);
                 background: linear-gradient(135deg, #4f86fb 0%, #2563eb 100%);
 
-                & svg {
+                svg {
                     transform: translateX(4px);
                 }
             }
         }
 
         @include sm {
+            flex: 1;
             justify-content: center;
-            padding: 16px 32px;
+            padding: 15px 24px;
             font-size: 16px;
         }
     }
 
-    @keyframes buttonPulse {
-        0%, 100% {
-            box-shadow: 
-                0 4px 20px rgba(62, 119, 251, 0.4),
-                0 0 0 0 rgba(62, 119, 251, 0.5);
+    // Вторичная кнопка
+    &__btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 17px 34px;
+        font-size: 17px;
+        font-weight: 600;
+        text-decoration: none;
+        color: #2563eb;
+        background: var(--color-white);
+        border: 1.5px solid rgba(62, 119, 251, 0.35);
+        border-radius: 50px;
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+        @media (any-hover: hover) {
+            &:hover {
+                transform: translateY(-3px);
+                border-color: #3E77FB;
+                background: rgba(62, 119, 251, 0.06);
+                box-shadow: 0 8px 24px rgba(62, 119, 251, 0.14);
+            }
         }
-        50% {
-            box-shadow: 
-                0 4px 25px rgba(62, 119, 251, 0.5),
-                0 0 0 6px rgba(62, 119, 251, 0.2);
+
+        @include sm {
+            flex: 1;
+            padding: 15px 24px;
+            font-size: 16px;
         }
     }
 
-    // Правая колонка - карточки преимуществ
+    // Правая колонка — карточки преимуществ
     &__content-right {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        animation: fadeInUp 0.8s ease-out 0.6s both;
+        animation: fadeInUp 0.8s ease-out 0.5s both;
     }
 
     &__features {
@@ -262,109 +266,74 @@
             gap: 14px;
         }
 
-        @include lg {
+        @include sm {
             grid-template-columns: 1fr;
         }
     }
 
     &__feature-card {
         position: relative;
-        padding: 24px 20px;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(62, 119, 251, 0.2);
+        padding: 24px 22px;
+        background: var(--color-white);
+        border: 1px solid rgba(62, 119, 251, 0.14);
         border-radius: 16px;
-        backdrop-filter: blur(10px);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        animation: cardSlideIn 0.6s ease-out both;
-
-        &::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(62, 119, 251, 0.1) 0%, transparent 100%);
-            border-radius: 16px;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
+        box-shadow: 0 8px 30px rgba(20, 50, 120, 0.06);
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 
         @media (any-hover: hover) {
             &:hover {
-                transform: translateY(-4px);
-                border-color: rgba(62, 119, 251, 0.4);
-                box-shadow: 
-                    0 12px 40px rgba(62, 119, 251, 0.15),
-                    inset 0 0 20px rgba(62, 119, 251, 0.05);
-
-                &::before {
-                    opacity: 1;
-                }
+                transform: translateY(-5px);
+                border-color: rgba(62, 119, 251, 0.3);
+                box-shadow: 0 16px 40px rgba(62, 119, 251, 0.16);
 
                 .hero__feature-icon {
-                    transform: scale(1.1) rotate(5deg);
+                    transform: scale(1.08) rotate(4deg);
                 }
             }
-        }
-
-        &:nth-child(1) { animation-delay: 0.7s; }
-        &:nth-child(2) { animation-delay: 0.8s; }
-        &:nth-child(3) { animation-delay: 0.9s; }
-        &:nth-child(4) { animation-delay: 1s; }
-    }
-
-    @keyframes cardSlideIn {
-        from {
-            opacity: 0;
-            transform: translateX(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
         }
     }
 
     &__feature-icon {
-        width: 48px;
-        height: 48px;
+        width: 52px;
+        height: 52px;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, rgba(62, 119, 251, 0.2) 0%, rgba(109, 226, 235, 0.1) 100%);
-        border-radius: 12px;
-        margin-bottom: 12px;
-        transition: transform 0.4s ease;
+        background: linear-gradient(135deg, rgba(62, 119, 251, 0.12) 0%, rgba(109, 226, 235, 0.16) 100%);
+        border-radius: 14px;
+        margin-bottom: 14px;
+        transition: transform 0.35s ease;
 
-        & svg {
+        svg {
             width: 28px;
             height: 28px;
-            fill: #6de2eb;
+            stroke: #3E77FB;
+            fill: none;
         }
     }
 
     &__feature-title {
         font-size: 16px;
-        font-weight: 600;
-        color: var(--color-white);
+        font-weight: 700;
+        color: var(--color-galaxy);
         margin: 0 0 6px 0;
         line-height: 1.3;
     }
 
     &__feature-desc {
         font-size: 14px;
-        color: rgba(255, 255, 255, 0.65);
+        color: var(--color-dim-gray);
         margin: 0;
         line-height: 1.5;
     }
 
-    // Баннер (сохраняем существующий)
+    // Баннер-слайдер
     &__banner {
         box-sizing: border-box;
         width: 100%;
         text-align: center;
         position: relative;
-        margin-bottom: 40px;
+        margin-bottom: 48px;
 
         @include xl {
             padding-top: 95px;
@@ -419,35 +388,31 @@
         transform: translateX(0) !important;
         text-align: center;
         margin-top: 16px;
+        color: var(--color-galaxy);
     }
 
-    &__swiper-pagination-banner {
-        color: var(--color-white);
-    }
-
-    // Декоративные элементы
+    // Декоративные пятна
     &__deco-shape {
         position: absolute;
         pointer-events: none;
         z-index: 1;
-        opacity: 0.5;
 
         &--top-right {
-            top: 10%;
-            right: 5%;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, rgba(62, 119, 251, 0.15) 0%, transparent 70%);
+            top: 8%;
+            right: 4%;
+            width: 240px;
+            height: 240px;
+            background: radial-gradient(circle, rgba(62, 119, 251, 0.12) 0%, transparent 70%);
             border-radius: 50%;
             animation: float 8s ease-in-out infinite;
         }
 
         &--bottom-left {
-            bottom: 10%;
-            left: 3%;
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle, rgba(109, 226, 235, 0.1) 0%, transparent 70%);
+            bottom: 6%;
+            left: 2%;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(109, 226, 235, 0.16) 0%, transparent 70%);
             border-radius: 50%;
             animation: float 10s ease-in-out infinite reverse;
         }
@@ -465,14 +430,14 @@
 
 // Swiper pagination bullets
 .swiper-pagination-bullet {
-    background-color: var(--color-white);
-    opacity: 0.5;
+    background-color: #3E77FB;
+    opacity: 0.35;
     width: 10px;
     height: 10px;
 
     &.swiper-pagination-bullet-active {
         opacity: 1;
-        background-color: #6de2eb;
+        background-color: #3E77FB;
         transform: scale(1.2);
     }
 }

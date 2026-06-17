@@ -141,17 +141,35 @@
 
     &__title {
         margin: 0;
-        font-weight: 700;
+        font-weight: 800;
         font-size: 36px;
         line-height: 140%;
-        color: #000;
+        color: var(--color-galaxy);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+        padding-bottom: 18px;
+
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 64px;
+            height: 4px;
+            border-radius: 2px;
+            background: linear-gradient(90deg, #3E77FB 0%, #6de2eb 100%);
+        }
 
         @include md {
             font-size: 24px;
         }
 
         & span {
-            color: var(--color-planetary);
+            background: linear-gradient(135deg, #3E77FB 0%, #6de2eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
     }
 
@@ -211,7 +229,7 @@
         flex-grow: 1 !important;
         
         &:hover {
-            transform: translateX(10px);
+            transform: translateY(-5px);
             box-shadow: 0 8px 30px rgba(62, 119, 251, 0.15);
             border-color: rgba(62, 119, 251, 0.3);
         }
