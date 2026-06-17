@@ -1,0 +1,52 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Что это
+
+Статический многостраничный сайт типографии «Лазурь» (lazurprint.ru). Сборка на **Gulp 4**: SCSS → CSS, ES-модули → бандл, HTML-партиалы → страницы. Серверной логики, кроме PHP-обработчика формы (`mail.php` + PHPMailer), нет.
+
+## Команды
+
+```bash
+npm run dev      # gulp dev  — чистит dist/build, собирает, поднимает browser-sync (baseDir: dist) и watch
+npm run build    # gulp build — продакшен-сборка (минификация HTML/CSS/JS, sitemap.xml)
+```
+
+Отдельные таски можно запускать точечно: `npx gulp styles`, `npx gulp scripts`, `npx gulp htmlMinify`, `npx gulp sitemap`.
+
+Тестов и линтеров в проекте нет.
+
+Разница `dev` vs `build`: флаг `prod` (см. таск `isProd`) включает sourcemaps только в dev, а минификацию (`cleanCSS`, `uglify`, `htmlMin`) и генерацию `sitemap.xml` — только в build. Оба режима пишут результат **одновременно в `dist/` и `build/`**.
+
+## Архитектура сборки (gulpfile.js)
+
+Ключевая особенность — **два независимых конвейера JavaScript**, их легко перепутать:
+
+1. **Бандл `app.js`** (таск `scripts`): собирается из `src/js/components/**/*.js` + `src/js/main.js`, прогоняется через Babel и concat в `app.js`. `main.js` — общая логика всех страниц (бургер-меню, выпадающие списки хедера, анимации появления по скроллу через классы `.fade-in`/`.slide-in-*`/`.scale-in` + `.visible`).
+
+2. **Файлы из `src/resources/`** (таск `resources`): копируются **как есть, без обработки** в корень `dist`/`build`. Здесь лежат:
+   - постраничные скрипты (`index.js`, `catalog.js`, `events.js`, `about.js`, `cart.js`, `map.js`, …) — подключаются вручную через `<script>` на нужных страницах;
+   - сторонние библиотеки (`swiper-bundle.min.js`, `choices.min.js`, `just-validate.min.js`, `inputmask.min.js`, `lazyload.min.js`, `rellax.min.js`, `simplebar.min.js`);
+   - PHP бэкенд формы (`mail.php`, `recaptchalib.php`, `phpmailer/`);
+   - `robots.txt`, `sitemap.xml`.
+
+   Новый JS, который должен попасть в бандл и пройти Babel, кладётся в `src/js/`. Скрипт конкретной страницы (или внешняя либа) — в `src/resources/` и подключается тегом `<script>` в HTML.
+
+CSS: все партиалы `src/styles/_*.scss` импортируются в `src/styles/styles.scss`, который через таск `styles` собирается в единый `main.css`. При добавлении нового `_*.scss` обязательно добавить `@import` в `styles.scss` — иначе он не попадёт в сборку.
+
+HTML: страницы лежат в `src/*.html`, переиспользуемые блоки — в `src/html/*.html` (header, footer, consultation, reviews, steps и т.д.) и вставляются через **gulp-file-include** синтаксисом `@@include('html/header.html', {})`. Менять шапку/подвал нужно в `src/html/`, а не в каждой странице.
+
+Версионирование: `gulp-version-number` дописывает `?_v=...` к ссылкам на css/js в HTML для сброса кэша (пишет `src/version.json`).
+
+Шрифты: `.ttf` из `src/fonts/` конвертируются в `.woff` и `.woff2`.
+Изображения: png/jpg/jpeg/svg копируются таском `images`; webp/mp4/mov/ico/pdf — таском `imagesCopy`; svg из `src/images/svg/` собираются в `sprite.svg` (svg-sprite).
+
+## Контент-страницы
+
+`src/articles*.html` (~100 файлов) и `src/news*.html` — статьи блога и новости, по сути контент-шаблоны с одинаковой структурой. Каталог сувениров оперирует данными из `src/js/data/products.json` (поля: `category`, `name`, `price`, `article`, `image`).
+
+## Важное
+
+- `dist/` и `build/` — артефакты сборки, в `.gitignore`. Никогда не редактировать их напрямую — правки делаются в `src/` и пересобираются.
+- `.env` содержит `GOOGLE_CLOUD_PROJECT` (не используется самой gulp-сборкой).

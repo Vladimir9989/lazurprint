@@ -10,20 +10,94 @@
     color: var(--color-night-rider);
 
     .news__title {
-        background: linear-gradient(90deg, var(--color-galaxy), var(--color-primary));
+        font-size: clamp(30px, 4vw, 48px);
+        line-height: 1.12;
+        background: linear-gradient(90deg, var(--color-galaxy), var(--color-primary), var(--color-accent2), var(--color-galaxy));
+        background-size: 300% 100%;
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
+        animation: cal-title-shine 9s ease infinite;
     }
+}
+
+@keyframes cal-title-shine {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 /* ---------- HERO ---------- */
 .cal-hero {
+    position: relative;
+    overflow: hidden;
     display: grid;
-    grid-template-columns: 1.05fr 1fr;
-    gap: 40px;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 44px;
     align-items: center;
-    margin: 24px 0 12px;
+    margin: 26px 0 12px;
+    padding: 42px 44px;
+    border-radius: 30px;
+    background:
+        radial-gradient(120% 140% at 100% 0%, rgba(80, 190, 253, 0.12), transparent 55%),
+        linear-gradient(135deg, #f3f8ff 0%, #eef3ff 60%, #f7faff 100%);
+    border: 1px solid rgba(62, 119, 251, 0.10);
+
+    &__blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(50px);
+        z-index: 0;
+        pointer-events: none;
+
+        &--1 {
+            width: 320px;
+            height: 320px;
+            top: -120px;
+            right: -60px;
+            background: rgba(80, 190, 253, 0.45);
+            animation: cal-float 12s ease-in-out infinite;
+        }
+
+        &--2 {
+            width: 260px;
+            height: 260px;
+            bottom: -130px;
+            left: -70px;
+            background: rgba(62, 119, 251, 0.28);
+            animation: cal-float 15s ease-in-out infinite reverse;
+        }
+    }
+
+    &__text {
+        position: relative;
+        z-index: 1;
+    }
+
+    &__eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 16px;
+        margin-bottom: 18px;
+        border-radius: 50px;
+        background: var(--color-white);
+        box-shadow: var(--cal-shadow-soft);
+        color: var(--color-primary);
+        font-weight: 700;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+
+        &::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--color-lime-green);
+            box-shadow: 0 0 0 4px rgba(48, 191, 57, 0.18);
+        }
+    }
 
     &__lead {
         font-size: 22px;
@@ -42,10 +116,18 @@
 
     &__media {
         position: relative;
+        z-index: 1;
+        perspective: 1200px;
+    }
+
+    &__frame {
+        position: relative;
         border-radius: var(--cal-radius);
         overflow: hidden;
         box-shadow: var(--cal-shadow);
         aspect-ratio: 4 / 3;
+        transform: rotate(-2deg);
+        transition: transform 0.5s ease, box-shadow 0.5s ease;
 
         img {
             width: 100%;
@@ -55,13 +137,39 @@
             transition: transform 0.6s ease;
         }
 
-        &:hover img {
-            transform: scale(1.04);
+        &:hover {
+            transform: rotate(0deg) translateY(-4px);
+            box-shadow: 0 26px 60px rgba(8, 31, 92, 0.18);
+
+            img {
+                transform: scale(1.05);
+            }
+        }
+    }
+
+    &__tag {
+        position: absolute;
+        right: -12px;
+        bottom: 22px;
+        z-index: 2;
+        padding: 11px 20px;
+        border-radius: 50px;
+        background: var(--color-white);
+        box-shadow: var(--cal-shadow);
+        color: var(--color-galaxy);
+        font-weight: 700;
+        font-size: 14px;
+
+        &::before {
+            content: "✓";
+            color: var(--color-lime-green);
+            margin-right: 8px;
+            font-weight: 800;
         }
     }
 
     &__actions {
-        margin-top: 22px;
+        margin-top: 24px;
         display: flex;
         gap: 14px;
         flex-wrap: wrap;
@@ -69,10 +177,56 @@
 
     @media (max-width: 896px) {
         grid-template-columns: 1fr;
-        gap: 24px;
+        gap: 28px;
+        padding: 30px 24px;
 
         &__lead {
             font-size: 20px;
+        }
+
+        &__tag {
+            right: 10px;
+        }
+    }
+}
+
+/* ---------- Статистика в hero ---------- */
+.cal-stats {
+    list-style: none;
+    margin: 28px 0 0;
+    padding: 22px 0 0;
+    border-top: 1px solid rgba(62, 119, 251, 0.18);
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+
+    &__item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__num {
+        font-family: "PlayfairDisplay", serif;
+        font-size: 34px;
+        font-weight: 700;
+        line-height: 1;
+        background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    &__label {
+        margin-top: 6px;
+        font-size: 14px;
+        color: var(--color-dim-gray);
+    }
+
+    @media (max-width: 410px) {
+        gap: 20px;
+
+        &__num {
+            font-size: 28px;
         }
     }
 }
@@ -111,16 +265,43 @@
             box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
         }
     }
+
+    &--ghost {
+        background: transparent;
+        color: var(--color-primary);
+        box-shadow: inset 0 0 0 2px rgba(62, 119, 251, 0.35);
+
+        &:hover {
+            transform: translateY(-2px);
+            background: rgba(62, 119, 251, 0.08);
+            box-shadow: inset 0 0 0 2px var(--color-primary);
+        }
+    }
 }
 
-/* ---------- Чипы-якоря по типам ---------- */
+/* ---------- Чипы-якоря по типам (липкие + scroll-spy) ---------- */
 .cal-types {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin: 34px 0 10px;
-    padding: 0;
+    position: sticky;
+    top: 82px;
+    z-index: 14;
+    margin: 34px -10px 10px;
+    padding: 12px 10px;
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--color-whisper);
+
+    @media (max-width: 410px) {
+        top: 55px;
+    }
+
+    &__list {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 0;
+        padding: 0;
+    }
 
     &__chip {
         display: inline-block;
@@ -138,13 +319,36 @@
             color: var(--color-white);
             transform: translateY(-2px);
         }
+
+        &--active {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+            color: var(--color-white);
+            box-shadow: 0 8px 20px rgba(62, 119, 251, 0.32);
+        }
+    }
+
+    @media (max-width: 786px) {
+        &__list {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        &__list::-webkit-scrollbar {
+            display: none;
+        }
+
+        &__chip {
+            white-space: nowrap;
+        }
     }
 }
 
 /* ---------- Секция типа календаря ---------- */
 .cal-section {
     margin: 56px 0;
-    scroll-margin-top: 110px;
+    scroll-margin-top: 150px;
 
     &__head {
         display: flex;
@@ -513,10 +717,59 @@
         background: radial-gradient(circle, rgba(255, 255, 255, 0.18), transparent 70%);
     }
 
+    &__deco {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.10);
+        pointer-events: none;
+        z-index: 0;
+
+        &--1 {
+            width: 150px;
+            height: 150px;
+            left: 38%;
+            bottom: -70px;
+            animation: cal-float 10s ease-in-out infinite;
+        }
+
+        &--2 {
+            width: 90px;
+            height: 90px;
+            right: 16%;
+            top: -40px;
+            background: rgba(255, 255, 255, 0.14);
+            animation: cal-float 13s ease-in-out infinite reverse;
+        }
+    }
+
     &__text {
         position: relative;
         z-index: 1;
         max-width: 640px;
+    }
+
+    &__badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 16px;
+        margin-bottom: 16px;
+        border-radius: 50px;
+        background: rgba(255, 255, 255, 0.16);
+        color: var(--color-white);
+        font-weight: 700;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+
+        &::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--color-accent2);
+            box-shadow: 0 0 0 4px rgba(80, 190, 253, 0.30);
+        }
     }
 
     &__title {
@@ -544,5 +797,196 @@
         &__title {
             font-size: 24px;
         }
+    }
+}
+
+/* ---------- Появление при скролле ---------- */
+.cal-js .cal-reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+
+    &--in {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---------- Ховер-«лупа» на слайдах ---------- */
+.cal-slide {
+    position: relative;
+
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 55%, rgba(8, 31, 92, 0.35));
+        opacity: 0;
+        transition: opacity 0.35s ease;
+        pointer-events: none;
+    }
+
+    &::before {
+        content: "";
+        position: absolute;
+        right: 16px;
+        bottom: 16px;
+        z-index: 2;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: var(--color-white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%233E77FB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M21 21l-4.3-4.3M11 8v6M8 11h6'/%3E%3C/svg%3E") center / 20px no-repeat;
+        box-shadow: 0 6px 16px rgba(8, 31, 92, 0.22);
+        opacity: 0;
+        transform: scale(0.7);
+        transition: opacity 0.35s ease, transform 0.35s ease;
+        pointer-events: none;
+    }
+
+    &:hover::after {
+        opacity: 1;
+    }
+
+    &:hover::before {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ---------- Таймлайн «Как проходит заказ» ---------- */
+.cal-flow {
+    margin: 70px 0 50px;
+
+    &__head {
+        text-align: center;
+        margin-bottom: 38px;
+
+        .cal-hero__eyebrow {
+            margin-bottom: 14px;
+        }
+    }
+
+    &__title {
+        font-family: "PlayfairDisplay", serif;
+        font-size: 30px;
+        font-weight: 700;
+        color: var(--color-galaxy);
+        margin: 0 0 10px;
+    }
+
+    &__subtitle {
+        font-size: 17px;
+        color: var(--color-dim-gray);
+        margin: 0;
+    }
+
+    &__list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 18px;
+        counter-reset: flow;
+
+        @media (max-width: 1024px) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        @media (max-width: 680px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__step {
+        position: relative;
+        background: var(--color-white);
+        border: 1px solid var(--color-whisper);
+        border-radius: var(--cal-radius);
+        padding: 28px 22px 24px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+
+        /* соединительная линия между шагами */
+        &:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            top: 50px;
+            right: -10px;
+            width: 20px;
+            height: 2px;
+            background: repeating-linear-gradient(90deg, var(--color-universe) 0 5px, transparent 5px 9px);
+
+            @media (max-width: 1024px) {
+                display: none;
+            }
+        }
+
+        &:hover {
+            transform: translateY(-6px);
+            border-color: rgba(62, 119, 251, 0.4);
+            box-shadow: var(--cal-shadow);
+        }
+    }
+
+    &__num {
+        position: absolute;
+        top: 16px;
+        right: 18px;
+        font-family: "PlayfairDisplay", serif;
+        font-size: 30px;
+        font-weight: 700;
+        line-height: 1;
+        color: rgba(62, 119, 251, 0.16);
+    }
+
+    &__icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 52px;
+        height: 52px;
+        margin-bottom: 16px;
+        border-radius: 15px;
+        background: linear-gradient(135deg, rgba(62, 119, 251, 0.12), rgba(80, 190, 253, 0.18));
+
+        svg {
+            width: 26px;
+            height: 26px;
+            stroke: var(--color-primary);
+        }
+    }
+
+    &__step-title {
+        font-size: 17px;
+        font-weight: 700;
+        color: var(--color-galaxy);
+        margin: 0 0 8px;
+    }
+
+    &__step-desc {
+        font-size: 14.5px;
+        line-height: 1.55;
+        color: var(--color-dim-gray);
+        margin: 0;
+    }
+}
+
+/* ---------- Анимации ---------- */
+@keyframes cal-float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(0, -22px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cal-article *,
+    .cal-article *::before,
+    .cal-article *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    .cal-js .cal-reveal {
+        opacity: 1;
+        transform: none;
     }
 }
