@@ -1,3 +1,22 @@
+// Swiper слайдер продукции (блок с картой)
+const productsSlider = new Swiper('.products-slider__swiper', {
+    slidesPerView: 1,
+    loop: true,
+    grabCursor: true,
+    effect: 'fade',
+    fadeEffect: {
+        crossFade: true,
+    },
+    autoplay: {
+        delay: 3500,
+        disableOnInteraction: false,
+    },
+    pagination: {
+        el: '.swiper-pagination-products',
+        dynamicBullets: true,
+    },
+});
+
 // Swiper hero
 
 const heroBanner = new Swiper('.hero__banner', {
