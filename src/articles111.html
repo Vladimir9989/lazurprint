@@ -57,8 +57,11 @@
             <time class="card__date" datetime="2026-06-16">16 июня 2026</time>
 
             <!-- HERO -->
-            <div class="cal-hero">
+            <div class="cal-hero cal-reveal">
+                <span class="cal-hero__blob cal-hero__blob--1" aria-hidden="true"></span>
+                <span class="cal-hero__blob cal-hero__blob--2" aria-hidden="true"></span>
                 <div class="cal-hero__text">
+                    <span class="cal-hero__eyebrow">Сезон календарей 2026</span>
                     <p class="cal-hero__lead">
                         Календарь — это реклама, которая стоит на столе клиента весь год. Один тираж работает
                         365 дней: напоминает о компании, держит под рукой телефон и сайт, формирует имидж.
@@ -68,31 +71,48 @@
                         от квартальных настенных до премиальных настольных планеров, — показали реальные
                         примеры из производства и собрали технические характеристики по каждому типу.
                     </p>
-                    <p>
-                        А в конце — главное про сезон: почему календари к Новому году стоит заказывать заранее
-                        и как ничего не упустить по срокам.
-                    </p>
                     <div class="cal-hero__actions">
                         <button class="cal-cta cal-btn cal-btn--primary" type="button">Рассчитать стоимость</button>
+                        <a href="#cal-quarterly" class="cal-btn cal-btn--ghost">Смотреть виды</a>
                     </div>
+                    <ul class="cal-stats">
+                        <li class="cal-stats__item">
+                            <span class="cal-stats__num">25+</span>
+                            <span class="cal-stats__label">лет печатаем</span>
+                        </li>
+                        <li class="cal-stats__item">
+                            <span class="cal-stats__num">6</span>
+                            <span class="cal-stats__label">видов календарей</span>
+                        </li>
+                        <li class="cal-stats__item">
+                            <span class="cal-stats__num">365</span>
+                            <span class="cal-stats__label">дней рекламы</span>
+                        </li>
+                    </ul>
                 </div>
                 <div class="cal-hero__media">
-                    <img src="images/img/calendars/articles-calendars/calendars-1.jpg"
-                        alt="Квартальный календарь, отпечатанный в типографии Лазурь">
+                    <div class="cal-hero__frame">
+                        <img src="images/img/calendars/articles-calendars/calendars-4.jpg"
+                            alt="Квартальный календарь, отпечатанный в типографии Лазурь">
+                    </div>
+                    <span class="cal-hero__tag">Печать «под ключ»</span>
                 </div>
             </div>
 
             <!-- Навигация по типам -->
-            <ul class="cal-types">
-                <li><a href="#cal-quarterly" class="cal-types__chip">Квартальные настенные</a></li>
-                <li><a href="#cal-desk" class="cal-types__chip">Настольные «домики»</a></li>
-                <li><a href="#cal-book" class="cal-types__chip">Перекидные «книжки»</a></li>
-                <li><a href="#cal-premium" class="cal-types__chip">Премиум-планеры</a></li>
-                <li><a href="#cal-themed" class="cal-types__chip">Тематические</a></li>
-            </ul>
+            <nav class="cal-types" aria-label="Виды календарей">
+                <ul class="cal-types__list">
+                    <li><a href="#cal-quarterly" class="cal-types__chip" data-spy>Квартальные настенные</a></li>
+                    <li><a href="#cal-desk" class="cal-types__chip" data-spy>Настольные «домики»</a></li>
+                    <li><a href="#cal-book" class="cal-types__chip" data-spy>Перекидные «книжки»</a></li>
+                    <li><a href="#cal-premium" class="cal-types__chip" data-spy>Премиум-планеры</a></li>
+                    <li><a href="#cal-themed" class="cal-types__chip" data-spy>Тематические</a></li>
+                    <li><a href="#cal-design" class="cal-types__chip" data-spy>Дизайнерские</a></li>
+                </ul>
+            </nav>
 
             <!-- 01. Квартальные настенные -->
-            <article class="cal-section" id="cal-quarterly">
+            <article class="cal-section cal-reveal" id="cal-quarterly">
                 <header class="cal-section__head">
                     <span class="cal-section__num">01</span>
                     <h2 class="news__subtitle cal-section__title">Квартальные настенные календари</h2>
@@ -127,8 +147,36 @@
                                 alt="Квартальный календарь-моно с ярким дизайном на 2024 год">
                         </div>
                         <div class="swiper-slide cal-slide">
+                            <img loading="lazy" src="images/img/calendars/articles-calendars/calendars-21-2.jpg"
+                                alt="Квартальный календарь-моно с ярким дизайном на 2024 год">
+                        </div>
+                        <div class="swiper-slide cal-slide">
                             <img loading="lazy" src="images/img/calendars/articles-calendars/calendars-22.jpg"
                                 alt="Настенный моноблочный квартальный календарь">
+                        </div>
+                        <div class="swiper-slide cal-slide">
+                            <img loading="lazy" src="images/img/calendars/articles-calendars/calendars-27.jpg"
+                                alt="Квартальный календарь-трио в корпоративном синем дизайне">
+                        </div>
+                        <div class="swiper-slide cal-slide">
+                            <img loading="lazy" src="images/img/calendars/articles-calendars/calendars-38.jpg"
+                                alt="Квартальный календарь-трио «Древо жизни» в интерьере">
+                        </div>
+                        <div class="swiper-slide cal-slide">
+                            <img loading="lazy" src="images/img/calendars/articles-calendars/calendars-41.jpg"
+                                alt="Квартальный календарь-трио с полноцветной фотопечатью">
+                        </div>
+                        <div class="swiper-slide cal-slide">
+                            <img loading="lazy" src="images/img/calendars/articles-calendars/calendars-30.jpg"
+                                alt="Квартальный моноблочный календарь с логотипом заказчика">
+                        </div>
+                        <div class="swiper-slide cal-slide">
+                            <img loading="lazy" src="images/img/calendars/articles-calendars/calendars-40.jpg"
+                                alt="Квартальный моноблочный календарь в фирменных синих тонах">
+                        </div>
+                        <div class="swiper-slide cal-slide">
+                            <img loading="lazy" src="images/img/calendars/articles-calendars/calendars-29.jpg"
+                                alt="Квартальный календарь-трио с символом года">
                         </div>
                     </div>
                     <div class="swiper-pagination cal-slider__pagination cal-pag--quarterly"></div>
@@ -164,7 +212,7 @@
             </article>
 
             <!-- 02. Настольные «домики» -->
-            <article class="cal-section" id="cal-desk">
+            <article class="cal-section cal-reveal" id="cal-desk">
                 <header class="cal-section__head">
                     <span class="cal-section__num">02</span>
                     <h2 class="news__subtitle cal-section__title">Настольные перекидные «домики»</h2>
@@ -222,6 +270,22 @@
                             <img loading="lazy" src="images/img/calendars/articles-calendars/calendars-15.jpg"
                                 alt="Настольный календарь-домик с лаконичным дизайном">
                         </div>
+                        <div class="swiper-slide cal-slide">
+                            <img loading="lazy" src="images/img/calendars/articles-calendars/calendars-31.jpg"
+                                alt="Настольный перекидной календарь с корпоративным дизайном">
+                        </div>
+                        <div class="swiper-slide cal-slide">
+                            <img loading="lazy" src="images/img/calendars/articles-calendars/calendars-37.jpg"
+                                alt="Настольный перекидной календарь с фирменной символикой">
+                        </div>
+                        <div class="swiper-slide cal-slide">
+                            <img loading="lazy" src="images/img/calendars/articles-calendars/calendars-25.jpg"
+                                alt="Компактный настольный календарь-домик «Лазурь»">
+                        </div>
+                        <div class="swiper-slide cal-slide">
+                            <img loading="lazy" src="images/img/calendars/articles-calendars/calendars-33.jpg"
+                                alt="Настольный календарь-домик горизонтального формата">
+                        </div>
                     </div>
                     <div class="swiper-pagination cal-slider__pagination cal-pag--desk"></div>
                     <div class="cal-slider__btn cal-slider__btn--prev cal-prev--desk" role="button" aria-label="Назад">
@@ -256,7 +320,7 @@
             </article>
 
             <!-- 03. Перекидные «книжки» -->
-            <article class="cal-section" id="cal-book">
+            <article class="cal-section cal-reveal" id="cal-book">
                 <header class="cal-section__head">
                     <span class="cal-section__num">03</span>
                     <h2 class="news__subtitle cal-section__title">Перекидные «книжки» и тематические подарки</h2>
@@ -310,7 +374,7 @@
             </article>
 
             <!-- 04. Премиум-планеры -->
-            <article class="cal-section" id="cal-premium">
+            <article class="cal-section cal-reveal" id="cal-premium">
                 <header class="cal-section__head">
                     <span class="cal-section__num">04</span>
                     <h2 class="news__subtitle cal-section__title">Премиум-планеры с комплектацией</h2>
@@ -370,7 +434,7 @@
             </article>
 
             <!-- 05. Тематические -->
-            <article class="cal-section" id="cal-themed">
+            <article class="cal-section cal-reveal" id="cal-themed">
                 <header class="cal-section__head">
                     <span class="cal-section__num">05</span>
                     <h2 class="news__subtitle cal-section__title">Тематические календари</h2>
@@ -424,8 +488,118 @@
                 </div>
             </article>
 
+            <!-- 06. Дизайнерские и нестандартные -->
+            <article class="cal-section cal-reveal" id="cal-design">
+                <header class="cal-section__head">
+                    <span class="cal-section__num">06</span>
+                    <h2 class="news__subtitle cal-section__title">Дизайнерские и нестандартные календари</h2>
+                </header>
+                <p class="cal-section__lead">
+                    Когда нужно выделиться, форматом дело не ограничивается. Печатаем имиджевые перекидные
+                    календари с авторскими иллюстрациями и портретными сериями, а также объёмные конструкции
+                    необычной формы. Такие изделия работают как арт-объект и подчёркивают индивидуальность
+                    бренда — их хочется рассматривать и оставить на виду.
+                </p>
+
+                <div class="cal-slider swiper cal-slider--design">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide cal-slide">
+                            <img loading="lazy" src="images/img/calendars/articles-calendars/calendars-34.jpg"
+                                alt="Художественный настенный перекидной календарь с авторской иллюстрацией">
+                        </div>
+                        <div class="swiper-slide cal-slide">
+                            <img loading="lazy" src="images/img/calendars/articles-calendars/calendars-44.jpg"
+                                alt="Имиджевый перекидной календарь с портретной серией">
+                        </div>
+                        <div class="swiper-slide cal-slide">
+                            <img loading="lazy" src="images/img/calendars/articles-calendars/calendars-39.jpg"
+                                alt="Объёмный дизайнерский календарь нестандартной формы">
+                        </div>
+                    </div>
+                    <div class="swiper-pagination cal-slider__pagination cal-pag--design"></div>
+                    <div class="cal-slider__btn cal-slider__btn--prev cal-prev--design" role="button" aria-label="Назад">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="cal-slider__btn cal-slider__btn--next cal-next--design" role="button" aria-label="Вперёд">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                </div>
+
+                <div class="cal-section__grid">
+                    <div class="cal-specs">
+                        <h3 class="cal-specs__title">Технические характеристики</h3>
+                        <dl class="cal-specs__list">
+                            <div class="cal-specs__row"><dt>Формат</dt><dd>Индивидуальный, под идею</dd></div>
+                            <div class="cal-specs__row"><dt>Печать</dt><dd>Полноцвет + спецэффекты</dd></div>
+                            <div class="cal-specs__row"><dt>Конструкция</dt><dd>Перекидная / объёмная сборка</dd></div>
+                            <div class="cal-specs__row"><dt>Отделка</dt><dd>Ламинация, тиснение, вырубка</dd></div>
+                            <div class="cal-specs__row"><dt>Под запрос</dt><dd>Любая нестандартная форма</dd></div>
+                        </dl>
+                    </div>
+                    <div class="cal-sell">
+                        <h3 class="cal-sell__title">Кому подходит</h3>
+                        <ul class="cal-sell__list">
+                            <li class="cal-sell__item">Бренды, которым важно выделиться и запомниться</li>
+                            <li class="cal-sell__item">Юбилеи, события и имиджевые подарки</li>
+                            <li class="cal-sell__item">Когда календарь должен работать как арт-объект</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Как проходит заказ -->
+            <section class="cal-flow cal-reveal">
+                <div class="cal-flow__head">
+                    <span class="cal-hero__eyebrow">Процесс</span>
+                    <h2 class="cal-flow__title">Как проходит заказ календаря</h2>
+                    <p class="cal-flow__subtitle">От заявки до готового тиража — пять прозрачных шагов.</p>
+                </div>
+                <ol class="cal-flow__list">
+                    <li class="cal-flow__step">
+                        <span class="cal-flow__num">01</span>
+                        <span class="cal-flow__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H8l-4 4V5z" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                        <h3 class="cal-flow__step-title">Заявка и бриф</h3>
+                        <p class="cal-flow__step-desc">Обсуждаем вид календаря, тираж, сроки и бюджет.</p>
+                    </li>
+                    <li class="cal-flow__step">
+                        <span class="cal-flow__num">02</span>
+                        <span class="cal-flow__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M4 20l4-1L19 8a2 2 0 0 0-3-3L5 16l-1 4z" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                        <h3 class="cal-flow__step-title">Дизайн и макет</h3>
+                        <p class="cal-flow__step-desc">Готовим макет или адаптируем ваш, проверяем перед печатью.</p>
+                    </li>
+                    <li class="cal-flow__step">
+                        <span class="cal-flow__num">03</span>
+                        <span class="cal-flow__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M8 14h8v7H8v-7z" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                        <h3 class="cal-flow__step-title">Печать</h3>
+                        <p class="cal-flow__step-desc">Офсет или цифра в полном цвете с контролем качества.</p>
+                    </li>
+                    <li class="cal-flow__step">
+                        <span class="cal-flow__num">04</span>
+                        <span class="cal-flow__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none"><circle cx="6" cy="6" r="2.5" stroke-width="1.7"/><circle cx="6" cy="18" r="2.5" stroke-width="1.7"/><path d="M20 4L8.5 15.5M20 20L8.5 8.5" stroke-width="1.7" stroke-linecap="round"/></svg>
+                        </span>
+                        <h3 class="cal-flow__step-title">Постпечать</h3>
+                        <p class="cal-flow__step-desc">Ламинация, вырубка шапки, спираль, сборка домиков.</p>
+                    </li>
+                    <li class="cal-flow__step">
+                        <span class="cal-flow__num">05</span>
+                        <span class="cal-flow__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h11v9H3V7zM14 10h4l3 3v3h-7v-6z" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="18" r="1.6" stroke-width="1.7"/><circle cx="17.5" cy="18" r="1.6" stroke-width="1.7"/></svg>
+                        </span>
+                        <h3 class="cal-flow__step-title">Доставка</h3>
+                        <p class="cal-flow__step-desc">Отгружаем тираж по России точно в срок к сезону.</p>
+                    </li>
+                </ol>
+            </section>
+
             <!-- Почему Лазурь -->
-            <section class="cal-why">
+            <section class="cal-why cal-reveal">
                 <h2 class="cal-why__title">Почему календари заказывают в «Лазури»</h2>
                 <ul class="cal-why__list">
                     <li class="cal-why__item">
@@ -452,8 +626,11 @@
             </section>
 
             <!-- Сезонный CTA -->
-            <div class="cal-season">
+            <div class="cal-season cal-reveal">
+                <span class="cal-season__deco cal-season__deco--1" aria-hidden="true"></span>
+                <span class="cal-season__deco cal-season__deco--2" aria-hidden="true"></span>
                 <div class="cal-season__text">
+                    <span class="cal-season__badge">Бронируйте заранее</span>
                     <h2 class="cal-season__title">Успейте заказать к Новому году</h2>
                     <p class="cal-season__desc">
                         Декабрь — пик загрузки типографий. Согласование макета, печать, постобработка и
