@@ -1,15 +1,14 @@
-// Постраничный скрипт статьи articles111.html «Календари на заказ».
-// Инициализирует слайдеры Swiper по типам календарей и навешивает
+// Постраничный скрипт статьи articles112.html «Открытки».
+// Инициализирует слайдеры Swiper по разделам статьи и навешивает
 // обработчики на CTA-кнопки, открывающие модальную форму расчёта.
 
 document.addEventListener('DOMContentLoaded', function () {
     if (typeof Swiper !== 'undefined') {
         const sliders = [
-            { sel: '.cal-slider--quarterly', prev: '.cal-prev--quarterly', next: '.cal-next--quarterly', pag: '.cal-pag--quarterly' },
-            { sel: '.cal-slider--desk', prev: '.cal-prev--desk', next: '.cal-next--desk', pag: '.cal-pag--desk' },
-            { sel: '.cal-slider--premium', prev: '.cal-prev--premium', next: '.cal-next--premium', pag: '.cal-pag--premium' },
-            { sel: '.cal-slider--themed', prev: '.cal-prev--themed', next: '.cal-next--themed', pag: '.cal-pag--themed' },
-            { sel: '.cal-slider--design', prev: '.cal-prev--design', next: '.cal-next--design', pag: '.cal-pag--design' },
+            { sel: '.cal-slider--trust',   prev: '.cal-prev--trust',   next: '.cal-next--trust',   pag: '.cal-pag--trust'   },
+            { sel: '.cal-slider--history', prev: '.cal-prev--history', next: '.cal-next--history', pag: '.cal-pag--history' },
+            { sel: '.cal-slider--quality', prev: '.cal-prev--quality', next: '.cal-next--quality', pag: '.cal-pag--quality' },
+            { sel: '.cal-slider--singles', prev: '.cal-prev--singles', next: '.cal-next--singles', pag: '.cal-pag--singles' },
         ];
 
         sliders.forEach(function (cfg) {
@@ -23,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 navigation: { nextEl: cfg.next, prevEl: cfg.prev },
                 breakpoints: {
                     576: { slidesPerView: 1.4, spaceBetween: 20 },
-                    768: { slidesPerView: 2, spaceBetween: 24 },
+                    768: { slidesPerView: 2,   spaceBetween: 24 },
                     1024: { slidesPerView: 2.3, spaceBetween: 24 },
                 },
             });
@@ -43,8 +42,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Плавное появление блоков при скролле.
-    // Класс cal-js включает скрытое стартовое состояние только при работающем JS,
-    // поэтому без JS контент остаётся видимым.
     const article = document.querySelector('.cal-article');
     const reveals = document.querySelectorAll('.cal-reveal');
     if (article && reveals.length) {

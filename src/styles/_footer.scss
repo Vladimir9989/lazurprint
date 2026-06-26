@@ -1,11 +1,9 @@
 /* footer */
 
 .footer {
-    background-color: var(--color-space-cadet);
-    // @media (max-width: 980px) {
-    //     background-color: red;
-    // }
-    
+    background: linear-gradient(180deg, #f4f8ff 0%, #e9f1fb 100%);
+    border-top: 1px solid rgba(62, 119, 251, 0.12);
+
     &__container {
         padding: 10px;
         display: flex;
@@ -16,15 +14,19 @@
         }
     }
     &__address {
-        color: var(--color-white);
+        color: var(--color-galaxy);
         padding: 10px;
+
+        .b {
+            color: var(--color-galaxy);
+        }
     }
     &__logo-img {
         max-width: 200px;
     }
 
     &__descr {
-        color: var(--color-white);
+        color: var(--color-galaxy);
         font-size: 30px;
         margin: 0 auto;
     }
@@ -33,7 +35,7 @@
         flex-direction: column;
         gap: 10px;
         min-height: 100%;
-        color: var(--color-white);
+        color: var(--color-galaxy);
     }
     &__logo-cnt {
         display: flex;
@@ -41,11 +43,11 @@
     }
     &__list {
         @include listReset;
-        color: #dbdbdb;
+        color: var(--color-dim-gray);
     }
     &__menu {
         @include listReset;
-        color: #dbdbdb;
+        color: var(--color-dim-gray);
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         // gap: 10px;
@@ -59,24 +61,27 @@
     &__item-link {
         display: block;
         padding: 10px;
+        transition: color 0.3s ease;
         @media (any-hover: hover) {
             &:hover {
-              color: #dbdbdb;
+              color: var(--color-primary);
             }
           }
     }
     &__contacts-btn {
         @include btnReset;
-        color: var(--color-white);
+        color: var(--color-primary);
         font-weight: 700;
-        border: 1px solid var(--color-white);
-        padding: 5px 10px;
-        border-radius: 5px;
+        border: 1px solid var(--color-primary);
+        padding: 7px 16px;
+        border-radius: 8px;
         margin: 10px 0;
         align-self: self-start;
+        transition: all 0.3s ease;
         &:hover {
-            color: var(--color-nobel);
-            border-color: var(--color-nobel);
+            color: var(--color-white);
+            background: var(--color-primary);
+            border-color: var(--color-primary);
         }
     }
     &__contacts-list {
@@ -87,14 +92,15 @@
     }
     &__contacts-item {
         &:last-child {
-            border-bottom: 1px dashed var(--color-bg-grey);
+            border-bottom: 1px dashed rgba(62, 119, 251, 0.3);
         }
     }
     &__contacts-link {
         display: block;
         padding: 5px;
+        transition: color 0.3s ease;
         &:hover {
-            color: var(--color-nobel);
+            color: var(--color-primary);
         }
     }
 
@@ -103,7 +109,7 @@
         text-align: left;
         display: none;
         position: relative;
-        color: #dbdbdb;
+        color: var(--color-galaxy);
         padding: 5px;
         font-size: 22px;
         @include lm {
@@ -118,8 +124,8 @@
             margin-bottom: 1px;
             width: 10px;
             height: 10px;
-            border-left: 2px solid #dbdbdb;
-            border-bottom: 2px solid #dbdbdb;
+            border-left: 2px solid var(--color-galaxy);
+            border-bottom: 2px solid var(--color-galaxy);
             transform: rotate(-45deg);
             right: 10px;
             top: 20%;
@@ -132,7 +138,7 @@
     }
 
     &-spoller {
-        color: var(--color-white);
+        color: var(--color-dim-gray);
         @include lm {
             display: none;
         }
