@@ -3,3 +3,4 @@
 /build
 /.claude
 /.env
+/.deploy-manifest.json

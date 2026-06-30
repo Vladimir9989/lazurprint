@@ -16,10 +16,16 @@ npm run build    # gulp build — продакшен-сборка (минифи�
 Отдельные таски можно запускать точечно: `npx gulp styles`, `npx gulp scripts`, `npx gulp htmlMinify`, `npx gulp sitemap`.
 
 ```bash
-npm run deploy   # gulp build, затем заливка build/ на хостинг NetAngels по SFTP (deploy.js)
+npm run deploy   # gulp build, затем заливка build/ на хостинг NetAngels (deploy.js)
 ```
 
-Деплой настроен через `deploy.js` (использует `ssh2-sftp-client`). Креды берутся из `.env` (см. `.env.example`): `DEPLOY_HOST`, `DEPLOY_PORT` (22), `DEPLOY_USER`, `DEPLOY_PASSWORD`, `DEPLOY_REMOTE_DIR`. `.env` в `.gitignore` — реальные пароли никогда не коммитятся, только шаблон `.env.example`. Логин/пароль для SFTP смотреть в панели NetAngels: `panel.netangels.ru/hosting/` → контейнер → вкладка «доступ SSH/FTP» → «Сменить пароль». Скрипт только заливает файлы (upload), ничего не удаляет на сервере.
+Деплой настроен через `deploy.js`, поддерживает и FTP (`basic-ftp`), и SFTP (`ssh2-sftp-client`) — переключатель `DEPLOY_PROTOCOL` в `.env` (`ftp` | `sftp`). Креды берутся из `.env` (см. `.env.example`): `DEPLOY_PROTOCOL`, `DEPLOY_HOST`, `DEPLOY_PORT` (21 для ftp / 22 для sftp), `DEPLOY_USER`, `DEPLOY_PASSWORD`, `DEPLOY_REMOTE_DIR`. `.env` в `.gitignore` — реальные пароли никогда не коммитятся, только шаблон `.env.example`.
+
+На NetAngels у контейнера два независимых набора кредов (`panel.netangels.ru/hosting/` → контейнер → вкладка «доступ SSH/FTP»):
+- общий **SSH-логин** контейнера (вида `cXXXXXX`) — доступ ко всему контейнеру (всем сайтам на нём) по SFTP;
+- отдельные **FTP-аккаунты** на каждый сайт (вида `cXXXXXX_domain_ru`), у lazurprint.ru — `c112136_lazurprint_ru`, root которого сразу `/www` (это и есть корень сайта). По умолчанию используется именно он (`DEPLOY_PROTOCOL=ftp`) — он привязан только к этому сайту, а не ко всему контейнеру.
+
+Скрипт только заливает файлы (upload), ничего не удаляет на сервере. Инкрементальность: после успешной заливки каждого файла его путь/размер/mtime сразу пишутся в `.deploy-manifest.json` (в `.gitignore`, не коммитится). В следующий запуск заливаются только новые/изменившиеся файлы — полная заливка всего `build/` (~2800 файлов, ~2 ГБ) по обычному FTP долгая (десятки минут) и нужна обычно только один раз. Манифест обновляется построчно по ходу дела, а не в конце — если соединение оборвётся (FTP на больших объёмах нестабилен), повторный `npm run deploy` продолжит с места обрыва, а не полезет заливать всё заново. При обрыве посреди файла скрипт сам переподключается и повторяет именно этот файл (до 3 попыток). Чтобы гарантированно перезалить всё с нуля — удалить `.deploy-manifest.json`.
 
 Тестов и линтеров в проекте нет.
 
