@@ -15,6 +15,12 @@ npm run build    # gulp build — продакшен-сборка (минифи�
 
 Отдельные таски можно запускать точечно: `npx gulp styles`, `npx gulp scripts`, `npx gulp htmlMinify`, `npx gulp sitemap`.
 
+```bash
+npm run deploy   # gulp build, затем заливка build/ на хостинг NetAngels по SFTP (deploy.js)
+```
+
+Деплой настроен через `deploy.js` (использует `ssh2-sftp-client`). Креды берутся из `.env` (см. `.env.example`): `DEPLOY_HOST`, `DEPLOY_PORT` (22), `DEPLOY_USER`, `DEPLOY_PASSWORD`, `DEPLOY_REMOTE_DIR`. `.env` в `.gitignore` — реальные пароли никогда не коммитятся, только шаблон `.env.example`. Логин/пароль для SFTP смотреть в панели NetAngels: `panel.netangels.ru/hosting/` → контейнер → вкладка «доступ SSH/FTP» → «Сменить пароль». Скрипт только заливает файлы (upload), ничего не удаляет на сервере.
+
 Тестов и линтеров в проекте нет.
 
 Разница `dev` vs `build`: флаг `prod` (см. таск `isProd`) включает sourcemaps только в dev, а минификацию (`cleanCSS`, `uglify`, `htmlMin`) и генерацию `sitemap.xml` — только в build. Оба режима пишут результат **одновременно в `dist/` и `build/`**.
