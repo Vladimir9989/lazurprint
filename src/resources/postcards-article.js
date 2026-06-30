@@ -27,6 +27,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
             });
         });
+
+        // Слайдер «Формы и конструкции» — карточки с текстом, поэтому
+        // показываем меньше слайдов за раз, чем в чисто фото-слайдерах.
+        if (document.querySelector('.cal-slider--forms')) {
+            new Swiper('.cal-slider--forms', {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                grabCursor: true,
+                watchOverflow: true,
+                pagination: { el: '.cal-pag--forms', clickable: true },
+                navigation: { nextEl: '.cal-next--forms', prevEl: '.cal-prev--forms' },
+                breakpoints: {
+                    576: { slidesPerView: 1.3, spaceBetween: 20 },
+                    768: { slidesPerView: 1.7, spaceBetween: 24 },
+                    1024: { slidesPerView: 2.1, spaceBetween: 24 },
+                },
+            });
+        }
     }
 
     // CTA-кнопки открывают модальную форму расчёта (та же, что в футере).

@@ -107,6 +107,9 @@
             <!-- Навигация по разделам -->
             <nav class="cal-types" aria-label="Разделы статьи">
                 <ul class="cal-types__list">
+                    <li><a href="#card-types" class="cal-types__chip" data-spy>Виды открыток</a></li>
+                    <li><a href="#card-gallery" class="cal-types__chip" data-spy>Галерея дизайнов</a></li>
+                    <li><a href="#card-forms" class="cal-types__chip" data-spy>Формы и конструкции</a></li>
                     <li><a href="#card-trust" class="cal-types__chip" data-spy>Психология открытки</a></li>
                     <li><a href="#card-history" class="cal-types__chip" data-spy>История</a></li>
                     <li><a href="#card-quality" class="cal-types__chip" data-spy>Качество и отделка</a></li>
@@ -114,10 +117,299 @@
                 </ul>
             </nav>
 
-            <!-- 01. Психология осязаемого -->
-            <article class="cal-section cal-reveal" id="card-trust">
+            <!-- 01. Какие бывают открытки -->
+            <article class="cal-section cal-reveal" id="card-types">
                 <header class="cal-section__head">
                     <span class="cal-section__num">01</span>
+                    <h2 class="news__subtitle cal-section__title">Какие бывают открытки</h2>
+                </header>
+                <p class="cal-section__lead">
+                    Открытка — это не один формат, а целое семейство изделий. Их классифицируют по способу
+                    доставки, типу изображения, форме и конструкции, а также по назначению. Прежде чем выбрать
+                    дизайн, полезно понимать, из чего вообще можно выбирать.
+                </p>
+
+                <ul class="cal-taxonomy__list">
+                    <li class="cal-taxonomy__item cal-taxonomy__item--delivery">
+                        <h3 class="cal-taxonomy__title">
+                            <span class="cal-taxonomy__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="5" width="18" height="14" rx="2"/>
+                                    <path d="M3 7l9 6 9-6"/>
+                                </svg>
+                            </span>
+                            По способу доставки
+                        </h3>
+                        <p class="cal-taxonomy__hint">
+                            Почтовые проходят через почту — с местом под марку и адрес; не почтовые
+                            передаются из рук в руки или вкладываются в подарок.
+                        </p>
+                        <ul class="cal-taxonomy__tags">
+                            <li>Почтовые</li>
+                            <li>Не почтовые</li>
+                        </ul>
+                    </li>
+                    <li class="cal-taxonomy__item cal-taxonomy__item--image">
+                        <h3 class="cal-taxonomy__title">
+                            <span class="cal-taxonomy__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="16" rx="2"/>
+                                    <circle cx="8.5" cy="9.5" r="1.6"/>
+                                    <path d="M21 16l-5.2-5.2a1.5 1.5 0 0 0-2.1 0L5 19"/>
+                                </svg>
+                            </span>
+                            По типу изображения
+                        </h3>
+                        <p class="cal-taxonomy__hint">
+                            Документальные показывают реальное место или событие, художественные —
+                            это иллюстрация, рисунок или коллаж.
+                        </p>
+                        <ul class="cal-taxonomy__tags">
+                            <li>Документальные</li>
+                            <li>Художественные</li>
+                        </ul>
+                    </li>
+                    <li class="cal-taxonomy__item cal-taxonomy__item--shape">
+                        <h3 class="cal-taxonomy__title">
+                            <span class="cal-taxonomy__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="6.5" cy="6" r="2.5"/>
+                                    <circle cx="6.5" cy="18" r="2.5"/>
+                                    <line x1="20" y1="4" x2="9" y2="15"/>
+                                    <line x1="13.5" y1="13.5" x2="20" y2="20"/>
+                                    <line x1="9" y1="9" x2="11.5" y2="11.5"/>
+                                </svg>
+                            </span>
+                            По форме и конструкции
+                        </h3>
+                        <p class="cal-taxonomy__hint">
+                            От простой плоской карточки до объёмных раскладных вариантов — подробные
+                            примеры с фото смотрите в разделе ниже.
+                        </p>
+                        <ul class="cal-taxonomy__tags">
+                            <li>Карточка</li>
+                            <li>Со сгибом</li>
+                            <li>С вложением</li>
+                            <li>Трансформер</li>
+                            <li>Нестандартной формы</li>
+                        </ul>
+                    </li>
+                    <li class="cal-taxonomy__item cal-taxonomy__item--purpose">
+                        <h3 class="cal-taxonomy__title">
+                            <span class="cal-taxonomy__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="9" width="18" height="11" rx="1.5"/>
+                                    <path d="M3 9h18"/>
+                                    <path d="M12 9v11"/>
+                                    <path d="M12 9c-1.6-3.2-7.5-3.6-7.5-.4 0 1.7 2 1.7 7.5.4z"/>
+                                    <path d="M12 9c1.6-3.2 7.5-3.6 7.5-.4 0 1.7-2 1.7-7.5.4z"/>
+                                </svg>
+                            </span>
+                            По назначению
+                        </h3>
+                        <p class="cal-taxonomy__hint">
+                            Повод определяет дизайн и тон сообщения — от тёплого поздравления
+                            до делового благодарственного письма.
+                        </p>
+                        <ul class="cal-taxonomy__tags">
+                            <li>Поздравительные</li>
+                            <li>Рекламные</li>
+                            <li>Видовые</li>
+                            <li>Историко-событийные</li>
+                            <li>Деловые</li>
+                            <li>Сувенирные</li>
+                            <li>Юмористические</li>
+                        </ul>
+                    </li>
+                    <li class="cal-taxonomy__item cal-taxonomy__item--other">
+                        <h3 class="cal-taxonomy__title">
+                            <span class="cal-taxonomy__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 3l2.2 5.4L20 10l-5.8 1.6L12 17l-2.2-5.4L4 10l5.8-1.6z"/>
+                                    <path d="M19 16l.9 2.1L22 19l-2.1.9L19 22l-.9-2.1L16 19l2.1-.9z"/>
+                                </svg>
+                            </span>
+                            Другие виды
+                        </h3>
+                        <p class="cal-taxonomy__hint">
+                            Особые техники и форматы — печать с личного фото, ручная работа,
+                            ретро-стилизация или интерактивные элементы.
+                        </p>
+                        <ul class="cal-taxonomy__tags">
+                            <li>Фотооткрытки</li>
+                            <li>Hand made</li>
+                            <li>Винтажные</li>
+                            <li>Интерактивные</li>
+                        </ul>
+                    </li>
+                </ul>
+            </article>
+
+            <!-- 02. Галерея дизайнов -->
+            <article class="cal-section cal-reveal" id="card-gallery">
+                <header class="cal-section__head">
+                    <span class="cal-section__num">02</span>
+                    <h2 class="news__subtitle cal-section__title">Открытка на любой повод</h2>
+                </header>
+                <p class="cal-section__lead">
+                    Назначение определяет и дизайн. Поздравительная открытка к Новому году не похожа на деловую
+                    благодарность, а видовая — на детский день рождения. Несколько примеров того, как разные
+                    поводы превращаются в разные визуальные решения.
+                </p>
+
+                <ul class="cal-gallery__list">
+                    <li class="cal-gallery__item cal-gallery__item--wide">
+                        <div class="cal-gallery__frame">
+                            <img loading="lazy" src="images/img/articles/articles112-img-18.jpg"
+                                alt="Видовая открытка с уральским пейзажем">
+                        </div>
+                        <span class="cal-gallery__caption">Виды Урала · видовая</span>
+                    </li>
+                    <li class="cal-gallery__item">
+                        <div class="cal-gallery__frame">
+                            <img loading="lazy" src="images/img/articles/articles112-img-12.jpg"
+                                alt="Новогодняя открытка с акварельной елью и золотыми огнями">
+                        </div>
+                        <span class="cal-gallery__caption">Новый год · поздравительная</span>
+                    </li>
+                    <li class="cal-gallery__item">
+                        <div class="cal-gallery__frame">
+                            <img loading="lazy" src="images/img/articles/articles112-img-13.jpg"
+                                alt="Открытка к 8 марта с акварельными тюльпанами и мимозой">
+                        </div>
+                        <span class="cal-gallery__caption">8 марта · поздравительная</span>
+                    </li>
+                    <li class="cal-gallery__item">
+                        <div class="cal-gallery__frame">
+                            <img loading="lazy" src="images/img/articles/articles112-img-14.jpg"
+                                alt="Яркая открытка на день рождения с воздушными шарами и конфетти">
+                        </div>
+                        <span class="cal-gallery__caption">День рождения · поздравительная</span>
+                    </li>
+                    <li class="cal-gallery__item">
+                        <div class="cal-gallery__frame">
+                            <img loading="lazy" src="images/img/articles/articles112-img-15.jpg"
+                                alt="Свадебная открытка с акварельными цветами и золотой рамкой">
+                        </div>
+                        <span class="cal-gallery__caption">Свадьба · поздравительная</span>
+                    </li>
+                    <li class="cal-gallery__item cal-gallery__item--wide">
+                        <div class="cal-gallery__frame">
+                            <img loading="lazy" src="images/img/articles/articles112-img-19.jpg"
+                                alt="Винтажная открытка в стиле почтовой марки с сургучной печатью">
+                        </div>
+                        <span class="cal-gallery__caption">Ретро-стиль · винтажная</span>
+                    </li>
+                    <li class="cal-gallery__item">
+                        <div class="cal-gallery__frame">
+                            <img loading="lazy" src="images/img/articles/articles112-img-16.jpg"
+                                alt="Деловая открытка-благодарность с веткой эвкалипта">
+                        </div>
+                        <span class="cal-gallery__caption">Благодарность · деловая</span>
+                    </li>
+                    <li class="cal-gallery__item">
+                        <div class="cal-gallery__frame">
+                            <img loading="lazy" src="images/img/articles/articles112-img-17.jpg"
+                                alt="Открытка к юбилею компании с иллюстрацией городского пейзажа Екатеринбурга">
+                        </div>
+                        <span class="cal-gallery__caption">Юбилей компании · деловая</span>
+                    </li>
+                </ul>
+            </article>
+
+            <!-- 03. Формы и конструкции -->
+            <article class="cal-section cal-reveal" id="card-forms">
+                <header class="cal-section__head">
+                    <span class="cal-section__num">03</span>
+                    <h2 class="news__subtitle cal-section__title">Формы и конструкции</h2>
+                </header>
+                <p class="cal-section__lead">
+                    Помимо повода и стиля, открытки отличаются физическим устройством. Вот пять самых
+                    распространённых форм — от простой карточки до объёмного трансформера.
+                </p>
+
+                <div class="cal-slider swiper cal-slider--forms">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide cal-forms__item">
+                            <div class="cal-forms__frame">
+                                <img loading="lazy" src="images/img/articles/articles112-img-20.jpg"
+                                    alt="Плоская открытка-карточка без сгибов">
+                            </div>
+                            <div class="cal-forms__body">
+                                <h3 class="cal-forms__title">Карточка</h3>
+                                <p class="cal-forms__desc">
+                                    Простая открытка без сгибов. Печать с одной или двух сторон — самый быстрый
+                                    и бюджетный вариант, особенно для тиражей на сборных листах.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="swiper-slide cal-forms__item">
+                            <div class="cal-forms__frame">
+                                <img loading="lazy" src="images/img/articles/articles112-img-21.jpg"
+                                    alt="Открытка со сгибом, раскрытая пополам">
+                            </div>
+                            <div class="cal-forms__body">
+                                <h3 class="cal-forms__title">Со сгибом</h3>
+                                <p class="cal-forms__desc">
+                                    Складывается пополам, текст пишут внутри. Снаружи — иллюстрация,
+                                    внутри — место для личного пожелания.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="swiper-slide cal-forms__item">
+                            <div class="cal-forms__frame">
+                                <img loading="lazy" src="images/img/articles/articles112-img-22.jpg"
+                                    alt="Открытка с вложением — карточка-конверт с дополнительным вкладышем">
+                            </div>
+                            <div class="cal-forms__body">
+                                <h3 class="cal-forms__title">С вложением</h3>
+                                <p class="cal-forms__desc">
+                                    Открытка-конверт: внутрь вкладывается отдельная карточка с пожеланием
+                                    или небольшой подарочный вкладыш — купон, мини-открытка, бонусная карта.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="swiper-slide cal-forms__item">
+                            <div class="cal-forms__frame">
+                                <img loading="lazy" src="images/img/articles/articles112-img-23.jpg"
+                                    alt="Объёмная открытка-трансформер с поднимающимися деталями">
+                            </div>
+                            <div class="cal-forms__body">
+                                <h3 class="cal-forms__title">Трансформер</h3>
+                                <p class="cal-forms__desc">
+                                    При раскрытии часть деталей поднимается и создаёт объёмную картинку —
+                                    эффектный вариант для VIP-поздравлений и запоминающихся подарков.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="swiper-slide cal-forms__item">
+                            <div class="cal-forms__frame">
+                                <img loading="lazy" src="images/img/articles/articles112-img-24.jpg"
+                                    alt="Открытка нестандартной фигурной формы с вырубкой по контуру">
+                            </div>
+                            <div class="cal-forms__body">
+                                <h3 class="cal-forms__title">Нестандартной формы</h3>
+                                <p class="cal-forms__desc">
+                                    Вырубка по контуру — круглая, в форме сердца, фигурная по силуэту
+                                    логотипа. Такая открытка сразу выделяется на столе среди остальных.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-pagination cal-slider__pagination cal-pag--forms"></div>
+                    <div class="cal-slider__btn cal-slider__btn--prev cal-prev--forms" role="button" aria-label="Назад">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <div class="cal-slider__btn cal-slider__btn--next cal-next--forms" role="button" aria-label="Вперёд">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 04. Психология осязаемого -->
+            <article class="cal-section cal-reveal" id="card-trust">
+                <header class="cal-section__head">
+                    <span class="cal-section__num">04</span>
                     <h2 class="news__subtitle cal-section__title">Психология осязаемого подарка</h2>
                 </header>
                 <p class="cal-section__lead">
@@ -168,10 +460,10 @@
                 </div>
             </article>
 
-            <!-- 02. История -->
+            <!-- 05. История -->
             <article class="cal-section cal-reveal" id="card-history">
                 <header class="cal-section__head">
-                    <span class="cal-section__num">02</span>
+                    <span class="cal-section__num">05</span>
                     <h2 class="news__subtitle cal-section__title">История с XIX века</h2>
                 </header>
                 <p class="cal-section__lead">
@@ -223,10 +515,10 @@
                 </div>
             </article>
 
-            <!-- 03. Качество и отделка -->
+            <!-- 06. Качество и отделка -->
             <article class="cal-section cal-reveal" id="card-quality">
                 <header class="cal-section__head">
-                    <span class="cal-section__num">03</span>
+                    <span class="cal-section__num">06</span>
                     <h2 class="news__subtitle cal-section__title">Качество — это образ компании</h2>
                 </header>
                 <p class="cal-section__lead">
@@ -283,10 +575,10 @@
                 </div>
             </article>
 
-            <!-- 04. Одиночные открытки -->
+            <!-- 07. Одиночные открытки -->
             <article class="cal-section cal-reveal" id="card-singles">
                 <header class="cal-section__head">
-                    <span class="cal-section__num">04</span>
+                    <span class="cal-section__num">07</span>
                     <h2 class="news__subtitle cal-section__title">Одиночные открытки на сборных листах</h2>
                 </header>
                 <p class="cal-section__lead">

@@ -1,0 +1,244 @@
+/* ============================================================
+   Статья «Открытки» (articles112.html)
+   Классификация открыток и галерея разнообразных дизайнов —
+   дополнение к .cal-article (стили из _calendars-article.scss)
+   ============================================================ */
+
+/* ---------- Классификация (виды открыток) ---------- */
+$cal-taxonomy-colors: (
+    delivery: #3E77FB,
+    image: #50befd,
+    shape: #334eac,
+    purpose: #7096d1,
+    other: #0076bb,
+);
+
+.cal-taxonomy {
+    &__list {
+        list-style: none;
+        margin: 8px 0 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+
+        @media (max-width: 1024px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media (max-width: 576px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__item {
+        --tx-accent: #3E77FB;
+        background: var(--color-white);
+        border: 1px solid var(--color-whisper);
+        border-radius: var(--cal-radius);
+        padding: 22px 24px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+
+        &:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--cal-shadow-soft);
+        }
+
+        @each $name, $color in $cal-taxonomy-colors {
+            &--#{$name} {
+                --tx-accent: #{$color};
+                background: linear-gradient(180deg, rgba($color, 0.07), rgba($color, 0.015) 55%), var(--color-white);
+            }
+        }
+    }
+
+    &__title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--color-galaxy);
+        margin: 0 0 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    &__icon {
+        flex-shrink: 0;
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.06);
+        background: color-mix(in srgb, var(--tx-accent) 14%, white);
+        color: var(--tx-accent);
+
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    &__hint {
+        font-size: 13.5px;
+        line-height: 1.5;
+        color: var(--color-dim-gray);
+        margin: 0 0 14px;
+    }
+
+    &__tags {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    &__tags li {
+        padding: 6px 14px;
+        border-radius: 50px;
+        background: var(--color-white);
+        border: 1px solid var(--color-whisper);
+        color: var(--color-galaxy);
+        font-size: 13.5px;
+        font-weight: 600;
+    }
+}
+
+/* ---------- Галерея дизайнов ---------- */
+.cal-gallery {
+    &__list {
+        list-style: none;
+        margin: 8px 0 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+
+        @media (max-width: 1024px) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        @media (max-width: 680px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media (max-width: 410px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__item {
+        position: relative;
+        border-radius: var(--cal-radius);
+        overflow: hidden;
+        box-shadow: var(--cal-shadow-soft);
+        background: var(--color-meteor);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        &:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--cal-shadow);
+
+            img {
+                transform: scale(1.06);
+            }
+        }
+
+        &--wide {
+            grid-column: span 2;
+
+            .cal-gallery__frame {
+                aspect-ratio: 8 / 5;
+            }
+
+            @media (max-width: 410px) {
+                grid-column: span 1;
+            }
+        }
+    }
+
+    &__frame {
+        aspect-ratio: 4 / 5;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.6s ease;
+        }
+    }
+
+    &__caption {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 14px 16px 12px;
+        background: linear-gradient(180deg, transparent, rgba(8, 31, 92, 0.78) 70%);
+        color: var(--color-white);
+        font-weight: 700;
+        font-size: 14.5px;
+        line-height: 1.3;
+    }
+}
+
+/* ---------- Формы и конструкции (слайдер, изображения горизонтальные) ---------- */
+.cal-forms {
+    &__item {
+        height: auto;
+        background: var(--color-white);
+        border: 1px solid var(--color-whisper);
+        border-radius: var(--cal-radius);
+        overflow: hidden;
+        box-shadow: var(--cal-shadow-soft);
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        &:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--cal-shadow);
+
+            img {
+                transform: scale(1.06);
+            }
+        }
+    }
+
+    &__frame {
+        aspect-ratio: 3 / 2;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.6s ease;
+        }
+    }
+
+    &__body {
+        flex: 1;
+        padding: 18px 20px 22px;
+    }
+
+    &__title {
+        font-size: 17px;
+        font-weight: 700;
+        color: var(--color-galaxy);
+        margin: 0 0 8px;
+    }
+
+    &__desc {
+        font-size: 14.5px;
+        line-height: 1.55;
+        color: var(--color-dim-gray);
+        margin: 0;
+    }
+}
