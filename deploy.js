@@ -15,7 +15,14 @@
 // гарантированно перезалить всё.
 //
 // При обрыве соединения посреди файла скрипт сам переподключается и
-// повторяет именно этот файл (до 3 попыток).
+// повторяет именно этот файл (до 4 попыток). Если файл так и не залился —
+// он просто пропускается (без остановки всей заливки) и попадёт в отчёт
+// в конце; следующий запуск сам попробует его снова.
+//
+// Файлы больше DEPLOY_MAX_SIZE_MB (по умолчанию 50 МБ, см. .env) сразу
+// пропускаются — большие видео не успевают залиться по FTP в таймаут
+// хостинга, сколько раз ни переподключайся. Их проще закинуть руками
+// через файловый менеджер (меняются редко).
 
 require('dotenv').config();
 const path = require('path');
@@ -25,6 +32,7 @@ const localDir = path.join(__dirname, 'build');
 const remoteDir = process.env.DEPLOY_REMOTE_DIR;
 const protocol = (process.env.DEPLOY_PROTOCOL || 'sftp').toLowerCase();
 const manifestPath = path.join(__dirname, '.deploy-manifest.json');
+const maxSizeBytes = (Number(process.env.DEPLOY_MAX_SIZE_MB) || 50) * 1024 * 1024;
 
 if (!fs.existsSync(localDir)) {
     console.error('Папка build/ не найдена. Сначала выполни `npm run build`.');
@@ -131,35 +139,49 @@ async function makeSftpUploader() {
     const allFiles = walk(localDir);
     const manifest = loadManifest();
 
-    const changedFiles = allFiles.filter((relPath) => {
+    const candidates = allFiles.filter((relPath) => {
         const stat = fs.statSync(path.join(localDir, relPath));
         const prev = manifest[relPath];
         return !prev || prev.size !== stat.size || prev.mtimeMs !== stat.mtimeMs;
     });
 
+    const skippedLarge = candidates.filter(
+        (relPath) => fs.statSync(path.join(localDir, relPath)).size > maxSizeBytes
+    );
+    const changedFiles = candidates.filter((relPath) => !skippedLarge.includes(relPath));
+
+    if (skippedLarge.length) {
+        console.log(`Пропущено больших файлов (> ${maxSizeBytes / 1024 / 1024} МБ) — залей их вручную через файловый менеджер:`);
+        skippedLarge.forEach((f) => console.log('  -', f));
+    }
+
     if (changedFiles.length === 0) {
-        console.log('Нет изменённых файлов с последнего деплоя — заливать нечего.');
+        console.log('Нет изменённых файлов (кроме пропущенных больших) с последнего деплоя — заливать нечего.');
         return;
     }
 
-    console.log(`Файлов всего: ${allFiles.length}, изменённых/новых: ${changedFiles.length}.`);
+    console.log(`Файлов всего: ${allFiles.length}, к заливке: ${changedFiles.length}.`);
     console.log(`Заливаю по ${protocol.toUpperCase()} -> ${process.env.DEPLOY_HOST}:${remoteDir} ...`);
 
     const uploader = protocol === 'ftp' ? await makeFtpUploader() : await makeSftpUploader();
     await uploader.connect();
 
     let uploaded = 0;
+    const failed = [];
     try {
         for (const relPath of changedFiles) {
             let attempt = 0;
-            for (;;) {
+            let ok = false;
+            while (!ok) {
                 try {
                     await uploader.uploadOne(relPath);
-                    break;
+                    ok = true;
                 } catch (err) {
                     attempt++;
-                    if (attempt > 3) {
-                        throw new Error(`Не удалось залить ${relPath} после ${attempt} попыток: ${err.message}`);
+                    if (attempt > 4) {
+                        console.error(`Не удалось залить ${relPath} после ${attempt} попыток: ${err.message} — пропускаю.`);
+                        failed.push(relPath);
+                        break;
                     }
                     console.error(`Сбой на ${relPath} (${err.message}) — переподключаюсь, попытка ${attempt + 1}...`);
                     try { await uploader.close(); } catch { /* соединение и так мертво */ }
@@ -168,16 +190,18 @@ async function makeSftpUploader() {
                 }
             }
 
-            const stat = fs.statSync(path.join(localDir, relPath));
-            manifest[relPath] = { size: stat.size, mtimeMs: stat.mtimeMs };
-            saveManifest(manifest);
-            uploaded++;
+            if (ok) {
+                const stat = fs.statSync(path.join(localDir, relPath));
+                manifest[relPath] = { size: stat.size, mtimeMs: stat.mtimeMs };
+                saveManifest(manifest);
+                uploaded++;
+            }
         }
         console.log(`Готово: залито файлов — ${uploaded}/${changedFiles.length}.`);
-    } catch (err) {
-        console.error(`Остановлено на ${uploaded}/${changedFiles.length}. Ошибка: ${err.message}`);
-        console.error('Прогресс сохранён — просто запусти деплой ещё раз, он продолжит с этого места.');
-        process.exitCode = 1;
+        if (failed.length) {
+            console.log('Не удалось залить (попробуются автоматически при следующем запуске):');
+            failed.forEach((f) => console.log('  -', f));
+        }
     } finally {
         try { await uploader.close(); } catch { /* уже закрыто/мертво */ }
     }
