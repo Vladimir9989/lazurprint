@@ -1,0 +1,195 @@
+@import 'variables';
+@import 'mixin';
+
+// Фон всей страницы новости про lazur-wear.ru: мягкие фиолетово-бирюзовые
+// пятна поверх светлого лавандового градиента. Класс вешается на
+// <section class="news news-feature-page"> только в news48.html.
+.news-feature-page {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #fbfaff 0%, #f2f1ff 100%);
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  &::before {
+    top: -120px;
+    right: -160px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(108, 92, 231, 0.14) 0%, transparent 70%);
+  }
+
+  &::after {
+    bottom: -160px;
+    left: -140px;
+    width: 460px;
+    height: 460px;
+    background: radial-gradient(circle, rgba(0, 206, 201, 0.12) 0%, transparent 70%);
+  }
+
+  .news__container {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+// Оформление отдельной новости в стиле lazur-wear.ru: светлая лавандовая
+// подложка, мягкие фиолетовые тени, акцентная кнопка и врезка-цитата.
+// Используется только внутри конкретных новостей (например, news48.html),
+// не затрагивает общий вид раздела "Новости".
+.news-feature {
+  --nf-accent: #6C5CE7;
+  --nf-accent-light: #a29bfe;
+  --nf-turquoise: #00cec9;
+  --nf-bg-from: #f8f7ff;
+  --nf-bg-to: #eef0ff;
+
+  max-width: 860px;
+  margin: 24px auto 0;
+  padding: 40px 48px;
+  background: linear-gradient(135deg, var(--nf-bg-from) 0%, var(--nf-bg-to) 100%);
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(108, 92, 231, 0.12);
+
+  @include lg {
+    max-width: 100%;
+  }
+
+  @include md {
+    padding: 24px 20px;
+    border-radius: 16px;
+  }
+
+  &__link {
+    color: var(--nf-accent);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: rgba(108, 92, 231, 0.35);
+    text-underline-offset: 3px;
+    transition: color 0.2s ease, text-decoration-color 0.2s ease;
+
+    &:hover {
+      color: var(--nf-turquoise);
+      text-decoration-color: var(--nf-turquoise);
+    }
+  }
+
+  &__lead {
+    margin: 0 0 24px;
+    padding: 18px 22px;
+    background: #ffffff;
+    border-radius: 14px;
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--color-galaxy);
+    box-shadow: 0 8px 24px rgba(108, 92, 231, 0.1);
+
+    @include md {
+      font-size: 17px;
+      padding: 16px 18px;
+    }
+  }
+
+  &__text {
+    margin: 0 0 22px;
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--color-dim-gray, #666);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__subtitle {
+    margin: 0 0 16px;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-galaxy);
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 22px;
+      height: 3px;
+      margin-right: 10px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--nf-accent), var(--nf-turquoise));
+      vertical-align: middle;
+    }
+  }
+
+  &__photo {
+    margin: 0 0 26px;
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(108, 92, 231, 0.15);
+    }
+  }
+
+  &__caption {
+    display: block;
+    max-width: 500px;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--color-pink-sw, #b7b7b7);
+  }
+
+  &__quote {
+    position: relative;
+    margin: 0 0 26px;
+    padding: 20px 24px 20px 28px;
+    background: #ffffff;
+    border-radius: 14px;
+    border-left: 4px solid transparent;
+    border-image: linear-gradient(180deg, #fd79a8, var(--nf-accent)) 1;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--color-dim-gray, #666);
+    font-style: italic;
+    box-shadow: 0 8px 24px rgba(108, 92, 231, 0.1);
+  }
+
+  &__cta {
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 1px dashed rgba(108, 92, 231, 0.25);
+    text-align: center;
+  }
+
+  &__cta-text {
+    margin: 0 0 18px;
+    font-size: 17px;
+    color: var(--color-galaxy);
+  }
+
+  &__btn {
+    display: inline-block;
+    padding: 15px 34px;
+    background: linear-gradient(135deg, var(--nf-accent) 0%, var(--nf-turquoise) 100%);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 50px;
+    box-shadow: 0 12px 30px rgba(108, 92, 231, 0.35);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(108, 92, 231, 0.45);
+    }
+  }
+}
