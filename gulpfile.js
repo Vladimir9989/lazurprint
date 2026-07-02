@@ -19,6 +19,7 @@ const ttf2woff = require('gulp-ttf2woff')
 const ttf2woff2 = require('gulp-ttf2woff2')
 const plumber = require('gulp-plumber')
 const sitemap = require('gulp-sitemap')
+const pkg = require('./package.json')
 
 
 const fonts = (done) => {
@@ -77,7 +78,7 @@ const htmlMinify = () => {
             removeComments: true,
         })))
         .pipe(versionNumber({
-            'value': '%DT%',
+            'value': pkg.version,
             'append': {
                 'key': '_v',
                 'cover': 0,

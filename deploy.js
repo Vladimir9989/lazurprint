@@ -6,13 +6,17 @@
 // Креды берутся из .env (см. .env.example) и НЕ должны попадать в git.
 //
 // Инкрементальность: после успешной заливки каждого файла его путь/размер/
-// mtime сразу сохраняются в .deploy-manifest.json (тоже не в git). В
-// следующий раз заливаются только файлы, которых не было в манифесте или
-// у которых изменился размер/время изменения. Манифест пишется по ходу
-// дела, а не только в конце — если соединение оборвётся на середине (FTP
-// нестабилен на больших объёмах), повторный запуск продолжит с места
-// обрыва, а не начнёт всё заново. Манифест можно удалить, если нужно
-// гарантированно перезалить всё.
+// хеш содержимого (sha256) сразу сохраняются в .deploy-manifest.json (тоже
+// не в git). В следующий раз заливаются только файлы, которых не было в
+// манифесте или у которых изменился размер/хеш. Сравнение именно по хешу,
+// а не по mtime: gulp при каждой сборке переписывает (и трогает mtime)
+// вообще все файлы в build/, даже если их содержимое не менялось — при
+// сравнении по mtime это означало бы перезаливку всего build/ (~2800
+// файлов) при любой мелкой правке. Манифест пишется по ходу дела, а не
+// только в конце — если соединение оборвётся на середине (FTP нестабилен
+// на больших объёмах), повторный запуск продолжит с места обрыва, а не
+// начнёт всё заново. Манифест можно удалить, если нужно гарантированно
+// перезалить всё.
 //
 // При обрыве соединения посреди файла скрипт сам переподключается и
 // повторяет именно этот файл (до 4 попыток). Если файл так и не залился —
@@ -27,6 +31,19 @@
 require('dotenv').config();
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto');
+
+// На нестабильных FTP-соединениях (большие видео, таймауты) библиотека
+// иногда роняет ошибку уже закрытого сокета асинхронно, уже после того как
+// наш retry-цикл для этого файла отработал и пошёл дальше. Без этого
+// перехвата такая "отложенная" ошибка валит весь процесс необработанным
+// исключением, хотя по сути файл уже обработан (успешно или пропущен).
+process.on('uncaughtException', (err) => {
+    console.error(`Отложенная ошибка соединения (игнорирую, продолжаю): ${err.message}`);
+});
+process.on('unhandledRejection', (err) => {
+    console.error(`Отложенная ошибка соединения (игнорирую, продолжаю): ${err && err.message}`);
+});
 
 const localDir = path.join(__dirname, 'build');
 const remoteDir = process.env.DEPLOY_REMOTE_DIR;
@@ -68,6 +85,10 @@ function loadManifest() {
 
 function saveManifest(manifest) {
     fs.writeFileSync(manifestPath, JSON.stringify(manifest));
+}
+
+function hashFile(filePath) {
+    return crypto.createHash('sha256').update(fs.readFileSync(filePath)).digest('hex');
 }
 
 function remoteDirOf(relPath) {
@@ -140,10 +161,30 @@ async function makeSftpUploader() {
     const manifest = loadManifest();
 
     const candidates = allFiles.filter((relPath) => {
-        const stat = fs.statSync(path.join(localDir, relPath));
+        const filePath = path.join(localDir, relPath);
+        const stat = fs.statSync(filePath);
         const prev = manifest[relPath];
-        return !prev || prev.size !== stat.size || prev.mtimeMs !== stat.mtimeMs;
+
+        if (!prev) return true; // новый файл — заливаем
+        if (prev.size !== stat.size) return true; // размер другой — точно менялся
+
+        // Размер совпал — сверяем по хешу содержимого, а не по mtime
+        // (mtime у gulp меняется при каждой пересборке независимо от
+        // реальных изменений). Если это старая запись манифеста (ещё без
+        // хеша, до перехода на эту схему) — считаем файл неизменным и
+        // просто дописываем ему хеш, не перезаливая заново.
+        const hash = hashFile(filePath);
+        if (!prev.hash) {
+            manifest[relPath] = { size: stat.size, hash };
+            return false;
+        }
+        return prev.hash !== hash;
     });
+
+    // Сохраняем манифест сразу после фильтрации — там могли досчитаться
+    // хеши для старых записей (см. выше), это нужно сохранить, даже если
+    // ниже окажется, что заливать нечего.
+    saveManifest(manifest);
 
     const skippedLarge = candidates.filter(
         (relPath) => fs.statSync(path.join(localDir, relPath)).size > maxSizeBytes
@@ -170,6 +211,7 @@ async function makeSftpUploader() {
     const failed = [];
     try {
         for (const relPath of changedFiles) {
+            console.log(`  [${uploaded + failed.length + 1}/${changedFiles.length}] ${relPath}`);
             let attempt = 0;
             let ok = false;
             while (!ok) {
@@ -191,8 +233,9 @@ async function makeSftpUploader() {
             }
 
             if (ok) {
-                const stat = fs.statSync(path.join(localDir, relPath));
-                manifest[relPath] = { size: stat.size, mtimeMs: stat.mtimeMs };
+                const filePath = path.join(localDir, relPath);
+                const stat = fs.statSync(filePath);
+                manifest[relPath] = { size: stat.size, hash: hashFile(filePath) };
                 saveManifest(manifest);
                 uploaded++;
             }
