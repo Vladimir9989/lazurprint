@@ -46,27 +46,41 @@ process.on('unhandledRejection', (err) => {
 });
 
 const localDir = path.join(__dirname, 'build');
-const remoteDir = process.env.DEPLOY_REMOTE_DIR;
 const protocol = (process.env.DEPLOY_PROTOCOL || 'sftp').toLowerCase();
+
+// Креды под конкретный протокол: при sftp сначала берём DEPLOY_SFTP_* (если заданы),
+// иначе — общие DEPLOY_*. Так FTP- и SFTP-настройки живут в .env рядом, и переключение
+// между ними — это только смена DEPLOY_PROTOCOL, без переписывания логина/пароля/пути.
+const pick = (base) => {
+    if (protocol === 'sftp') {
+        const v = process.env[`DEPLOY_SFTP_${base}`];
+        if (v !== undefined && v !== '') return v;
+    }
+    return process.env[`DEPLOY_${base}`];
+};
+const deployHost = pick('HOST');
+const deployUser = pick('USER');
+const deployPassword = pick('PASSWORD');
+const deployPort = Number(pick('PORT')) || (protocol === 'sftp' ? 22 : 21);
+const remoteDir = pick('REMOTE_DIR');
 const manifestPath = path.join(__dirname, '.deploy-manifest.json');
 const maxSizeBytes = (Number(process.env.DEPLOY_MAX_SIZE_MB) || 50) * 1024 * 1024;
 
-// Файлы, которые заливаются ТОЛЬКО вручную через файловый менеджер. Крупные видео
-// (< maxSizeBytes, поэтому под правило «> 50 МБ» не попадают), но по FTP стабильно
-// таймаутят и подвешивают деплой. Держим их на сервере руками, а деплой всегда
-// пропускает — так же, как файлы больше maxSizeBytes. Пути — относительно build/, через '/'.
-const manualSkip = new Set([
-    'images/img/video/lazur-video.mp4',
-    'images/img/video/museum/SnapSave_App_10164537520131779_1080p.mp4',
-]);
+// Файлы, которые заливаются ТОЛЬКО вручную через файловый менеджер — деплой их всегда
+// пропускает (как и файлы больше maxSizeBytes). Пути — относительно build/, через '/'.
+// Раньше сюда попадали средние видео (~30–45 МБ), которые таймаутили по FTP; после
+// перехода на SFTP+fastPut они заливаются штатно, поэтому список пуст. Оставлен как
+// точка расширения: если какой-то файл будет упорно рвать заливку — вписать сюда.
+const manualSkip = new Set([]);
 
 if (!fs.existsSync(localDir)) {
     console.error('Папка build/ не найдена. Сначала выполни `npm run build`.');
     process.exit(1);
 }
 
-if (!process.env.DEPLOY_HOST || !process.env.DEPLOY_USER || !process.env.DEPLOY_PASSWORD || !remoteDir) {
-    console.error('В .env не заданы DEPLOY_HOST / DEPLOY_USER / DEPLOY_PASSWORD / DEPLOY_REMOTE_DIR.');
+if (!deployHost || !deployUser || !deployPassword || !remoteDir) {
+    const suffix = protocol === 'sftp' ? ' (для sftp — DEPLOY_SFTP_* или общие DEPLOY_*)' : '';
+    console.error(`В .env не заданы HOST / USER / PASSWORD / REMOTE_DIR${suffix}.`);
     console.error('Скопируй .env.example в .env и заполни реальными данными.');
     process.exit(1);
 }
@@ -114,10 +128,10 @@ async function makeFtpUploader() {
             client = new ftp.Client(60000);
             client.ftp.verbose = false;
             await client.access({
-                host: process.env.DEPLOY_HOST,
-                port: Number(process.env.DEPLOY_PORT) || 21,
-                user: process.env.DEPLOY_USER,
-                password: process.env.DEPLOY_PASSWORD,
+                host: deployHost,
+                port: deployPort,
+                user: deployUser,
+                password: deployPassword,
             });
             madeDirs = new Set();
         },
@@ -144,10 +158,10 @@ async function makeSftpUploader() {
         async connect() {
             sftp = new Client();
             await sftp.connect({
-                host: process.env.DEPLOY_HOST,
-                port: Number(process.env.DEPLOY_PORT) || 22,
-                username: process.env.DEPLOY_USER,
-                password: process.env.DEPLOY_PASSWORD,
+                host: deployHost,
+                port: deployPort,
+                username: deployUser,
+                password: deployPassword,
             });
             madeDirs = new Set();
         },
@@ -157,7 +171,12 @@ async function makeSftpUploader() {
                 await sftp.mkdir(rDir, true);
                 madeDirs.add(rDir);
             }
-            await sftp.put(path.join(localDir, relPath), `${remoteDir}/${relPath}`);
+            // fastPut (параллельные чанки) — на этом хостинге ~3.5x быстрее обычного put
+            // (проверено: 43 МБ за 105 c против 374 c). put упирается в одно окно SFTP.
+            await sftp.fastPut(path.join(localDir, relPath), `${remoteDir}/${relPath}`, {
+                concurrency: 64,
+                chunkSize: 32768,
+            });
         },
         async close() {
             await sftp.end();
@@ -221,7 +240,7 @@ async function makeSftpUploader() {
     }
 
     console.log(`Файлов всего: ${allFiles.length}, к заливке: ${changedFiles.length}.`);
-    console.log(`Заливаю по ${protocol.toUpperCase()} -> ${process.env.DEPLOY_HOST}:${remoteDir} ...`);
+    console.log(`Заливаю по ${protocol.toUpperCase()} -> ${deployHost}:${remoteDir} ...`);
 
     const uploader = protocol === 'ftp' ? await makeFtpUploader() : await makeSftpUploader();
     await uploader.connect();
