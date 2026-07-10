@@ -51,6 +51,15 @@ const protocol = (process.env.DEPLOY_PROTOCOL || 'sftp').toLowerCase();
 const manifestPath = path.join(__dirname, '.deploy-manifest.json');
 const maxSizeBytes = (Number(process.env.DEPLOY_MAX_SIZE_MB) || 50) * 1024 * 1024;
 
+// Файлы, которые заливаются ТОЛЬКО вручную через файловый менеджер. Крупные видео
+// (< maxSizeBytes, поэтому под правило «> 50 МБ» не попадают), но по FTP стабильно
+// таймаутят и подвешивают деплой. Держим их на сервере руками, а деплой всегда
+// пропускает — так же, как файлы больше maxSizeBytes. Пути — относительно build/, через '/'.
+const manualSkip = new Set([
+    'images/img/video/lazur-video.mp4',
+    'images/img/video/museum/SnapSave_App_10164537520131779_1080p.mp4',
+]);
+
 if (!fs.existsSync(localDir)) {
     console.error('Папка build/ не найдена. Сначала выполни `npm run build`.');
     process.exit(1);
@@ -189,11 +198,21 @@ async function makeSftpUploader() {
     const skippedLarge = candidates.filter(
         (relPath) => fs.statSync(path.join(localDir, relPath)).size > maxSizeBytes
     );
-    const changedFiles = candidates.filter((relPath) => !skippedLarge.includes(relPath));
+    const skippedManual = candidates.filter(
+        (relPath) => manualSkip.has(relPath) && !skippedLarge.includes(relPath)
+    );
+    const changedFiles = candidates.filter(
+        (relPath) => !skippedLarge.includes(relPath) && !skippedManual.includes(relPath)
+    );
 
     if (skippedLarge.length) {
         console.log(`Пропущено больших файлов (> ${maxSizeBytes / 1024 / 1024} МБ) — залей их вручную через файловый менеджер:`);
         skippedLarge.forEach((f) => console.log('  -', f));
+    }
+
+    if (skippedManual.length) {
+        console.log('Пропущено файлов из ручного списка (manualSkip, заливаются только через файловый менеджер):');
+        skippedManual.forEach((f) => console.log('  -', f));
     }
 
     if (changedFiles.length === 0) {
