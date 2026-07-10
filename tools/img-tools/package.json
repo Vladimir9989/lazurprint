@@ -1,0 +1,10 @@
+{
+  "name": "img-tools",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Локальные скрипты обработки фото каталога (resize/crop/rotate/яркость) на sharp",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "sharp": "^0.35.3"
+  }
+}

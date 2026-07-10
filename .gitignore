@@ -1,4 +1,7 @@
 /node_modules
+/tools/img-tools/node_modules
+/tools/img-tools/out
+/tools/img-tools/montage.png
 /dist
 /build
 /.claude
