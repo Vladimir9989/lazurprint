@@ -22,7 +22,7 @@
 @import 'thanks';
 @import 'vacancy';
 @import 'news';
-@import 'news-feature';
+@import 'articles/news-feature';
 @import 'work';
 @import 'consultation-faq';
 @import 'counter';
@@ -35,8 +35,9 @@
 @import 'catalog-suvenir';
 @import 'equipment';
 @import 'forms';
-@import 'calendars-article';
-@import 'postcards-article';
+@import 'articles/calendars-article';
+@import 'articles/postcards-article';
+@import 'articles/exhibition-article';
 @import 'footer';
 
 // Анимации появления при скролле
