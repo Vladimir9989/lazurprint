@@ -15,7 +15,8 @@
     const state = {
         currentCategory: '1',
         searchQuery: '',
-        sortBy: 'default'
+        sortBy: 'default',
+        currentCity: ''
     };
 
     // DOM элементы
@@ -23,6 +24,7 @@
         categoryTabs: null,
         searchInput: null,
         sortSelect: null,
+        citySelect: null,
         paginationContainer: null
     };
 
@@ -34,6 +36,7 @@
         initCategoryNavigation();
         initSearch();
         initSort();
+        initCityFilter();
         restoreCategoryFromURL();
     }
 
@@ -44,6 +47,7 @@
         elements.categoryTabs = document.querySelector('.catalog__category-tabs');
         elements.searchInput = document.querySelector('.catalog__search input');
         elements.sortSelect = document.querySelector('.catalog__sort select');
+        elements.citySelect = document.querySelector('.catalog__city-filter select');
         elements.paginationContainer = document.querySelector('.catalog__pagination');
         
         // Скрываем пагинацию
@@ -102,6 +106,9 @@
         document.querySelectorAll('.catalog__section').forEach(section => {
             section.classList.toggle('catalog__section--active', section.dataset.tab === categoryId);
         });
+
+        // Фильтр по городу не сбрасывается при смене категории — применяем его к новой секции
+        filterProducts();
     }
 
     /**
@@ -141,24 +148,47 @@
         if (!activeSection) return;
 
         const items = activeSection.querySelectorAll('.catalog__item');
-        
+
         items.forEach(item => {
             const name = item.querySelector('.catalog-item__name');
             const number = item.querySelector('.catalog-item__number');
             const nameText = name ? name.textContent.trim().toLowerCase() : '';
             const articleText = number ? number.textContent.trim().toLowerCase() : '';
-            
+
             // Поиск
             let matchesSearch = true;
             if (state.searchQuery) {
                 matchesSearch = nameText.includes(state.searchQuery) || articleText.includes(state.searchQuery);
             }
-            
-            item.style.display = matchesSearch ? '' : 'none';
+
+            // Фильтр по городу. "universal" — отдельный пункт для товаров без data-city
+            // (не привязаны ни к одному городу); при выборе конкретного города такие
+            // товары не показываются — только точное совпадение по data-city.
+            let matchesCity = true;
+            if (state.currentCity === 'universal') {
+                matchesCity = !item.dataset.city;
+            } else if (state.currentCity) {
+                const itemCities = item.dataset.city ? item.dataset.city.split(' ') : [];
+                matchesCity = itemCities.includes(state.currentCity);
+            }
+
+            item.style.display = (matchesSearch && matchesCity) ? '' : 'none';
         });
 
         // Сортировка
         sortProducts(activeSection);
+    }
+
+    /**
+     * Инициализация фильтра по городу
+     */
+    function initCityFilter() {
+        if (!elements.citySelect) return;
+
+        elements.citySelect.addEventListener('change', function(e) {
+            state.currentCity = e.target.value;
+            filterProducts();
+        });
     }
 
     /**
