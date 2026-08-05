@@ -39,11 +39,23 @@
 <body class="body">
     @@include('html/header.html', {})
     @@include('html/main-button.html', {})
-    <main class="main">
+    <main class="main contacts-showcase">
         <section class="contacts" id="contacts" style="padding-top: 70px;">
             <div class="contacts__top">
                 <div class="container">
                     <h1 class="contacts__title">Контакты</h1>
+                    <p class="contacts-showcase__lead">
+                        Свяжитесь с нами удобным способом — ответим на вопросы, рассчитаем стоимость и подготовим
+                        предложение под ваш проект.
+                    </p>
+                    <nav class="contacts-showcase__nav">
+                        <a href="#contacts" class="contacts-showcase__chip contacts-showcase__chip--main">Как
+                            связаться</a>
+                        <a href="#cw-team" class="contacts-showcase__chip">Наша команда</a>
+                        <a href="#cw-advantages" class="contacts-showcase__chip">Преимущества</a>
+                        <a href="#cw-faq" class="contacts-showcase__chip">Вопросы</a>
+                        <a href="#cw-reviews" class="contacts-showcase__chip">Отзывы</a>
+                    </nav>
                     <ul class="contacts__list list-reset">
                         <li class="contacts__item">
                             <a href="#map" class="contacts__link">
@@ -128,10 +140,18 @@
                 </div>
             </div>
         </section>
-        @@include('html/steps.html', {})
-        @@include('html/info.html', {})
-        @@include('html/consultation.html', {})
-        @@include('html/reviews.html', {})
+        <div id="cw-team">
+            @@include('html/steps.html', {})
+        </div>
+        <div id="cw-advantages">
+            @@include('html/info.html', {})
+        </div>
+        <div id="cw-faq">
+            @@include('html/consultation.html', {})
+        </div>
+        <div id="cw-reviews">
+            @@include('html/reviews.html', {})
+        </div>
     </main>
     @@include('html/footer.html', {})
     <div class="about__modal video-1">

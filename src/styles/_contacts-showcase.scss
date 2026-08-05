@@ -1,0 +1,313 @@
+@import 'variables';
+@import 'mixin';
+
+/* ============================================================
+   Редизайн страницы «Контакты» (contacts.html) в стилистике
+   индивидуально оформленных статей/новостей: хиро с лидом и
+   чип-навигацией, карточки с круглыми иконками-бейджами,
+   аккуратно оформленный блок преимуществ и услуг (раньше рендерился
+   вообще без стилей — голым списком).
+   Всё под префиксом .contacts-showcase (класс на <main> только
+   на этой странице), чтобы не задеть идентичный блок .contacts
+   на главной (index.html использует те же BEM-классы для своей
+   секции контактов) и остальные 24 страницы, которые переиспользуют
+   те же @@include('html/steps|info|consultation|reviews.html').
+   ============================================================ */
+
+.contacts-showcase {
+  background: linear-gradient(180deg, #f7f9ff 0%, #eef2fb 45%, #f7f9ff 100%);
+
+  // ---------- Хиро: лид + чип-навигация ----------
+  .contacts {
+    position: relative;
+    overflow: hidden;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    &::before {
+      top: -160px;
+      right: -160px;
+      width: 480px;
+      height: 480px;
+      background: radial-gradient(circle, rgba(62, 119, 251, 0.14) 0%, transparent 70%);
+    }
+
+    &::after {
+      bottom: -140px;
+      left: -150px;
+      width: 420px;
+      height: 420px;
+      background: radial-gradient(circle, rgba(109, 226, 235, 0.14) 0%, transparent 70%);
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+    }
+  }
+
+  &__lead {
+    max-width: 640px;
+    margin: 0 0 26px;
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--color-dim-gray, #666);
+
+    @include md {
+      font-size: 16px;
+    }
+  }
+
+  &__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0 0 36px;
+  }
+
+  &__chip {
+    padding: 9px 18px;
+    border-radius: 50px;
+    background: #ffffff;
+    border: 1px solid rgba(62, 119, 251, 0.18);
+    color: var(--color-galaxy);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(62, 119, 251, 0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(62, 119, 251, 0.18);
+      color: var(--color-primary, #3E77FB);
+    }
+
+    &--main {
+      color: #ffffff;
+      background: linear-gradient(135deg, #3E77FB 0%, #6de2eb 100%);
+      border-color: transparent;
+
+      &:hover {
+        color: #ffffff;
+      }
+    }
+  }
+
+  // ---------- Иконки-бейджи в карточках контактов ----------
+  .contacts__item-svg {
+    width: 64px;
+    height: 64px;
+    padding: 15px;
+    box-sizing: border-box;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(62, 119, 251, 0.12), rgba(109, 226, 235, 0.16));
+    filter: none;
+    transition: background 0.3s ease, transform 0.3s ease;
+
+    path {
+      fill: var(--color-primary, #3E77FB) !important;
+      transition: fill 0.3s ease;
+    }
+
+    @include md {
+      width: 54px;
+      height: 54px;
+      padding: 12px;
+    }
+  }
+
+  .contacts__link:hover .contacts__item-svg {
+    background: linear-gradient(135deg, #3E77FB 0%, #6de2eb 100%);
+    transform: scale(1.08);
+
+    path {
+      fill: #ffffff !important;
+    }
+  }
+
+  // ---------- Общий приём: горизонтальная плашка перед заголовком раздела ----------
+  #cw-team .steps__title,
+  #cw-advantages .info__title,
+  #cw-reviews .reviews__title {
+    position: relative;
+    padding-left: 30px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 3px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #3E77FB, #6de2eb);
+    }
+  }
+
+  #cw-reviews .reviews__title {
+    display: inline-block;
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--color-galaxy);
+    margin-bottom: 6px;
+
+    @include md {
+      font-size: 24px;
+    }
+  }
+
+  // ---------- Блок «Наши преимущества» + услуги книжной печати ----------
+  // Раньше .info__* / .books__* нигде в проекте не стилизовались —
+  // выводились браузерными стилями по умолчанию (голый список).
+  #cw-advantages {
+    .info {
+      padding: 70px 0 80px;
+      background: linear-gradient(180deg, #ffffff 0%, #f4f8ff 100%);
+
+      @include md {
+        padding: 45px 0 55px;
+      }
+    }
+
+    .info__list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      list-style: none;
+      margin: 30px 0 50px;
+      padding: 0;
+
+      @include lg {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .info__item {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 28px 26px;
+      box-shadow: 0 10px 30px rgba(62, 119, 251, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 40px rgba(62, 119, 251, 0.14);
+      }
+    }
+
+    .info__item-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .info__item-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(62, 119, 251, 0.12), rgba(109, 226, 235, 0.16));
+
+      img {
+        width: 28px;
+        height: 28px;
+        object-fit: contain;
+      }
+    }
+
+    .info__item-title {
+      font-weight: 700;
+      font-size: 17px;
+      line-height: 1.3;
+      color: var(--color-galaxy);
+    }
+
+    .info__item-bottom {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--color-dim-gray, #666);
+    }
+
+    .books__subtitle {
+      position: relative;
+      margin: 46px 0 16px;
+      padding-left: 30px;
+      font-size: 21px;
+      font-weight: 700;
+      color: var(--color-galaxy);
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 22px;
+        height: 3px;
+        border-radius: 2px;
+        background: linear-gradient(90deg, #3E77FB, #6de2eb);
+      }
+    }
+
+    .books__desc {
+      margin: 0 0 18px;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--color-dim-gray, #666);
+
+      .link {
+        color: var(--color-primary, #3E77FB);
+        font-weight: 600;
+        text-decoration: underline;
+      }
+    }
+
+    .books__list {
+      display: grid;
+      gap: 10px;
+      margin: 0 0 8px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .books__item {
+      position: relative;
+      padding: 13px 20px 13px 46px;
+      background: #ffffff;
+      border-radius: 12px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--color-dim-gray, #666);
+      box-shadow: 0 6px 18px rgba(62, 119, 251, 0.06);
+
+      &::before {
+        content: '✓';
+        position: absolute;
+        left: 16px;
+        top: 12px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3E77FB, #6de2eb);
+        color: #ffffff;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 20px;
+        text-align: center;
+      }
+    }
+  }
+}
