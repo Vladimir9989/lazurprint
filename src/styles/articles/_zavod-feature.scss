@@ -1,0 +1,258 @@
+@import '../variables';
+@import '../mixin';
+
+/* ============================================================
+   Новость «Уральский полиграфический десант» (news51.html) —
+   репортаж о визите специалиста «Лазури» на завод «Пластмасс»,
+   вышедший в газете «Комсомольская правда» — Челябинск».
+   Индивидуальный стиль. Префикс .zavod- чтобы не пересекаться
+   с остальными стилями (по аналогии с .cal-, .news-feature,
+   .expo-, .play-, .lib-, .gigas-, .gazeta-feature).
+   Палитра «заводской цех»: графит + оливковый (гособоронзаказ,
+   промышленная тема завода) + тёплая горчичная латунь (печать,
+   бумага) на светлом промышленном фоне — не повторяет терракот+
+   сталь у .gazeta-feature и оранжево-янтарную .expo-.
+   ============================================================ */
+
+.zavod-feature-page {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #f6f5ef 0%, #ece8dc 100%);
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  &::before {
+    top: -150px;
+    left: -170px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(74, 90, 53, 0.12) 0%, transparent 70%);
+  }
+
+  &::after {
+    bottom: -160px;
+    right: -140px;
+    width: 460px;
+    height: 460px;
+    background: radial-gradient(circle, rgba(56, 60, 63, 0.10) 0%, transparent 70%);
+  }
+
+  .news__container {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.zavod-feature {
+  --zv-olive: #4a5a35;
+  --zv-mustard: #c9922e;
+  --zv-graphite: #383c3f;
+  --zv-bg-from: #fbfaf5;
+  --zv-bg-to: #f2ede0;
+
+  max-width: 860px;
+  margin: 24px auto 0;
+  padding: 40px 48px;
+  background: linear-gradient(135deg, var(--zv-bg-from) 0%, var(--zv-bg-to) 100%);
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(56, 60, 63, 0.12);
+
+  @include lg {
+    max-width: 100%;
+  }
+
+  @include md {
+    padding: 24px 20px;
+    border-radius: 16px;
+  }
+
+  &__source {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 22px;
+    padding: 7px 16px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: linear-gradient(135deg, var(--zv-olive) 0%, #303c1f 100%);
+    box-shadow: 0 8px 20px rgba(74, 90, 53, 0.25);
+  }
+
+  &__lead {
+    margin: 0 0 24px;
+    padding: 18px 22px;
+    background: #ffffff;
+    border-radius: 14px;
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--color-galaxy);
+    box-shadow: 0 8px 24px rgba(56, 60, 63, 0.1);
+
+    @include md {
+      font-size: 17px;
+      padding: 16px 18px;
+    }
+  }
+
+  &__text {
+    margin: 0 0 22px;
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--color-dim-gray, #666);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__subtitle {
+    margin: 34px 0 16px;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-galaxy);
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 22px;
+      height: 3px;
+      margin-right: 10px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--zv-olive), var(--zv-mustard));
+      vertical-align: middle;
+    }
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  &__photo {
+    margin: 0 0 26px;
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(56, 60, 63, 0.18);
+    }
+
+    &--portrait img {
+      max-width: 340px;
+    }
+  }
+
+  &__caption {
+    display: block;
+    max-width: 500px;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--color-pink-sw, #b7b7b7);
+  }
+
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin: 0 0 30px;
+
+    @include md {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  &__stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 18px 10px;
+    background: #ffffff;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(56, 60, 63, 0.08);
+  }
+
+  &__stat-num {
+    font-size: 24px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--zv-olive), var(--zv-mustard));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  &__stat-label {
+    font-size: 12px;
+    line-height: 1.3;
+    color: var(--color-dim-gray, #666);
+  }
+
+  &__quote {
+    position: relative;
+    margin: 0 0 26px;
+    padding: 20px 24px 20px 28px;
+    background: #ffffff;
+    border-radius: 14px;
+    border-left: 4px solid transparent;
+    border-image: linear-gradient(180deg, var(--zv-olive), var(--zv-mustard)) 1;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--color-dim-gray, #666);
+    font-style: italic;
+    box-shadow: 0 8px 24px rgba(56, 60, 63, 0.1);
+
+    cite {
+      display: block;
+      margin-top: 10px;
+      font-size: 13px;
+      font-style: normal;
+      font-weight: 700;
+      color: var(--zv-graphite);
+    }
+  }
+
+  &__cta {
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 1px dashed rgba(74, 90, 53, 0.3);
+    text-align: center;
+  }
+
+  &__cta-text {
+    margin: 0 0 18px;
+    font-size: 17px;
+    color: var(--color-galaxy);
+  }
+
+  &__btn {
+    display: inline-block;
+    padding: 15px 34px;
+    background: linear-gradient(135deg, var(--zv-olive) 0%, var(--zv-mustard) 100%);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 50px;
+    box-shadow: 0 12px 30px rgba(74, 90, 53, 0.3);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(74, 90, 53, 0.4);
+    }
+  }
+}
