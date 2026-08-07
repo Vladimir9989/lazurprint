@@ -28,7 +28,7 @@
 // хостинга, сколько раз ни переподключайся. Их проще закинуть руками
 // через файловый менеджер (меняются редко).
 
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
