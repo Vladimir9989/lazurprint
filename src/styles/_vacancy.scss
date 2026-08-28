@@ -1,3 +1,33 @@
+/* ============================================================
+   Редизайн vacancy.html («Вакансии») в стилистике редизайна
+   about.html/contacts.html: хиро с блобами, аккордеон-карточки
+   вместо голого списка с разделительными линиями, чек-бейджи
+   для условий работы, чек-лист для требований.
+
+   ВАЖНО: .vacancy/.vacancy__container/.vacancy__nav-cnt/
+   .vacancy__nav-link/.vacancy__list/.vacancy__item/
+   .vacancy__item-title/.vacancy__name/.vacancy__price/
+   .vacancy__text/.vacancy__descr-list/.vacancy__descr-item/
+   .duties/.duties__item/.vacancy__conditions — общий компонент
+   "аккордеон-список", переиспользуется НЕ только на vacancy.html,
+   но и на require.html (большой список технических требований
+   к макетам), а .vacancy__nav-cnt/.vacancy__nav-link вообще
+   является общей хлебной крошкой на ~160 страницах статей/новостей.
+   Поэтому:
+   - .vacancy__nav-link получил только цвет/hover (без паддингов/
+     фона) — безопасное точечное улучшение читаемости хлебных
+     крошек сайта в целом, без изменения их разметки/отступов.
+   - .vacancy__price различает "пустой" (require.html — там это
+     просто плейсхолдер под стрелку-шеврон) и "с текстом зарплаты"
+     (vacancy.html) через :empty/:not(:empty), а не по странице.
+   - Бейджи типа занятости ("Полный рабочий день"/"Полная
+     занятость") оформлены через новые модификаторы
+     .vacancy__descr-item--tags/.vacancy__descr-title--tag,
+     которые добавлены только в разметку vacancy.html — на
+     require.html такой разметки нет и появиться не может, это
+     не завязано на :first-child и не заденет её структуру.
+   ============================================================ */
+
 .html {
     height: 100%;
 }
@@ -13,98 +43,368 @@
 .footer__vacancy {
     flex: 0 0 auto;
 }
+
 .vacancy {
+    position: relative;
+    overflow: hidden;
     flex: 1 0 auto;
-    // height: 73vh;
-    padding: 110px 0 30px;
+    padding: 110px 0 60px;
+    background: linear-gradient(180deg, #f7f9ff 0%, #ffffff 55%);
+
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    &::before {
+        top: -160px;
+        right: -160px;
+        width: 460px;
+        height: 460px;
+        background: radial-gradient(circle, rgba(62, 119, 251, 0.12) 0%, transparent 70%);
+    }
+
+    &::after {
+        bottom: -120px;
+        left: -150px;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(109, 226, 235, 0.14) 0%, transparent 70%);
+    }
+
     &__container {
+        position: relative;
+        z-index: 1;
         max-width: 1000px;
     }
-    &__btn-cnt {
-        padding: 30px 0;
-        border-bottom: 7px solid var(--color-dim-gray);
-        // margin-bottom: 50px;
+}
+
+/* ---------- Хлебные крошки (общий компонент на ~160 страницах —
+   только цвет/hover, без изменения отступов и разметки) ---------- */
+.vacancy__nav-cnt {
+    @include listReset;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 22px;
+    font-size: 14px;
+}
+
+.vacancy__nav-link {
+    color: var(--color-dim-gray, #666);
+    transition: color 0.25s ease;
+
+    &:hover {
+        color: var(--color-primary, #3E77FB);
     }
-    &__nav-cnt {
-        @include listReset;
-        display: flex;
+
+    &:last-child {
+        color: var(--color-galaxy);
+        font-weight: 600;
     }
-    &__link-home {
-        color: var(--color-nobel);
-        border: 2px solid var(--color-dim-gray);
-        border-radius: 5px;
-        padding: 5px 10px;
-        transition: color .2s ease;
-        &:hover {
-            color: var(--color-dim-gray)
+}
+
+/* ---------- Заголовок ---------- */
+.vacancy__title {
+    position: relative;
+    margin: 0 0 28px;
+    padding-left: 24px;
+    font-size: 44px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--color-galaxy);
+
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 4px;
+        bottom: 4px;
+        width: 5px;
+        border-radius: 3px;
+        background: linear-gradient(180deg, #3E77FB 0%, #6de2eb 100%);
+    }
+
+    @include md {
+        padding-left: 18px;
+        font-size: 28px;
+    }
+}
+
+/* ---------- Список вакансий — аккордеон-карточки ---------- */
+.vacancy__list {
+    @include listReset;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 0 0 40px;
+}
+
+.vacancy__item {
+    position: relative;
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 22px 28px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(62, 119, 251, 0.07);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(62, 119, 251, 0.14);
+    }
+
+    @include md {
+        padding: 18px 20px;
+    }
+}
+
+.vacancy__item-title {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+}
+
+.vacancy__name {
+    margin: 0;
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--color-galaxy);
+
+    @include md {
+        font-size: 16px;
+    }
+}
+
+.vacancy__price {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--color-primary, #3E77FB);
+    white-space: nowrap;
+    transition: background 0.25s ease, color 0.25s ease;
+
+    &::after {
+        content: '';
+        width: 8px;
+        height: 8px;
+        flex-shrink: 0;
+        border-left: 2px solid currentColor;
+        border-bottom: 2px solid currentColor;
+        transform: rotate(-45deg);
+        transition: transform 0.3s ease;
+    }
+
+    &--active::after {
+        transform: rotate(135deg);
+    }
+
+    // Зарплата (vacancy.html) — градиентная плашка с текстом.
+    &:not(:empty) {
+        padding: 8px 18px;
+        border-radius: 50px;
+        background: linear-gradient(135deg, rgba(62, 119, 251, 0.12), rgba(109, 226, 235, 0.16));
+    }
+
+    // Пустой плейсхолдер под шеврон (require.html) — просто круглая кнопка.
+    &:empty {
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid var(--color-primary, #3E77FB);
+    }
+
+    @include md {
+        font-size: 13px;
+
+        &:not(:empty) {
+            padding: 6px 14px;
         }
     }
-    &__list {
-        @include listReset;
-        padding: 30px 0;
-    }
-    &__item {
-        border-top: 1px solid var(--color-vl-grey);
-        cursor: pointer;
-        &:last-child {
-            border-bottom: 1px solid var(--color-vl-grey);
-        }
-    }
-    &__item-title {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    &__name {
-        font-weight: 400;
-        color: var(--color-nero);
-    }
-    &__price {
-        font-weight: 700;
-        display: block;
-        text-align: right;
-        &::after {
-            content: '';
-            display: inline-block;
-            margin-left: 10px;
-            width: 10px;
-            height: 10px;
-            border-left: 2px solid #000;
-            border-bottom: 2px solid #000;
-            transform: rotate(-45deg) translateY(-35%);
-        }
-        &--active {
-            &::after {
-                transform: rotate(-225deg);
-            }
-        }
-    }
-    &__text {
+}
+
+/* ---------- Тело аккордеона — плавная анимация раскрытия ---------- */
+.vacancy__text {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    color: var(--color-dim-gray, #666);
+    transition: grid-template-rows 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.35s ease,
+                margin-top 0.45s ease;
+
+    > * {
+        min-height: 0;
         overflow: hidden;
-        height: 0;
-        color: var(--color-nobel);
-        transition: all 4s ease;
-        &--active {
-            height: auto;
-            background-color: var(--color-white);
-            z-index: 1000;
+    }
+
+    &--active {
+        grid-template-rows: 1fr;
+        opacity: 1;
+        margin-top: 20px;
+    }
+}
+
+.vacancy__descr-list {
+    @include listReset;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.vacancy__descr-item {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--color-dim-gray, #666);
+
+    // Строка бейджей "Полный рабочий день" / "Полная занятость" (только vacancy.html).
+    &--tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}
+
+// Требования к макетам (require.html) — плотный список пронумерованных пунктов,
+// лёгкая акцентная линия слева вместо голой стены текста.
+.vacancy__descr-require {
+    padding-left: 16px;
+    border-left: 2px solid var(--color-border, #eaeaea);
+}
+
+.vacancy__descr-title {
+    position: relative;
+    display: block;
+    margin: 0 0 10px;
+    padding-left: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-galaxy);
+
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 6px;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3E77FB, #6de2eb);
+    }
+
+    // Бейдж типа занятости — плашка вместо подзаголовка.
+    &--tag {
+        display: inline-flex;
+        margin: 0;
+        padding: 6px 16px;
+        border-radius: 50px;
+        background: var(--color-whisper, #ececec);
+        color: var(--color-dim-gray, #666);
+        font-size: 13px;
+        font-weight: 600;
+
+        &::before {
+            display: none;
         }
     }
-    &__descr-list {
-        @include listReset;
+}
+
+.vacancy__descr-text {
+    margin: 6px 0 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--color-dim-gray, #666);
+
+    &:first-child {
+        margin-top: 0;
     }
-    &__conditions {
-        background-color: var(--color-whisper);
-        color: var(--color-dim-gray);
-        border-radius: 10px;
-        padding: 40px;
-        font-size: 18px;
+}
+
+/* ---------- Требования (чек-лист) ---------- */
+.duties {
+    @include listReset;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.duties__item {
+    position: relative;
+    padding-left: 28px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--color-dim-gray, #666);
+
+    &::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        top: 1px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3E77FB, #6de2eb);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 18px;
+        text-align: center;
     }
-    &__descr-require {
-        margin-bottom: 20px;
+}
+
+/* ---------- Итоговый блок условий ---------- */
+.vacancy__conditions {
+    position: relative;
+    margin-top: 8px;
+    padding: 28px 32px 28px 76px;
+    background: linear-gradient(135deg, rgba(62, 119, 251, 0.08), rgba(109, 226, 235, 0.10));
+    border-radius: 18px;
+    color: var(--color-galaxy);
+    font-size: 16px;
+    line-height: 1.65;
+
+    &::before {
+        content: '✓';
+        position: absolute;
+        left: 28px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3E77FB, #6de2eb);
+        color: #fff;
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 32px;
+        text-align: center;
     }
-    &__conditions-link {
-        color: var(--color-primary);
-        text-decoration: underline;
+
+    @include md {
+        padding: 22px 20px 22px 64px;
+        font-size: 15px;
+
+        &::before {
+            left: 16px;
+        }
     }
+}
+
+.vacancy__conditions-link {
+    color: var(--color-primary, #3E77FB);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
 }

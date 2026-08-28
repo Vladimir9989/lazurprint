@@ -1,64 +1,162 @@
-/* gallery */
+/* ============================================================
+   Редизайн catalog.html («Каталог») в общей светлой стилистике
+   сайта (about.html/vacancy.html/equipment.html): хиро с блобами
+   вместо сплошной тёмной подложки на 71vh, карточка-фильтр слева,
+   карточка-витрина свайпера справа вместо голого текста на тёмном
+   фоне.
+
+   Разметка и JS (resources/catalog.js: Choices на #selectGallery,
+   переключение .gallery-swp/.swpN по .gallery--active, Swiper на
+   .gallery-swiper-container, модалка на .gallery-swiper-slide) не
+   менялись — правки только визуальные (CSS), включая перекраску
+   инлайновых SVG-стрелок свайпера через классы .swiper-button-gray__
+   (fill/stroke в HTML — это дефолтные presentation-атрибуты низкого
+   приоритета, класс из CSS их перебивает без !important).
+
+   Все классы .gallery__, .choices__, .swiper-button-gray__
+   используются только на этой странице (проверено grep'ом по всем
+   src html-файлам) — можно менять свободно, без риска задеть другие
+   страницы.
+   ============================================================ */
 
 .gallery {
-    padding-top: 110px;
-    height: 71vh;
-    background: radial-gradient(86.02% 250.54% at 100% 50%, rgba(152, 219, 251, 0.4) 0%, rgba(18, 20, 34, 0) 100%), linear-gradient(0deg, rgba(24, 27, 43, 0.95), rgba(24, 27, 43, 0.95)), #3E77FB;
-    padding-bottom: 50px;
-    &__nav-cnt {
-        color: var(--color-white);
+    position: relative;
+    overflow: hidden;
+    padding-top: 130px;
+    padding-bottom: 70px;
+    background: linear-gradient(180deg, #f7f9ff 0%, #ffffff 45%);
+
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
     }
+
+    &::before {
+        top: -160px;
+        right: -160px;
+        width: 460px;
+        height: 460px;
+        background: radial-gradient(circle, rgba(62, 119, 251, 0.12) 0%, transparent 70%);
+    }
+
+    &::after {
+        bottom: -140px;
+        left: -160px;
+        width: 420px;
+        height: 420px;
+        background: radial-gradient(circle, rgba(109, 226, 235, 0.14) 0%, transparent 70%);
+    }
+
+    > .container {
+        position: relative;
+        z-index: 1;
+    }
+
     @include md {
-        height: auto;
+        padding-top: 100px;
+    }
+}
+
+/* ---------- Хлебные крошки ---------- */
+.gallery__nav-cnt {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 22px;
+    font-size: 14px;
+}
+
+.gallery__nav-link {
+    color: var(--color-dim-gray, #666);
+    text-decoration: none;
+    transition: color 0.25s ease;
+
+    &:hover {
+        color: var(--color-primary, #3E77FB);
+    }
+
+    &:last-child {
+        color: var(--color-galaxy);
+        font-weight: 600;
     }
 }
 
 .gallery__container {
     display: flex;
+    align-items: flex-start;
     justify-content: space-between;
     padding-bottom: 40px;
-    color: var(--color-white);
 }
 
+/* ---------- Левая колонка — карточка фильтра ---------- */
 .gallery__left {
     flex-direction: column;
     width: 25%;
-    padding-top: 20px !important;
+    padding: 28px 24px !important;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 6px 24px rgba(62, 119, 251, 0.08);
 }
 
 .gallery__title {
-    font-weight: 400;
-    font-size: 48px;
-    margin-bottom: 28px;
+    position: relative;
+    margin: 0 0 24px;
+    padding-left: 20px;
+    font-weight: 800;
+    font-size: 34px;
+    line-height: 1.2;
+    color: var(--color-galaxy);
+
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 2px;
+        bottom: 2px;
+        width: 4px;
+        border-radius: 3px;
+        background: linear-gradient(180deg, #3E77FB 0%, #6de2eb 100%);
+    }
 }
 
 .gallery__filter {
-    font-weight: 600;
-    font-size: 16px;
-    margin-bottom: 15px;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-primary, #3E77FB);
+    margin-bottom: 12px;
 }
 
-
+.choices {
+    box-sizing: border-box;
+}
 
 .choices__inner {
-    width: 93%;
+    box-sizing: border-box;
+    width: 100%;
     position: relative;
     min-height: auto;
-    border-radius: 6px;
-    border: 1px solid var(--color-white);
-    color: var(--color-white);
-    font-size: 16px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(62, 119, 251, 0.25);
+    color: var(--color-galaxy);
+    font-size: 15px;
     line-height: 14px;
-    background-color: transparent;
-    transition: background-color 0.3s ease-in-out;
+    background-color: #f7f9ff;
+    transition: border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
 }
 
 .choices:focus {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: #fff;
 }
 
 .choices__inner:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: #fff;
+    border-color: var(--color-primary, #3E77FB);
 }
 
 .choices__list--single {
@@ -66,12 +164,15 @@
 }
 
 .choices__list--dropdown {
-    border: 0;
-    /* background-color: transparent; */
+    box-sizing: border-box;
+    width: 100%;
+    border: 1px solid rgba(62, 119, 251, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
 }
 
 .choices__list--dropdown .choices__item--selectable.is-highlighted {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(62, 119, 251, 0.08);
 }
 
 .choices__list--dropdown .choices__item--selectable {
@@ -80,24 +181,18 @@
 
 .is-open .choices__inner,
 .is-focused .choices__inner {
-    border-radius: 6px;
-    border-color: var(--color-white);
+    border-radius: 12px;
+    border-color: var(--color-primary, #3E77FB);
 }
 
 .choices__list--dropdown .choices__item {
-    color: var(--color-nobel);
-    border: 1px solid var(--color-nobel);
-    border-top: 0;
+    color: var(--color-dim-gray, #666);
+    border: 0;
+    border-top: 1px solid rgba(62, 119, 251, 0.12);
 }
 
 .choices__list--dropdown .choices__item:first-child {
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-}
-
-.choices__list--dropdown .choices__item:last-child {
-    border-bottom-left-radius: 6px;
-    border-bottom-right-radius: 6px;
+    border-top: 0;
 }
 
 .choices[data-type*=select-one]:after {
@@ -108,8 +203,8 @@
     height: 7px;
     width: 7px;
     border: 0;
-    border-left: 1px solid var(--color-white);
-    border-bottom: 1px solid var(--color-white);
+    border-left: 1px solid var(--color-primary, #3E77FB);
+    border-bottom: 1px solid var(--color-primary, #3E77FB);
     pointer-events: none;
     transform: rotate(-45deg) translateY(-50%);
 }
@@ -117,33 +212,45 @@
 .choices[data-type*=select-one].is-open:after {
     margin-top: 0;
     right: 16px;
-    border-color: var(--color-white);
+    border-color: var(--color-primary, #3E77FB);
     transform: rotate(135deg);
 }
 
+/* ---------- Ссылки на смежные каталоги ---------- */
 .gallery__link {
-    border-radius: 6px;
-    border: 1px solid var(--color-white);
-    color: var(--color-white);
-    font-size: 16px;
-    padding: 10px;
-    background-color: transparent;
-    transition: background-color 0.3s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50px;
+    border: 1.5px solid rgba(62, 119, 251, 0.35);
+    color: var(--color-primary, #3E77FB);
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    padding: 10px 18px;
+    background-color: #fff;
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.3s ease, box-shadow 0.3s ease;
     margin-bottom: 24px;
+
     &:hover {
-        background-color: rgba(255, 255, 255, 0.2);
+        background: linear-gradient(135deg, #3E77FB 0%, #1a56db 100%);
+        color: #fff;
+        border-color: transparent;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(62, 119, 251, 0.25);
     }
 }
 
+/* ---------- Правая колонка — карточка-витрина свайпера ---------- */
 .gallery__right {
     position: relative;
     margin: 0;
-    padding-top: 6px;
-    padding-bottom: 9px;
-    padding-left: 3px;
+    padding: 20px 28px 14px;
     width: 72%;
     height: auto;
-
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 6px 24px rgba(62, 119, 251, 0.08);
 }
 
 .gallery-swiper-container {
@@ -172,9 +279,9 @@
 }
 
 .gallery-button {
-    display: inline-block;
+    display: inline-flex;
     align-items: center;
-    padding: 19px 0;
+    padding: 18px 0;
     padding-left: 3px;
 }
 
@@ -199,8 +306,9 @@
     display: inline-block;
     margin-right: 18px;
     width: auto;
-    color: var(--color-white);
-    font-size: 16px;
+    color: var(--color-galaxy);
+    font-size: 15px;
+    font-weight: 600;
     line-height: 32px;
 }
 
@@ -216,22 +324,39 @@
 
 .gallery-button__next.swiper-button-disabled,
 .gallery-button__prev.swiper-button-disabled {
-    opacity: 0.5;
+    opacity: 0.4;
 }
 
+// Перекраска инлайновых SVG-стрелок (fill/stroke заданы в HTML как
+// presentation-атрибуты — низкий приоритет, класс их перебивает).
 .swiper-button-gray__background {
+    fill: rgba(62, 119, 251, 0.10);
+    stroke: rgba(62, 119, 251, 0.4);
     transition-property: fill, stroke;
     transition-duration: 0.3s;
     transition-timing-function: ease-in-out;
 }
 
+.swiper-button-gray__triangle {
+    stroke: var(--color-primary, #3E77FB);
+    transition: stroke 0.3s ease-in-out;
+}
+
+.gallery-button__prev:hover .swiper-button-gray__background,
+.gallery-button__next:hover .swiper-button-gray__background,
 .swiper-button-gray:focus .swiper-button-gray__background {
-    stroke: var(--color-black);
+    fill: var(--color-primary, #3E77FB);
+    stroke: var(--color-primary, #3E77FB);
+}
+
+.gallery-button__prev:hover .swiper-button-gray__triangle,
+.gallery-button__next:hover .swiper-button-gray__triangle {
+    stroke: #fff;
 }
 
 .swiper-button-gray:active .swiper-button-gray__background {
-    fill: var(--color-studio);
-    stroke: var(--color-black);
+    fill: #1a56db;
+    stroke: #1a56db;
 }
 
 .gallery-swiper-slide {
@@ -239,8 +364,14 @@
     padding-bottom: 35%;
     overflow: hidden;
     cursor: pointer;
-    position: relative;
-    border-radius: 10px;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(8, 31, 92, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 14px 30px rgba(62, 119, 251, 0.2);
+    }
 }
 
 .gallery-swiper-slide__img {
@@ -255,13 +386,11 @@
 .gallery-swiper-slide::before {
     content: "";
     position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    border: 2px solid var(--color-mauve);
+    inset: 0;
+    border: 2px solid var(--color-primary, #3E77FB);
+    border-radius: inherit;
     opacity: 0;
-    background: linear-gradient(0deg, rgba(194, 131, 243, 0.4), rgba(194, 131, 243, 0.4));
+    background: linear-gradient(0deg, rgba(62, 119, 251, 0.35), rgba(62, 119, 251, 0.35));
     transition: opacity 0.3s ease-in-out;
 }
 
@@ -280,7 +409,7 @@
     background-image: url(images/img/gallery/gallery_slide_hover.svg);
     background-repeat: no-repeat;
     background-position: center;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(8, 31, 92, 0.55);
     opacity: 0;
     transform: translate(-50%, -50%);
     transition: opacity 0.3s ease-in-out;
@@ -299,6 +428,7 @@
     z-index: 2;
     opacity: 1;
 }
+
 .gallery__btn-container {
     display: flex;
     justify-content: center;
@@ -311,19 +441,17 @@
     /* max-width: 220px; */
     margin: 5px 20px;
     text-align: center;
-    color: var(--color-white);
+    color: var(--color-galaxy);
     font-size: 20px;
     font-weight: 600;
     border-radius: 50px;
     padding: 10px 20px;
-    border: 2px solid var(--color-white);
+    border: 2px solid var(--color-primary, #3E77FB);
     transition: background .5s ease-in-out, color .5s ease-in-out;
 }
 
-
 .gallery__btn:hover,
 .gallery__btn-link:hover {
-    background: var(--color-white);
-    color: #000;
+    background: var(--color-primary, #3E77FB);
+    color: #fff;
 }
-

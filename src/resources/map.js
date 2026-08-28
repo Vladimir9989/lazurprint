@@ -1,22 +1,24 @@
-// карта
-ymaps.ready(init);
+// Переключение карты офисов между несколькими точками.
+// Виджет Яндекс.Карт (yandex.ru/map-widget/v1) встраивается без API-ключа,
+// поэтому переключение — это просто подмена src у iframe по клику на офис в списке.
+document.addEventListener('DOMContentLoaded', function () {
+    var items = document.querySelectorAll('.offices__item');
+    var frame = document.getElementById('officesMapFrame');
+    var link = document.getElementById('officesMapLink');
 
-function init() {
+    if (!items.length || !frame) return;
 
-    var myMap = new ymaps.Map("map", {
+    items.forEach(function (item) {
+        item.addEventListener('click', function () {
+            items.forEach(function (i) {
+                i.classList.remove('offices__item--active');
+            });
+            item.classList.add('offices__item--active');
 
-        center: [57.348307, 61.405098],
-        zoom: 11,
-        controls: [],
+            frame.src = item.dataset.map;
+            if (link) {
+                link.href = item.dataset.link;
+            }
+        });
     });
-    var myPlacemark = new ymaps.Placemark([57.348307, 61.405098], {}, {
-        iconLayout: 'default#image',
-        iconImageHref: 'images/img/background/marker.svg',
-        iconImageSize: [30, 30],
-        iconImageOffset: [0, 0],
-    });
-
-    myMap.geoObjects.add(myPlacemark);
-
-    // myMap.behaviors.disable(['drag', 'rightMouseButtonMagnifier', 'scrollZoom']);
-};
+});

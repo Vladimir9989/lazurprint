@@ -1288,38 +1288,87 @@
                 </div>
             </div>
             @@include('html/reviews.html', {})
-            <div class="contacts__bottom">
-                <div class="map map--active" id="map"></div>
-                <div class="products-slider">
-                    <span class="products-slider__title">Наша продукция</span>
-                    <div class="swiper products-slider__swiper">
+            <div class="offices" id="map">
+                <div class="container">
+                    <h3 class="contacts__title offices__title">Наши офисы</h3>
+                    <div class="offices__wrap">
+                        <ul class="offices__list list-reset">
+                            <li class="offices__item offices__item--active" data-office="rezh"
+                                data-map="https://yandex.ru/map-widget/v1/?ll=61.405159%2C57.348140&amp;z=16&amp;pt=61.405159,57.348140,pm2blm"
+                                data-link="https://yandex.ru/maps/?whatshere%5Bpoint%5D=61.405159,57.348140&amp;whatshere%5Bzoom%5D=16">
+                                <span class="offices__item-city">Производство — г. Реж</span>
+                                <span class="offices__item-address">ул. Павлика Морозова, 61</span>
+                            </li>
+                            <li class="offices__item" data-office="ekb"
+                                data-map="https://yandex.ru/map-widget/v1/?ll=60.596568%2C56.833501&amp;z=16&amp;pt=60.596568,56.833501,pm2blm"
+                                data-link="https://yandex.ru/maps/?whatshere%5Bpoint%5D=60.596568,56.833501&amp;whatshere%5Bzoom%5D=16">
+                                <span class="offices__item-city">Офис — г. Екатеринбург</span>
+                                <span class="offices__item-address">ул. Малышева, д. 36, оф. 604</span>
+                            </li>
+                            <li class="offices__item" data-office="msk"
+                                data-map="https://yandex.ru/map-widget/v1/?ll=37.699600%2C55.729700&amp;z=15&amp;pt=37.699600,55.729700,pm2blm"
+                                data-link="https://yandex.ru/maps/?whatshere%5Bpoint%5D=37.699600,55.729700&amp;whatshere%5Bzoom%5D=15">
+                                <span class="offices__item-city">Офис — г. Москва</span>
+                                <span class="offices__item-address">Автомобильный проезд, д. 4, ап. 6315</span>
+                            </li>
+                        </ul>
+                        <div class="offices__map">
+                            <iframe id="officesMapFrame"
+                                src="https://yandex.ru/map-widget/v1/?ll=61.405159%2C57.348140&amp;z=16&amp;pt=61.405159,57.348140,pm2blm"
+                                loading="lazy" allowfullscreen title="Карта офисов «Лазурь»"></iframe>
+                            <a class="offices__map-link" id="officesMapLink"
+                                href="https://yandex.ru/maps/?whatshere%5Bpoint%5D=61.405159,57.348140&amp;whatshere%5Bzoom%5D=16"
+                                target="_blank" rel="noopener">Открыть в Яндекс Картах</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="products-showcase">
+            <div class="container">
+                <h3 class="products-showcase__title">Наша продукция</h3>
+                <div class="products-showcase__layout">
+                    <div class="swiper products-showcase__swiper">
                         <div class="swiper-wrapper">
-                            <div class="swiper-slide">
+                            <div class="swiper-slide" data-title="Книжная продукция"
+                                data-desc="Печатаем книги любых форматов и тиражей — от пробного экземпляра до миллионного заказа, с разными видами переплёта и отделки.">
                                 <img loading="lazy" src="images/img/gallery/work/work_books.jpg" alt="Книжная продукция">
                             </div>
-                            <div class="swiper-slide">
+                            <div class="swiper-slide" data-title="Журналы"
+                                data-desc="Полноцветная печать журналов и корпоративных изданий: плотная бумага, яркие цвета, аккуратная брошюровка.">
                                 <img loading="lazy" src="images/img/gallery/work/work-journal.jpg" alt="Журналы">
                             </div>
-                            <div class="swiper-slide">
+                            <div class="swiper-slide" data-title="Журналы"
+                                data-desc="Подберём формат и тираж под любую периодику — от корпоративного вестника до делового издания.">
                                 <img loading="lazy" src="images/img/gallery/work/work-journal2.jpg" alt="Журналы">
                             </div>
-                            <div class="swiper-slide">
+                            <div class="swiper-slide" data-title="Этикетки"
+                                data-desc="Этикетки и стикеры с точной цветопередачей и любой формой высечки — для продукции любого объёма.">
                                 <img loading="lazy" src="images/img/gallery/work/work-etiketka.jpg" alt="Этикетки">
                             </div>
-                            <div class="swiper-slide">
+                            <div class="swiper-slide" data-title="Этикетки"
+                                data-desc="Печатаем на самоклеящихся и бумажных материалах, с ламинацией и тиснением по запросу.">
                                 <img loading="lazy" src="images/img/gallery/work/work-etiketka2.jpg" alt="Этикетки">
                             </div>
-                            <div class="swiper-slide">
+                            <div class="swiper-slide" data-title="Упаковка"
+                                data-desc="Изготавливаем коробки и упаковку по индивидуальным лекалам — прочные материалы, аккуратная сборка.">
                                 <img loading="lazy" src="images/img/gallery/work/work-box.jpg" alt="Коробки">
                             </div>
-                            <div class="swiper-slide">
+                            <div class="swiper-slide" data-title="Упаковка"
+                                data-desc="От простых коробов до брендированной подарочной упаковки с полноцветной печатью.">
                                 <img loading="lazy" src="images/img/gallery/work/work-box2.jpg" alt="Коробки">
                             </div>
-                            <div class="swiper-slide">
+                            <div class="swiper-slide" data-title="Каталоги"
+                                data-desc="Каталоги и буклеты для выставок и презентаций — качественная бумага и точная цветопередача.">
                                 <img loading="lazy" src="images/img/gallery/work/work-catalog.jpg" alt="Каталоги">
                             </div>
                         </div>
                         <div class="swiper-pagination swiper-pagination-products"></div>
+                    </div>
+                    <div class="products-showcase__info">
+                        <h4 class="products-showcase__info-title">Книжная продукция</h4>
+                        <p class="products-showcase__info-desc">Печатаем книги любых форматов и тиражей — от
+                            пробного экземпляра до миллионного заказа, с разными видами переплёта и отделки.</p>
                     </div>
                 </div>
             </div>
@@ -1330,7 +1379,6 @@
         <span class="benefit__modal-close pm__module-close">Закрыть</span>
         <div class="benefit-modal__cnt"></div>
     </div>
-    <script src="https://api-maps.yandex.ru/2.1/?apikey=вашAPI-ключ&lang=ru_RU"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="map.js"></script>
     <script src="https://www.googletagmanager.com/gtag/js?id=G-0SWRKZ38MF"></script>

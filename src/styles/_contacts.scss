@@ -266,138 +266,148 @@ $contacts-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     filter: drop-shadow(0 6px 15px rgba(62, 119, 251, 0.4));
 }
 
-// Нижняя часть с картой и изображением
-.contacts__bottom {
-    display: flex;
-    height: 500px;
-    gap: 30px;
-    padding: 0 40px 60px;
-    max-width: 1920px;
-    margin: 0 auto;
-    
-    @include xxl {
-        height: 450px;
-        padding: 0 30px 50px;
-        gap: 25px;
-    }
-    
-    @include xl {
-        height: 420px;
-        padding: 0 25px 45px;
-        gap: 20px;
-    }
-    
+// Блок «Наши офисы»: список точек + переключаемая карта
+.offices {
+    padding: 0 0 60px;
+    position: relative;
+
     @include lg {
-        height: 400px;
-        padding: 0 20px 40px;
+        padding: 0 0 40px;
+    }
+}
+
+.offices__title {
+    margin-bottom: 30px;
+}
+
+.offices__wrap {
+    display: flex;
+    gap: 30px;
+    align-items: stretch;
+    min-height: 460px;
+
+    @include xxl {
+        min-height: 420px;
+    }
+
+    @include lg {
+        min-height: 380px;
         gap: 20px;
     }
-    
-    @include lm {
-        height: 380px;
-        padding: 0 20px 35px;
-    }
-    
+
     @include md {
         flex-direction: column;
-        height: auto;
-        padding: 0 15px 30px;
-        gap: 20px;
+        min-height: auto;
     }
 }
 
-// Карта
-.map {
-    width: 62%;
-    height: 100%;
+.offices__list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 34%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    @include md {
+        width: 100%;
+        flex-direction: row;
+        overflow-x: auto;
+        gap: 10px;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+.offices__item {
+    flex: 1;
+    background: $contacts-card-bg;
+    border-radius: 16px;
+    padding: 18px 22px 18px 20px;
+    border-left: 4px solid transparent;
+    box-shadow: $contacts-shadow;
+    cursor: pointer;
+    transition: $contacts-transition;
+
+    @include md {
+        flex: 0 0 240px;
+        padding: 16px 18px;
+    }
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: $contacts-shadow-hover;
+    }
+
+    &--active {
+        border-left-color: $contacts-accent;
+        background: linear-gradient(135deg, rgba(62, 119, 251, 0.07) 0%, rgba(109, 226, 235, 0.08) 100%);
+    }
+}
+
+.offices__item-city {
+    display: block;
+    font-weight: 700;
+    font-size: 17px;
+    color: $contacts-text-primary;
+    margin-bottom: 6px;
+
+    .offices__item--active & {
+        color: $contacts-accent-dark;
+    }
+}
+
+.offices__item-address {
+    display: block;
+    font-size: 14px;
+    line-height: 1.5;
+    color: $contacts-text-secondary;
+}
+
+.offices__map {
+    flex: 1;
     border-radius: $contacts-radius;
     overflow: hidden;
     box-shadow: $contacts-shadow;
     position: relative;
-    
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(62, 119, 251, 0.05) 0%, rgba(26, 86, 219, 0.05) 100%);
-        pointer-events: none;
-        z-index: 1;
-    }
-    
-    @include md {
+
+    iframe {
         width: 100%;
-        height: 350px;
-        order: 2;
+        height: 100%;
+        min-height: 320px;
+        border: 0;
+        display: block;
+    }
+
+    @include md {
+        min-height: 320px;
     }
 }
 
-// Слайдер продукции
-.products-slider {
-    width: 38%;
-    height: 100%;
-    border-radius: $contacts-radius;
-    overflow: hidden;
-    position: relative;
-    box-shadow: $contacts-shadow;
+.offices__map-link {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    z-index: 5;
+    padding: 9px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #3E77FB, #6de2eb);
+    box-shadow: 0 4px 15px rgba(62, 119, 251, 0.35);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 
-    @include md {
-        width: 100%;
-        height: 320px;
-        order: 1;
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 22px rgba(62, 119, 251, 0.4);
     }
 
-    // Подпись «Наша продукция»
-    &__title {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        z-index: 5;
-        padding: 8px 18px;
-        font-weight: 600;
-        font-size: 16px;
-        color: #fff;
-        border-radius: 50px;
-        background: linear-gradient(135deg, #3E77FB, #6de2eb);
-        box-shadow: 0 4px 15px rgba(62, 119, 251, 0.35);
-        pointer-events: none;
-
-        @include lg {
-            font-size: 14px;
-            padding: 7px 15px;
-        }
-    }
-
-    &__swiper {
-        width: 100%;
-        height: 100%;
-    }
-
-    .swiper-slide {
-        width: 100%;
-        height: 100%;
-
-        & img {
-            object-fit: cover;
-            width: 100%;
-            height: 100%;
-        }
-    }
-
-    .swiper-pagination-products {
-        bottom: 14px;
-
-        .swiper-pagination-bullet {
-            background: #fff;
-            opacity: 0.6;
-        }
-
-        .swiper-pagination-bullet-active {
-            background: #fff;
-            opacity: 1;
-        }
+    @include lg {
+        font-size: 13px;
+        padding: 8px 15px;
     }
 }
 
@@ -480,16 +490,12 @@ $contacts-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         height: 50px;
     }
     
-    .contacts__bottom {
-        padding: 0 15px 25px;
+    .offices {
+        padding: 0 0 25px;
     }
-    
-    .map {
-        height: 300px;
-    }
-    
-    .products-slider {
-        height: 240px;
+
+    .offices__map iframe {
+        min-height: 260px;
     }
 }
 

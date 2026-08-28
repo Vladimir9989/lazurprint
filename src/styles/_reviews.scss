@@ -1,8 +1,35 @@
 .reviews {
-    margin-top: 15px;
+    padding: 50px 0 70px;
+    background: linear-gradient(180deg, #ffffff 0%, #f4f8ff 100%);
+
+    @include md {
+        padding: 30px 0 45px;
+    }
+
     &__title {
         position: relative;
-        margin: 0;
+        margin: 0 0 6px;
+        padding-left: 30px;
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--color-galaxy);
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 22px;
+            height: 3px;
+            border-radius: 2px;
+            background: linear-gradient(90deg, #3E77FB, #6de2eb);
+        }
+
+        @include md {
+            font-size: 22px;
+            padding-left: 22px;
+        }
     }
 
     &__list {
@@ -26,10 +53,17 @@
         box-sizing: border-box;
         flex-shrink: 0;
         gap: 20px;
-        padding: 10px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px 5px rgb(221, 221, 221);
+        padding: 20px;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(62, 119, 251, 0.08);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
         cursor: pointer;
+
+        &:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(62, 119, 251, 0.14);
+        }
 
         @include lg {
             width: calc(100% - 20px);

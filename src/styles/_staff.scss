@@ -1,3 +1,13 @@
+// .work-section (_service-page.scss) задаёт всем страницам-«визиткам
+// услуг» общий .#{$p}__content { max-width: 900px; } — для staff.html
+// это смотрится слишком узкой колонкой (контент прижат влево, справа
+// пустота), здесь контенту нужна вся ширина контейнера. Переопределяем
+// только здесь, точечно под staff.html, не трогая остальные страницы
+// из общего списка $service-page-prefixes.
+.work-section .staff__content {
+    max-width: none;
+}
+
 .staff {
     &__list {
         @include listReset;

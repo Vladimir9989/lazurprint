@@ -1,0 +1,311 @@
+/* ============================================================
+   Редизайн страниц услуг/продукции — books.html, journal.html,
+   label.html, catalogs.html, calendars.html, coloring.html,
+   packages.html, packagings.html, little-packagings.html,
+   booklets.html, posters.html, photo-albums.html, textbook.html,
+   t-shirts.html, badges.html, newspaper.html, leaflets.html,
+   staff.html, map-game.html, promo.html — раньше рендерились
+   голым текстом (заголовок браузерного размера, список с точками
+   по умолчанию, невидимая кнопка «Сделать заказ»), в стилистике
+   редизайна contacts.html: хиро с градиентным фоном, чек-карточки
+   вместо голых списков, акцентные подзаголовки.
+
+   ВАЖНО: сюда сознательно НЕ пошли селекторы по CSS-суффиксу класса
+   вида [class$="__title"] — на первый взгляд удобно (не нужно
+   перечислять префиксы), но есть два подводных камня:
+   1) `[class$="__item"]` матчит только когда "__item" — это САМЫЙ
+      ПОСЛЕДНИЙ класс в атрибуте целиком. А в разметке сплошь и рядом
+      class="books__item desc" — "__item" не в конце строки, суффикс
+      не совпадает, стиль вообще не применяется.
+   2) даже без первой проблемы, "__item"/"__list"/"__title" — это
+      родовые окончания BEM-имён: .info__item (карточка преимущества)
+      ТОЖЕ оканчивается на "__item" и случайно попадает под раздачу,
+      ломая ей вёрстку (см. историю бага — путали книги/контакты).
+   Поэтому — явные классы через список префиксов (@each) и точные
+   .books__subtitle/.books__list/.books__item без вайлдкардов.
+   ============================================================ */
+
+// Префиксы страниц-«визиток услуг»: у каждой свой BEM-блок
+// (books__, journal__, label__ …), но структура/суффиксы внутри
+// .work-section идентичны на всех.
+$service-page-prefixes: books, journal, label, calendars, coloring,
+    packages, packagings, booklets, posters, textbook, newspaper,
+    leaflets, staff, map-game;
+
+.work-section {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, #f7f9ff 0%, #ffffff 60%);
+
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    &::before {
+        top: -160px;
+        right: -160px;
+        width: 460px;
+        height: 460px;
+        background: radial-gradient(circle, rgba(62, 119, 251, 0.12) 0%, transparent 70%);
+    }
+
+    &::after {
+        bottom: -140px;
+        left: -150px;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(109, 226, 235, 0.14) 0%, transparent 70%);
+    }
+
+    > .container {
+        position: relative;
+        z-index: 1;
+    }
+
+    @each $p in $service-page-prefixes {
+
+        // ---------- Хлебные крошки ----------
+        .#{$p}__nav-cnt {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 22px;
+            font-size: 14px;
+        }
+
+        .#{$p}__nav-link {
+            color: var(--color-dim-gray, #666);
+            text-decoration: none;
+            transition: color 0.25s ease;
+
+            &:hover {
+                color: var(--color-primary, #3E77FB);
+            }
+
+            &:last-child {
+                color: var(--color-galaxy);
+                font-weight: 600;
+            }
+        }
+
+        // ---------- Заголовок ----------
+        .#{$p}__title {
+            position: relative;
+            margin: 0 0 16px;
+            padding-left: 24px;
+            font-weight: 800;
+            font-size: clamp(28px, 3.6vw, 44px);
+            line-height: 1.25;
+            color: var(--color-galaxy);
+
+            &::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 6px;
+                bottom: 6px;
+                width: 5px;
+                border-radius: 3px;
+                background: linear-gradient(180deg, #3E77FB 0%, #6de2eb 100%);
+            }
+
+            [itemprop="price"] {
+                display: inline-block;
+                margin-top: 12px;
+                padding: 7px 18px;
+                border-radius: 50px;
+                background: linear-gradient(135deg, rgba(62, 119, 251, 0.12), rgba(109, 226, 235, 0.16));
+                color: var(--color-primary, #3E77FB);
+                font-size: 16px;
+                font-weight: 700;
+                vertical-align: middle;
+            }
+
+            @include md {
+                padding-left: 18px;
+                font-size: 26px;
+            }
+        }
+
+        // ---------- Контент ----------
+        .#{$p}__content {
+            max-width: 900px;
+        }
+
+        // ---------- Описание (у textbook.html — __descr) ----------
+        .#{$p}__desc,
+        .#{$p}__descr {
+            margin: 0 0 18px;
+            font-size: 16px;
+            line-height: 1.75;
+            color: var(--color-dim-gray, #666);
+
+            strong,
+            b {
+                color: var(--color-galaxy);
+            }
+        }
+    }
+
+    time {
+        display: inline-block;
+        margin-bottom: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--color-nobel, #999);
+    }
+
+    // ---------- Кнопка «Сделать заказ» ----------
+    // .hero__btn в разметке этих страниц лежит вне .hero — базовый стиль
+    // (_hero.scss, &__btn) на него не действует, кнопка была невидимой.
+    .hero__btn {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        overflow: hidden;
+        margin: 20px 0 28px;
+        padding: 16px 36px;
+        color: #fff;
+        background: linear-gradient(135deg, #3E77FB 0%, #1a56db 100%);
+        border-radius: 50px;
+        font-size: 16px;
+        font-weight: 600;
+        text-decoration: none;
+        box-shadow: 0 8px 24px rgba(62, 119, 251, 0.28);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+
+        // Стрелка справа — по аналогии с .work__btn/.hero__btn (_hero.scss),
+        // только на CSS-уголке — в разметке этих страниц у кнопки нет svg.
+        &::after {
+            content: '';
+            flex-shrink: 0;
+            width: 8px;
+            height: 8px;
+            border-top: 2px solid #fff;
+            border-right: 2px solid #fff;
+            transform: rotate(45deg);
+            transition: transform 0.3s ease;
+        }
+
+        // Блик, пробегающий по кнопке при наведении
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -75%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+            transform: skewX(-20deg);
+            transition: left 0.6s ease;
+        }
+
+        &:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, #4f86fb 0%, #2563eb 100%);
+            box-shadow: 0 12px 30px rgba(62, 119, 251, 0.38);
+
+            &::after {
+                transform: rotate(45deg) translate(2px, -2px);
+            }
+
+            &::before {
+                left: 125%;
+            }
+        }
+
+        @include sm {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+}
+
+/* ----------------------------------------------------------------
+   Подзаголовки/списки контента, общего для ВСЕХ этих страниц —
+   классы .books__subtitle/.books__list/.books__item жёстко зашиты
+   в один и тот же шаблон html/info.html (+ info-badges.html,
+   info-t-shirts.html, info-photo-albums.html) и используются им
+   с префиксом "books__" независимо от того, какая страница его
+   подключает (books.html, journal.html, label.html … и даже
+   contacts.html/services.html/faq.html/partners.html). Префикс тут
+   всегда один и тот же, поэтому вайлдкарды не нужны — обычные классы,
+   без завязки на .work-section/.info, матчат везде, где встречаются.
+   ---------------------------------------------------------------- */
+.books__subtitle {
+    position: relative;
+    margin: 44px 0 18px;
+    padding-left: 26px;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-galaxy);
+
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 3px;
+        border-radius: 2px;
+        background: linear-gradient(90deg, #3E77FB, #6de2eb);
+    }
+
+    @include md {
+        font-size: 19px;
+        margin: 34px 0 14px;
+    }
+}
+
+.books__list {
+    display: grid;
+    gap: 10px;
+    margin: 0 0 20px;
+    padding: 0;
+    list-style: none;
+}
+
+.books__item {
+    position: relative;
+    padding: 14px 20px 14px 48px;
+    background: #ffffff;
+    border-radius: 14px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--color-dim-gray, #666);
+    box-shadow: 0 6px 20px rgba(62, 119, 251, 0.07);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+    strong,
+    b {
+        color: var(--color-galaxy);
+    }
+
+    &::before {
+        content: '✓';
+        position: absolute;
+        left: 16px;
+        top: 14px;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3E77FB, #6de2eb);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 22px;
+        text-align: center;
+    }
+
+    &:hover {
+        transform: translateX(2px);
+        box-shadow: 0 10px 26px rgba(62, 119, 251, 0.12);
+    }
+}

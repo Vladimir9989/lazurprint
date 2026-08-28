@@ -1,5 +1,27 @@
-// Swiper слайдер продукции (блок с картой)
-const productsSlider = new Swiper('.products-slider__swiper', {
+// Swiper слайдер продукции (отдельный блок «Наша продукция»)
+// Подпись справа (заголовок + описание) меняется вместе со слайдом —
+// берём data-title/data-desc с активного слайда (в т.ч. клонов loop-режима,
+// у них те же data-атрибуты, что и у оригинала).
+const productsInfoTitle = document.querySelector('.products-showcase__info-title');
+const productsInfoDesc = document.querySelector('.products-showcase__info-desc');
+const productsInfoBlock = document.querySelector('.products-showcase__info');
+
+function updateProductsInfo(swiper) {
+    const activeSlide = swiper.slides[swiper.activeIndex];
+    if (!activeSlide || !productsInfoTitle || !productsInfoDesc) return;
+
+    const { title, desc } = activeSlide.dataset;
+    if (!title && !desc) return;
+
+    productsInfoBlock.classList.add('is-changing');
+    setTimeout(function () {
+        productsInfoTitle.textContent = title;
+        productsInfoDesc.textContent = desc;
+        productsInfoBlock.classList.remove('is-changing');
+    }, 200);
+}
+
+const productsSlider = new Swiper('.products-showcase__swiper', {
     slidesPerView: 1,
     loop: true,
     grabCursor: true,
@@ -14,6 +36,10 @@ const productsSlider = new Swiper('.products-slider__swiper', {
     pagination: {
         el: '.swiper-pagination-products',
         dynamicBullets: true,
+    },
+    on: {
+        init: updateProductsInfo,
+        slideChange: updateProductsInfo,
     },
 });
 

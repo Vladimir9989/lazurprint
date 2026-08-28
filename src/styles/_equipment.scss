@@ -1,116 +1,304 @@
+/* ============================================================
+   Редизайн equipment.html («Продажа оборудования») в стилистике
+   about.html/vacancy.html: хиро с блобами, карточки под каждую
+   единицу оборудования вместо голого списка, ценник-плашка,
+   современный переключатель вкладок «Продажа»/«Объявления».
+
+   Все классы здесь (.equipment__*, .suprasetter, .muller-martini,
+   .gto-52-2, .shoei-74, .kba-216, .yawa) используются только на
+   этой странице — можно менять свободно, без риска задеть другие
+   страницы. Раскладки картинок под конкретную технику (grid-row/
+   grid-column у .equipment__suprasetter/__gto/__yawa и т.д.) уже
+   были аккуратно подобраны раньше — сохраняю как есть, добавляю
+   только внешний вид (карточка, тени, скругления, hover).
+   ============================================================ */
+
 .equipment {
-  padding-top: 80px;
-  padding-bottom: 50px;
+    position: relative;
+    overflow: hidden;
+    padding-top: 0;
+    padding-bottom: 60px;
+    background: linear-gradient(180deg, #f7f9ff 0%, #ffffff 45%);
 
-  &__header {
-    background-color: var(--color-space-cadet);
-  }
-
-  &__header-menu {
-    @include listReset;
-    display: flex;
-    justify-content: center;
-    gap: 50px;
-    padding: 30px;
-  }
-
-  &__header-btn {
-    @include btnReset;
-    color: var(--color-white);
-    font-size: 24px;
-    font-weight: 700;
-    &:hover {
-      transform: scale(1.1);
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
     }
-  }
 
-  &__header-btn.equipment--active {
-    border-bottom: 2px solid var(--color-white);
-  }
+    &::before {
+        top: -160px;
+        right: -160px;
+        width: 460px;
+        height: 460px;
+        background: radial-gradient(circle, rgba(62, 119, 251, 0.12) 0%, transparent 70%);
+    }
 
-  &__container {
-    display: none;
-  }
+    &::after {
+        bottom: -120px;
+        left: -150px;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(109, 226, 235, 0.14) 0%, transparent 70%);
+    }
 
-  &__container.equipment--active {
-    display: block;
-  }
+    // ---------- Переключатель вкладок ----------
+    &__header {
+        position: relative;
+        z-index: 1;
+        padding-top: 88px;
+        padding-bottom: 22px;
+        background: linear-gradient(135deg, var(--color-space-cadet, #0f2753) 0%, #1a3a6b 100%);
+    }
 
-  &__img-cnt {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    @include mg {
-      grid-template-columns: repeat(2, 1fr);
+    &__header-menu {
+        @include listReset;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        padding: 0 15px;
+        flex-wrap: wrap;
     }
-  }
-  &__img {
-    object-fit: cover;
-  }
-  &__suprasetter {
-    & .equipment__img:last-child {
-      grid-row: 1/4;
-      width: 100%;
-      max-height: 660px;
-      object-fit: cover;
-      @include xl {
-        max-height: 500px;
-      }
-      @include lg {
-        max-height: 400px;
-      }
-      @include mg {
-        grid-row: 1/6;
-        height: 100%;
-        max-height: none;
-      }
-    }
-  }
-  &__muller-martini {
-    grid-template-columns: repeat(4, 1fr);
-    @include mg {
-        grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  &__gto {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    @include mg {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    & img {
-        width: 100%;
-        max-height: 600px;
-        height: 100%;
-        &:nth-child(-n+2) {
-            grid-row: 1/3;
-            object-position: top;
+
+    &__header-btn {
+        @include btnReset;
+        padding: 11px 30px;
+        border-radius: 50px;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 16px;
+        font-weight: 600;
+        transition: color 0.3s ease, background 0.3s ease;
+
+        &:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.08);
         }
     }
-  }
-  &__shoei-74 {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    @include mg {
-        grid-template-columns: repeat(1, 1fr);
+
+    &__header-btn.equipment--active {
+        color: var(--color-space-cadet, #0f2753);
+        background: #fff;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+
+        &:hover {
+            color: var(--color-space-cadet, #0f2753);
+            background: #fff;
+        }
     }
-  }
-  &__yawa {
-    grid-template-columns: repeat(3, 1fr);
-    @include mg {
-        grid-template-columns: repeat(2, 1fr);
+
+    // ---------- Контент вкладок ----------
+    &__container {
+        position: relative;
+        z-index: 1;
+        display: none;
+        padding-top: 44px;
     }
-    & img:last-child {
-        grid-row: 1/4;
+
+    &__container.equipment--active {
+        display: block;
+    }
+
+    &__title {
+        position: relative;
+        margin: 0 0 32px;
+        padding-left: 24px;
+        font-size: 42px;
+        font-weight: 800;
+        line-height: 1.2;
+        color: var(--color-galaxy);
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 4px;
+            bottom: 4px;
+            width: 5px;
+            border-radius: 3px;
+            background: linear-gradient(180deg, #3E77FB 0%, #6de2eb 100%);
+        }
+
+        @include md {
+            padding-left: 18px;
+            font-size: 28px;
+        }
+    }
+
+    // ---------- Карточка одной единицы оборудования/объявления ----------
+    &__card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 28px 32px 32px;
+        margin-bottom: 28px;
+        box-shadow: 0 6px 24px rgba(62, 119, 251, 0.08);
+        transition: box-shadow 0.3s ease;
+
+        &:hover {
+            box-shadow: 0 14px 36px rgba(62, 119, 251, 0.14);
+        }
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        @include md {
+            padding: 20px;
+        }
+    }
+
+    &__subtitle {
+        margin: 0 0 14px;
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 1.35;
+        color: var(--color-galaxy);
+
+        @include md {
+            font-size: 19px;
+        }
+    }
+
+    // "Стоимость…"/"Рассмотрим вариант аренды" в объявлении — не заголовок
+    // товара, а короткая заметка внутри той же карточки.
+    &__subtitle--note {
+        margin: 18px 0 0;
+        font-size: 17px;
+        color: var(--color-primary, #3E77FB);
+    }
+
+    &__price {
+        display: inline-flex;
+        align-items: center;
+        margin: 0 0 20px;
+        padding: 8px 20px;
+        border-radius: 50px;
+        background: linear-gradient(135deg, rgba(62, 119, 251, 0.12), rgba(109, 226, 235, 0.16));
+        color: var(--color-primary, #3E77FB);
+        font-weight: 700;
+        font-size: 16px;
+    }
+
+    // ---------- Галерея фото оборудования ----------
+    &__img-cnt {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
         @include mg {
-            grid-row: 1/3;
+            grid-template-columns: repeat(2, 1fr);
         }
     }
-    & img:nth-child(3) {
+    &__img {
+        object-fit: cover;
+        border-radius: 14px;
+        box-shadow: 0 4px 16px rgba(46, 42, 36, 0.08);
+        transition: transform 0.35s ease, box-shadow 0.35s ease;
+
+        &:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 28px rgba(62, 119, 251, 0.18);
+        }
+    }
+    &__suprasetter {
+        & .equipment__img:last-child {
+            grid-row: 1/4;
+            width: 100%;
+            max-height: 660px;
+            object-fit: cover;
+            @include xl {
+                max-height: 500px;
+            }
+            @include lg {
+                max-height: 400px;
+            }
+            @include mg {
+                grid-row: 1/6;
+                height: 100%;
+                max-height: none;
+            }
+        }
+    }
+    &__muller-martini {
+        grid-template-columns: repeat(4, 1fr);
         @include mg {
-            grid-column: 1/3;
+            grid-template-columns: repeat(2, 1fr);
         }
     }
-  }
+    &__gto {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        @include mg {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        & img {
+            width: 100%;
+            max-height: 600px;
+            height: 100%;
+            &:nth-child(-n+2) {
+                grid-row: 1/3;
+                object-position: top;
+            }
+        }
+    }
+    &__shoei-74 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        @include mg {
+            grid-template-columns: repeat(1, 1fr);
+        }
+    }
+    &__yawa {
+        grid-template-columns: repeat(3, 1fr);
+        @include mg {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        & img:last-child {
+            grid-row: 1/4;
+            @include mg {
+                grid-row: 1/3;
+            }
+        }
+        & img:nth-child(3) {
+            @include mg {
+                grid-column: 1/3;
+            }
+        }
+    }
+
+    // ---------- Список характеристик помещения (вкладка "Объявления") ----------
+    &__list {
+        @include listReset;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin: 18px 0 8px;
+    }
+
+    &__item {
+        position: relative;
+        padding: 12px 18px 12px 44px;
+        background: #f7f9ff;
+        border-radius: 14px;
+        font-size: 15px;
+        color: var(--color-dim-gray, #666);
+
+        &::before {
+            content: '✓';
+            position: absolute;
+            left: 14px;
+            top: 11px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3E77FB, #6de2eb);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 20px;
+            text-align: center;
+        }
+    }
 }
