@@ -4,10 +4,23 @@ require_once('phpmailer/PHPMailerAutoload.php');
 $mail = new PHPMailer;
 $mail->CharSet = 'utf-8';
 
-$name = $_POST['name'];
-$phone = $_POST['tel'];
-$email = $_POST['email'];
-$text = $_POST['textarea'];
+$name = trim($_POST['name'] ?? '');
+$phone = trim($_POST['tel'] ?? '');
+$email = trim($_POST['email'] ?? '');
+$text = trim($_POST['textarea'] ?? '');
+
+if ($name === '' || $phone === '' || $email === '') {
+    exit('Заполните обязательные поля');
+}
+
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    exit('Некорректный email');
+}
+
+$name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
+$phone = htmlspecialchars($phone, ENT_QUOTES, 'UTF-8');
+$email = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
+$text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
 
 //$mail->SMTPDebug = 3;                               // Enable verbose debug output
 
