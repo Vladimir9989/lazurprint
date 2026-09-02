@@ -35,7 +35,7 @@ $mail->Port = 2525; // TCP port to connect to / этот порт может о�
 $mail->setFrom('noreply@info.lazurprint.ru'); // от кого будет уходить письмо?
 $mail->addAddress('deeva.lazur@mail.ru');     // Кому будет уходить письмо 
 // $mail->addAddress('av@lazurprint.ru');     // Кому будет уходить письмо 
-// $mail->addAddress('info@lazurprint.ru');     // Кому будет уходить письмо 
+$mail->addAddress('info@lazurprint.ru');     // Кому будет уходить письмо
 $mail->addAddress('agapovladimir89@gmail.com');     // Кому будет уходить письмо 
 // $mail->addAddress('agapov_89@bk.ru');     // Кому будет уходить письмо 
 // $mail->addAddress('admin@lazurprint.ru');     // Кому будет уходить письмо 
