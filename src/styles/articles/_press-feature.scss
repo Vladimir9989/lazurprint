@@ -423,24 +423,25 @@
 }
 
 /* ============================================================
-   Модалка-«читалка» номера: свайпер по 16 страницам + лента
-   миниатюр для быстрого перехода. Работает через Swiper
-   (news55.js), см. CLAUDE.md про конвейер src/resources/.
+   Модалка-«читалка» номера: одна страница в кадре, стрелки,
+   лента миниатюр и увеличение. Намеренно без Swiper — в скрытом
+   контейнере он считал ширину слайда как бесконечность (браузер
+   обрезал её до 33 554 300px) и страница уезжала за экран.
+   Логика — src/resources/news55.js.
    ============================================================ */
 .press-modal {
     position: fixed;
-    inset: 0;
-    z-index: 1000;
-    display: flex;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2147483647;
+    display: none;
     flex-direction: column;
-    background: rgba(6, 10, 20, 0.94);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    background: #0a0e17;
 
     &--active {
-        opacity: 1;
-        visibility: visible;
+        display: flex;
     }
 
     &__close {
@@ -539,83 +540,138 @@
         }
     }
 
-    &__main {
+    &__stage {
         flex: 1;
         min-height: 0;
-        padding: 70px 60px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 70px 80px 20px;
+        overflow: hidden;
 
         @include md {
             padding: 56px 12px 12px;
         }
 
-        .swiper-slide {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-        }
-
-        .swiper-zoom-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-        }
-
-        img {
-            display: block;
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
-            border-radius: 4px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        /* При увеличении картинка перестаёт вписываться в кадр —
+           включаем прокрутку и прижимаем её к началу, иначе центрирование
+           обрезает верх и левый край увеличенной страницы. */
+        &--zoomed {
+            overflow: auto;
+            align-items: flex-start;
+            justify-content: flex-start;
+            cursor: grab;
         }
     }
 
-    &__nav {
-        color: #fff;
+    &__page {
+        display: block;
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        margin: auto;
+        border-radius: 4px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        background: #fff;
+    }
 
-        &::after {
-            font-size: 22px;
+    &__stage--zoomed &__page {
+        max-width: none;
+        max-height: none;
+        margin: 0;
+    }
+
+    &__nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 5;
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+        font-size: 30px;
+        line-height: 1;
+        cursor: pointer;
+        transition: background 0.2s ease;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        &--prev {
+            left: 18px;
+        }
+
+        &--next {
+            right: 18px;
+        }
+
+        @include md {
+            width: 38px;
+            height: 38px;
+            font-size: 24px;
+
+            &--prev {
+                left: 6px;
+            }
+
+            &--next {
+                right: 6px;
+            }
         }
     }
 
     &__thumbs {
         flex-shrink: 0;
+        display: flex;
+        gap: 8px;
         height: 84px;
         padding: 10px 20px 16px;
         box-sizing: border-box;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
+        overflow-x: auto;
+        overflow-y: hidden;
 
         @include md {
             height: 64px;
             padding: 8px 10px 12px;
         }
+    }
 
-        .swiper-slide {
-            width: auto;
-            height: 100%;
-            opacity: 0.45;
-            cursor: pointer;
-            transition: opacity 0.2s ease, outline-color 0.2s ease;
-            outline: 2px solid transparent;
-            outline-offset: 2px;
-            border-radius: 3px;
-            overflow: hidden;
+    &__thumb {
+        flex-shrink: 0;
+        height: 100%;
+        padding: 0;
+        border: none;
+        background: none;
+        border-radius: 3px;
+        opacity: 0.45;
+        cursor: pointer;
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+        transition: opacity 0.2s ease, outline-color 0.2s ease;
 
-            img {
-                display: block;
-                height: 100%;
-                width: auto;
-                border-radius: 3px;
-            }
+        &:hover {
+            opacity: 0.8;
         }
 
-        .swiper-slide-thumb-active {
+        &--active {
             opacity: 1;
             outline-color: var(--press-steel, #7ea6d6);
+        }
+
+        img {
+            display: block;
+            height: 100%;
+            width: auto;
+            border-radius: 3px;
         }
     }
 }
