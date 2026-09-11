@@ -149,8 +149,9 @@
     &__media img {
         display: block;
         width: 100%;
-        max-height: 520px;
-        object-fit: cover;
+        max-width: 440px;
+        height: auto;
+        margin: 0 auto;
         border-radius: var(--gift-radius);
         box-shadow: var(--gift-shadow);
     }
@@ -289,8 +290,9 @@
     &__cake img {
         display: block;
         width: 100%;
-        max-height: 320px;
-        object-fit: cover;
+        max-width: 320px;
+        height: auto;
+        margin: 0 auto;
         border-radius: 16px;
         box-shadow: var(--gift-shadow-soft);
     }
@@ -365,12 +367,14 @@
 /* ---------- Полноширинное фото между секциями ---------- */
 .gift-photo {
     margin: 0 0 30px;
+    text-align: center;
 
     img {
         display: block;
         width: 100%;
-        max-height: 480px;
-        object-fit: cover;
+        max-width: 420px;
+        height: auto;
+        margin: 0 auto;
         border-radius: var(--gift-radius);
         box-shadow: var(--gift-shadow-soft);
     }
