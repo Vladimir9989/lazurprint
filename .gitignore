@@ -7,3 +7,6 @@
 /.claude
 /.env
 /.deploy-manifest.json
+/admin/config.local.php
+/admin/uploads/*
+!/admin/uploads/.htaccess
