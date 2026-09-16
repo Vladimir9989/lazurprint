@@ -282,6 +282,14 @@
     @include md {
         grid-template-columns: 1fr;
     }
+
+    &--steps {
+        grid-template-columns: repeat(2, 1fr);
+
+        @include md {
+            grid-template-columns: 1fr;
+        }
+    }
 }
 
 .znak-fact {
