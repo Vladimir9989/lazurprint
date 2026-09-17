@@ -16,7 +16,8 @@
         currentCategory: '1',
         searchQuery: '',
         sortBy: 'default',
-        currentCity: ''
+        currentCity: '',
+        hitOnly: false
     };
 
     // DOM элементы
@@ -25,6 +26,7 @@
         searchInput: null,
         sortSelect: null,
         citySelect: null,
+        hitToggle: null,
         paginationContainer: null
     };
 
@@ -37,6 +39,7 @@
         initSearch();
         initSort();
         initCityFilter();
+        initHitFilter();
         restoreCategoryFromURL();
     }
 
@@ -48,8 +51,9 @@
         elements.searchInput = document.querySelector('.catalog__search input');
         elements.sortSelect = document.querySelector('.catalog__sort select');
         elements.citySelect = document.querySelector('.catalog__city-filter select');
+        elements.hitToggle = document.querySelector('.catalog__hit-toggle');
         elements.paginationContainer = document.querySelector('.catalog__pagination');
-        
+
         // Скрываем пагинацию
         if (elements.paginationContainer) {
             elements.paginationContainer.style.display = 'none';
@@ -73,7 +77,18 @@
      * Переключение категории
      */
     function switchCategory(categoryId) {
-        if (state.currentCategory === categoryId) return;
+        const wasHitOnly = state.hitOnly;
+        if (!wasHitOnly && state.currentCategory === categoryId) return;
+
+        // Клик по табу категории выключает режим «Хит продаж»
+        if (wasHitOnly) {
+            state.hitOnly = false;
+            resetHitModeStyles();
+            if (elements.hitToggle) {
+                elements.hitToggle.classList.remove('catalog__hit-toggle--active');
+                elements.hitToggle.setAttribute('aria-pressed', 'false');
+            }
+        }
 
         state.currentCategory = categoryId;
         state.searchQuery = '';
@@ -141,42 +156,98 @@
     }
 
     /**
-     * Фильтрация и сортировка товаров
+     * Фильтрация и сортировка товаров.
+     * В обычном режиме работает только с секцией текущей категории.
+     * В режиме «Хит продаж» (state.hitOnly) проходит по ВСЕМ секциям —
+     * товары-хиты есть в разных категориях, и на выбор фильтра их нужно
+     * показать все сразу, а не только внутри одной открытой вкладки.
      */
     function filterProducts() {
-        const activeSection = document.querySelector(`.catalog__section[data-tab="${state.currentCategory}"]`);
-        if (!activeSection) return;
+        const sections = state.hitOnly
+            ? Array.from(document.querySelectorAll('.catalog__section'))
+            : [document.querySelector(`.catalog__section[data-tab="${state.currentCategory}"]`)].filter(Boolean);
 
-        const items = activeSection.querySelectorAll('.catalog__item');
+        sections.forEach(section => {
+            const items = section.querySelectorAll('.catalog__item');
+            let sectionHasVisible = false;
 
-        items.forEach(item => {
-            const name = item.querySelector('.catalog-item__name');
-            const number = item.querySelector('.catalog-item__number');
-            const nameText = name ? name.textContent.trim().toLowerCase() : '';
-            const articleText = number ? number.textContent.trim().toLowerCase() : '';
+            items.forEach(item => {
+                const name = item.querySelector('.catalog-item__name');
+                const number = item.querySelector('.catalog-item__number');
+                const nameText = name ? name.textContent.trim().toLowerCase() : '';
+                const articleText = number ? number.textContent.trim().toLowerCase() : '';
 
-            // Поиск
-            let matchesSearch = true;
-            if (state.searchQuery) {
-                matchesSearch = nameText.includes(state.searchQuery) || articleText.includes(state.searchQuery);
+                // Поиск
+                let matchesSearch = true;
+                if (state.searchQuery) {
+                    matchesSearch = nameText.includes(state.searchQuery) || articleText.includes(state.searchQuery);
+                }
+
+                // Фильтр по городу. "universal" — отдельный пункт для товаров без data-city
+                // (не привязаны ни к одному городу); при выборе конкретного города такие
+                // товары не показываются — только точное совпадение по data-city.
+                let matchesCity = true;
+                if (state.currentCity === 'universal') {
+                    matchesCity = !item.dataset.city;
+                } else if (state.currentCity) {
+                    const itemCities = item.dataset.city ? item.dataset.city.split(' ') : [];
+                    matchesCity = itemCities.includes(state.currentCity);
+                }
+
+                // Фильтр «Хит продаж» — только товары с бейджем (data-hit="true")
+                let matchesHit = true;
+                if (state.hitOnly) {
+                    matchesHit = item.dataset.hit === 'true';
+                }
+
+                const visible = matchesSearch && matchesCity && matchesHit;
+                item.style.display = visible ? '' : 'none';
+                if (visible) sectionHasVisible = true;
+            });
+
+            if (state.hitOnly) {
+                // Секции без единого хита в режиме фильтра скрываем целиком.
+                // Важно: неактивные вкладки скрыты классом .catalog__section
+                // (display: none по умолчанию, без --active), поэтому просто
+                // снять инлайн-стиль (style.display = '') недостаточно —
+                // нужно явно выставить 'block', иначе CSS-класс снова спрячет
+                // секцию, даже если в ней есть видимые хиты.
+                section.style.display = sectionHasVisible ? 'block' : 'none';
             }
 
-            // Фильтр по городу. "universal" — отдельный пункт для товаров без data-city
-            // (не привязаны ни к одному городу); при выборе конкретного города такие
-            // товары не показываются — только точное совпадение по data-city.
-            let matchesCity = true;
-            if (state.currentCity === 'universal') {
-                matchesCity = !item.dataset.city;
-            } else if (state.currentCity) {
-                const itemCities = item.dataset.city ? item.dataset.city.split(' ') : [];
-                matchesCity = itemCities.includes(state.currentCity);
-            }
+            // Сортировка (если активна) может переместить товары между
+            // подгруппами секции — поэтому видимость подзаголовков/списков
+            // считаем после неё, а не до.
+            sortProducts(section);
 
-            item.style.display = (matchesSearch && matchesCity) ? '' : 'none';
+            if (state.hitOnly) {
+                // Прячем пустые подгруппы (подзаголовок + список), чтобы
+                // не было пустых заголовков без единого товара под ними.
+                section.querySelectorAll('.catalog__list').forEach(list => {
+                    const hasVisibleItem = Array.from(list.children).some(li => li.style.display !== 'none');
+                    list.style.display = hasVisibleItem ? '' : 'none';
+
+                    // Перед списком может стоять подзаголовок (обычный
+                    // .catalog__subtitle или стилизованный .catalog__subtitle--style,
+                    // как у «Детские/Сувенирные/Без принта» в футболках), а между
+                    // подзаголовком и списком скрипт catalog-pdf.js вставляет свою
+                    // кнопку «Скачать PDF» (.catalog__pdf-btn). Прячем всю эту
+                    // цепочку целиком, если под ней не осталось ни одного товара.
+                    let sibling = list.previousElementSibling;
+                    while (sibling && (
+                        sibling.classList.contains('catalog__pdf-btn') ||
+                        sibling.classList.contains('catalog__subtitle') ||
+                        sibling.classList.contains('catalog__subtitle--style')
+                    )) {
+                        sibling.style.display = hasVisibleItem ? '' : 'none';
+                        const isTitle = sibling.classList.contains('catalog__subtitle') ||
+                            sibling.classList.contains('catalog__subtitle--style');
+                        sibling = sibling.previousElementSibling;
+                        if (isTitle) break;
+                    }
+                });
+            }
         });
-
-        // Сортировка
-        sortProducts(activeSection);
     }
 
     /**
@@ -188,6 +259,59 @@
         elements.citySelect.addEventListener('change', function(e) {
             state.currentCity = e.target.value;
             filterProducts();
+        });
+    }
+
+    /**
+     * Инициализация переключателя «Хит продаж».
+     * Это кросс-категорийный фильтр (в отличие от табов категорий) —
+     * показывает товары-хиты сразу из всех разделов каталога.
+     */
+    function initHitFilter() {
+        if (!elements.hitToggle) return;
+
+        elements.hitToggle.addEventListener('click', function() {
+            state.hitOnly = !state.hitOnly;
+            elements.hitToggle.classList.toggle('catalog__hit-toggle--active', state.hitOnly);
+            elements.hitToggle.setAttribute('aria-pressed', String(state.hitOnly));
+
+            const categoryTitle = document.getElementById('current-category');
+            if (categoryTitle) {
+                if (state.hitOnly) {
+                    categoryTitle.textContent = 'Хит продаж';
+                } else {
+                    const activeBtn = document.querySelector(`.catalog__category-btn[data-category="${state.currentCategory}"]`);
+                    categoryTitle.textContent = activeBtn ? activeBtn.textContent.trim() : '';
+                }
+            }
+
+            if (!state.hitOnly) {
+                resetHitModeStyles();
+            }
+
+            filterProducts();
+        });
+    }
+
+    /**
+     * Сброс инлайновых стилей, выставленных в режиме «Хит продаж»
+     * (скрытые секции/подгруппы других категорий), при выходе из него.
+     */
+    function resetHitModeStyles() {
+        const menu = document.querySelector('.catalog__menu');
+        if (!menu) return;
+
+        menu.querySelectorAll('.catalog__section').forEach(section => {
+            section.style.display = '';
+        });
+        menu.querySelectorAll('.catalog__list').forEach(list => {
+            list.style.display = '';
+        });
+        menu.querySelectorAll('.catalog__subtitle, .catalog__subtitle--style').forEach(subtitle => {
+            subtitle.style.display = '';
+        });
+        menu.querySelectorAll('.catalog__pdf-btn').forEach(btn => {
+            btn.style.display = '';
         });
     }
 
