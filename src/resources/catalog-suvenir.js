@@ -40,7 +40,34 @@
         initSort();
         initCityFilter();
         initHitFilter();
+        initTshirtSliders();
         restoreCategoryFromURL();
+    }
+
+    /**
+     * Мини-слайдер «перед/зад» внутри карточки товара (Swiper уже подключён
+     * на странице). observer/observeParents нужны, потому что карточка
+     * может лежать в неактивной вкладке каталога (display: none) в момент
+     * инициализации — без них Swiper посчитает ширину слайдов нулевой.
+     */
+    function initTshirtSliders() {
+        if (typeof Swiper === 'undefined') return;
+
+        document.querySelectorAll('.catalog-slider').forEach(function (el) {
+            new Swiper(el, {
+                rewind: true,
+                observer: true,
+                observeParents: true,
+                pagination: {
+                    el: el.querySelector('.catalog-slider__pagination'),
+                    clickable: true
+                },
+                navigation: {
+                    nextEl: el.querySelector('.catalog-slider__arrow--next'),
+                    prevEl: el.querySelector('.catalog-slider__arrow--prev')
+                }
+            });
+        });
     }
 
     /**
