@@ -60,16 +60,17 @@ function hideSub(e) {
     }
 }
 
-const dropdownMenu = document.querySelector('.dropdown-menu');
-const mainBtn = document.querySelector('.main-button');
-const iconMessages = document.querySelector('.icon-cnt-messages');
-const iconClose = document.querySelector('.icon-cnt-close');
+// Кнопка соцсетей отключена (2026-09-24) — тестируем чат Битрикс24 вместо неё.
+// const dropdownMenu = document.querySelector('.dropdown-menu');
+// const mainBtn = document.querySelector('.main-button');
+// const iconMessages = document.querySelector('.icon-cnt-messages');
+// const iconClose = document.querySelector('.icon-cnt-close');
 
-mainBtn.addEventListener('click', () => {
-    dropdownMenu.classList.toggle('show');
-    iconMessages.classList.toggle('hidden');
-    iconClose.classList.toggle('hidden');
-})
+// mainBtn.addEventListener('click', () => {
+//     dropdownMenu.classList.toggle('show');
+//     iconMessages.classList.toggle('hidden');
+//     iconClose.classList.toggle('hidden');
+// })
 
 // валидация
 
