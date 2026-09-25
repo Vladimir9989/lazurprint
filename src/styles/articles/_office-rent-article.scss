@@ -1,0 +1,235 @@
+@import '../variables';
+@import '../mixin';
+
+// Оформление новости о сдаче офиса в аренду (news59.html): графит + тёплая
+// бронза/латунь — под цвет мебели и стен на реальных фото помещения,
+// отдельно от палитр других уникальных статей/новостей (см. CLAUDE.md).
+.office-page {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #f8f6f2 0%, #efe9df 100%);
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  &::before {
+    top: -140px;
+    right: -160px;
+    width: 480px;
+    height: 480px;
+    background: radial-gradient(circle, rgba(185, 131, 79, 0.16) 0%, transparent 70%);
+  }
+
+  &::after {
+    bottom: -160px;
+    left: -140px;
+    width: 460px;
+    height: 460px;
+    background: radial-gradient(circle, rgba(42, 47, 58, 0.1) 0%, transparent 70%);
+  }
+
+  .news__container {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.office {
+  --of-dark: #2a2f3a;
+  --of-brass: #b9834f;
+  --of-brass-light: #d7ab74;
+  --of-bg-from: #fbfaf8;
+  --of-bg-to: #f2ede4;
+
+  max-width: 860px;
+  margin: 24px auto 0;
+  padding: 40px 48px;
+  background: linear-gradient(135deg, var(--of-bg-from) 0%, var(--of-bg-to) 100%);
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(42, 47, 58, 0.1);
+
+  @include lg {
+    max-width: 100%;
+  }
+
+  @include md {
+    padding: 24px 20px;
+    border-radius: 16px;
+  }
+
+  &__lead {
+    margin: 0 0 24px;
+    padding: 18px 22px;
+    background: #ffffff;
+    border-radius: 14px;
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--of-dark);
+    box-shadow: 0 8px 24px rgba(42, 47, 58, 0.08);
+
+    @include md {
+      font-size: 17px;
+      padding: 16px 18px;
+    }
+  }
+
+  &__text {
+    margin: 0 0 22px;
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--color-dim-gray, #666);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__subtitle {
+    margin: 0 0 16px;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--of-dark);
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 22px;
+      height: 3px;
+      margin-right: 10px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--of-brass), var(--of-dark));
+      vertical-align: middle;
+    }
+  }
+
+  &__photo {
+    margin: 0 0 26px;
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: 600px;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(42, 47, 58, 0.18);
+    }
+  }
+
+  &__caption {
+    display: block;
+    max-width: 600px;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--color-pink-sw, #b7b7b7);
+  }
+
+  // Сетка ключевых характеристик помещения
+  &__facts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin: 0 0 26px;
+
+    @include mg {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  &__fact {
+    padding: 16px 14px;
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(42, 47, 58, 0.08);
+    text-align: center;
+  }
+
+  &__fact-value {
+    display: block;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--of-dark);
+    margin-bottom: 4px;
+  }
+
+  &__fact-label {
+    display: block;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--color-dim-gray, #666);
+  }
+
+  // Блок цены
+  &__price {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 0 0 14px;
+    padding: 22px 24px;
+    background: linear-gradient(135deg, var(--of-dark) 0%, #3d4557 100%);
+    border-radius: 16px;
+    box-shadow: 0 14px 34px rgba(42, 47, 58, 0.28);
+  }
+
+  &__price-value {
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--of-brass-light);
+  }
+
+  &__price-unit {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+  }
+
+  &__price-note {
+    margin: 0 0 26px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--color-dim-gray, #666);
+    font-style: italic;
+  }
+
+  // Карточка контакта
+  &__contact {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: 32px;
+    padding: 22px 26px;
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid rgba(185, 131, 79, 0.3);
+    box-shadow: 0 8px 24px rgba(42, 47, 58, 0.08);
+
+    @include md {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+  }
+
+  &__contact-name {
+    margin: 0 0 4px;
+    font-size: 15px;
+    color: var(--color-dim-gray, #666);
+  }
+
+  &__contact-link {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--of-dark);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--of-brass);
+    }
+  }
+}
