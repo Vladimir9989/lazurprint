@@ -1,0 +1,663 @@
+/* ============================================================
+   Статья «Иоганн Гутенберг: как изобретение печатного станка
+   изменило историю книги» (articles120.html)
+   Индивидуальный стиль статьи. Префикс .guten- чтобы не пересекаться
+   с остальными стилями (по аналогии с .cal-, .gigas-, .lib-, .expo-).
+   Палитра «типографская краска и патина металла»: холодный
+   чернильно-синий почти-чёрный (краска, гравировальная пластина) +
+   приглушённая бронзово-медная патина (окислившийся металл пресса) +
+   тёплый пергаментный фон — не повторяет ни один из занятых акцентов
+   (не золото гравюр .gift-/.gallery-page, не багрянец .gigas-,
+   не вино-бирюза .lib-).
+   ============================================================ */
+
+.guten-article {
+    --guten-ink: #1b2030;
+    --guten-accent: #3c6e6a;
+    --guten-accent2: #a97c4f;
+    --guten-bg-from: #f6f1e3;
+    --guten-bg-to: #ece0c4;
+    --guten-radius: 22px;
+    --guten-shadow: 0 18px 48px rgba(27, 32, 48, 0.20);
+    --guten-shadow-soft: 0 8px 24px rgba(27, 32, 48, 0.12);
+    color: var(--color-night-rider);
+
+    .news__title {
+        font-size: clamp(28px, 3.6vw, 44px);
+        line-height: 1.16;
+        color: var(--color-galaxy);
+    }
+}
+
+/* ---------- HERO ---------- */
+.guten-hero {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 40px;
+    align-items: center;
+    margin: 26px 0 34px;
+    padding: 40px 44px;
+    border-radius: 30px;
+    background:
+        radial-gradient(120% 140% at 100% 0%, rgba(169, 124, 79, 0.16), transparent 55%),
+        linear-gradient(135deg, var(--guten-bg-from) 0%, var(--guten-bg-to) 100%);
+    border: 1px solid rgba(27, 32, 48, 0.14);
+
+    @include lg {
+        grid-template-columns: 1fr;
+    }
+
+    @include md {
+        padding: 26px 20px;
+        border-radius: 20px;
+    }
+
+    &__blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(55px);
+        z-index: 0;
+        pointer-events: none;
+
+        &--1 {
+            width: 300px;
+            height: 300px;
+            top: -110px;
+            right: -60px;
+            background: rgba(60, 110, 106, 0.22);
+        }
+
+        &--2 {
+            width: 260px;
+            height: 260px;
+            bottom: -120px;
+            left: -70px;
+            background: rgba(169, 124, 79, 0.26);
+        }
+    }
+
+    &__text {
+        position: relative;
+        z-index: 1;
+    }
+
+    &__eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 16px;
+        margin-bottom: 18px;
+        border-radius: 50px;
+        background: var(--color-white);
+        box-shadow: var(--guten-shadow-soft);
+        color: var(--guten-accent);
+        font-weight: 700;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+
+        &::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--guten-accent);
+            box-shadow: 0 0 0 4px rgba(60, 110, 106, 0.18);
+        }
+    }
+
+    &__lead {
+        font-size: 21px;
+        line-height: 1.5;
+        font-weight: 600;
+        margin: 0 0 14px;
+        color: var(--color-galaxy);
+    }
+
+    &__text {
+        font-size: 17px;
+        line-height: 1.7;
+        margin: 0 0 22px;
+        color: var(--color-dim-gray);
+    }
+
+    &__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-bottom: 26px;
+    }
+
+    &__stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 26px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    &__stat-num {
+        display: block;
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--color-galaxy);
+    }
+
+    &__stat-label {
+        display: block;
+        font-size: 13px;
+        color: var(--color-dim-gray);
+    }
+
+    &__media {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 260px;
+    }
+}
+
+/* ---------- Фото в тёмной раме ---------- */
+.guten-frame {
+    position: relative;
+    max-width: 300px;
+    padding: 12px;
+    background: var(--guten-ink);
+    border-radius: 10px;
+    box-shadow: var(--guten-shadow);
+
+    &__inner {
+        position: relative;
+        overflow: hidden;
+        border-radius: 4px;
+        border: 1px solid rgba(169, 124, 79, 0.5);
+        box-shadow: inset 0 0 0 4px rgba(0, 0, 0, 0.25);
+    }
+
+    img {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+    &__caption {
+        display: block;
+        margin-top: 12px;
+        text-align: center;
+        font-size: 12px;
+        line-height: 1.5;
+        color: var(--color-white);
+        opacity: 0.85;
+    }
+}
+
+/* ---------- Кнопки ---------- */
+.guten-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+
+    &--primary {
+        background: linear-gradient(135deg, var(--guten-accent) 0%, var(--guten-ink) 100%);
+        color: var(--color-white);
+        box-shadow: 0 12px 28px rgba(60, 110, 106, 0.32);
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 34px rgba(60, 110, 106, 0.42);
+        }
+    }
+
+    &--ghost {
+        background: var(--color-white);
+        color: var(--color-galaxy);
+        border: 1px solid rgba(8, 31, 92, 0.14);
+
+        &:hover {
+            border-color: var(--guten-accent);
+            color: var(--guten-accent);
+        }
+    }
+}
+
+/* Ссылка внутри текста статьи */
+.guten-link {
+    color: var(--guten-accent);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: rgba(60, 110, 106, 0.35);
+    text-underline-offset: 3px;
+    transition: color 0.2s ease, text-decoration-color 0.2s ease;
+
+    &:hover {
+        color: var(--guten-ink);
+        text-decoration-color: var(--guten-ink);
+    }
+}
+
+/* ---------- Навигация по разделам ---------- */
+.guten-nav {
+    margin-bottom: 34px;
+
+    &__list {
+        @include listReset;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    &__chip {
+        display: inline-block;
+        padding: 9px 18px;
+        border-radius: 50px;
+        background: var(--color-white);
+        border: 1px solid rgba(8, 31, 92, 0.10);
+        color: var(--color-galaxy);
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+
+        &:hover {
+            background: var(--guten-accent);
+            border-color: var(--guten-accent);
+            color: var(--color-white);
+        }
+    }
+}
+
+/* ---------- Секции ---------- */
+.guten-section {
+    margin-bottom: 54px;
+
+    &__head {
+        display: flex;
+        align-items: baseline;
+        gap: 16px;
+        margin-bottom: 14px;
+    }
+
+    &__num {
+        font-size: 15px;
+        font-weight: 800;
+        color: var(--guten-accent);
+        letter-spacing: 0.04em;
+    }
+
+    &__title {
+        margin: 0;
+    }
+
+    &__lead {
+        font-size: 17px;
+        line-height: 1.7;
+        color: var(--color-dim-gray);
+        margin: 0 0 18px;
+        max-width: 820px;
+    }
+
+    &__text {
+        font-size: 16px;
+        line-height: 1.75;
+        color: var(--color-dim-gray);
+        margin: 0 0 16px;
+        max-width: 820px;
+    }
+}
+
+/* ---------- Факты списком (биография, характеристики книги) ---------- */
+.guten-specs {
+    @include listReset;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-radius: var(--guten-radius);
+    background: var(--color-white);
+    border: 1px solid var(--color-whisper);
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.guten-specs__item {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 18px;
+    align-items: baseline;
+    padding: 16px 22px;
+
+    &:not(:last-child) {
+        border-bottom: 1px dashed var(--color-whisper);
+    }
+
+    @include md {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+}
+
+.guten-specs__label {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: var(--guten-accent);
+}
+
+.guten-specs__value {
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--color-dim-gray);
+}
+
+/* ---------- Три карточки изобретения ---------- */
+.guten-grid {
+    @include listReset;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+
+    @include lg {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include md {
+        grid-template-columns: 1fr;
+    }
+}
+
+.guten-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-whisper);
+    border-radius: var(--guten-radius);
+    padding: 22px 24px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--guten-shadow-soft);
+    }
+
+    &__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        margin-bottom: 14px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(60, 110, 106, 0.14), rgba(169, 124, 79, 0.14));
+        color: var(--guten-accent);
+
+        svg {
+            width: 22px;
+            height: 22px;
+        }
+    }
+
+    &__title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--color-galaxy);
+        margin: 0 0 8px;
+    }
+
+    &__text {
+        font-size: 14.5px;
+        line-height: 1.6;
+        color: var(--color-dim-gray);
+        margin: 0;
+    }
+}
+
+/* ---------- Таймлайн жизни и мастерской ---------- */
+.guten-timeline {
+    @include listReset;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding-left: 34px;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 6px;
+        bottom: 6px;
+        left: 7px;
+        width: 2px;
+        background: linear-gradient(180deg, var(--guten-accent), var(--guten-accent2));
+    }
+}
+
+.guten-timeline__item {
+    position: relative;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 4px;
+        left: -34px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--color-white);
+        border: 3px solid var(--guten-accent);
+    }
+}
+
+.guten-timeline__date {
+    display: block;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--guten-accent);
+    margin-bottom: 4px;
+}
+
+.guten-timeline__text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--color-dim-gray);
+    margin: 0;
+}
+
+/* ---------- Разворот с изображением книги ---------- */
+.guten-showcase {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 36px;
+    align-items: center;
+    margin-bottom: 22px;
+
+    @include lg {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ---------- Цитата ---------- */
+.guten-quote {
+    position: relative;
+    margin: 0 0 26px;
+    padding: 20px 24px 20px 28px;
+    background: var(--color-white);
+    border-radius: 14px;
+    border-left: 4px solid transparent;
+    border-image: linear-gradient(180deg, var(--guten-accent2), var(--guten-accent)) 1;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--color-dim-gray);
+    font-style: italic;
+    box-shadow: var(--guten-shadow-soft);
+}
+
+/* ---------- Отдельное полноширинное фото ---------- */
+.guten-photo {
+    margin: 0 0 54px;
+
+    img {
+        display: block;
+        width: 100%;
+        max-height: 460px;
+        object-fit: cover;
+        border-radius: var(--guten-radius);
+        box-shadow: var(--guten-shadow-soft);
+    }
+
+    &__caption {
+        display: block;
+        margin-top: 10px;
+        font-size: 13px;
+        color: var(--color-dim-gray);
+        text-align: center;
+    }
+}
+
+/* ---------- Список последствий изобретения ---------- */
+.guten-impact {
+    @include listReset;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+
+    @include md {
+        grid-template-columns: 1fr;
+    }
+}
+
+.guten-impact__item {
+    display: flex;
+    gap: 16px;
+    padding: 20px 22px;
+    background: var(--color-white);
+    border-radius: var(--guten-radius);
+    border: 1px solid var(--color-whisper);
+}
+
+.guten-impact__num {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--guten-accent), var(--guten-accent2));
+    color: var(--color-white);
+    font-weight: 800;
+    font-size: 14px;
+}
+
+.guten-impact__title {
+    font-size: 15.5px;
+    font-weight: 700;
+    color: var(--color-galaxy);
+    margin: 0 0 6px;
+}
+
+.guten-impact__text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-dim-gray);
+    margin: 0;
+}
+
+/* ---------- Стоимость: акцентная плашка ---------- */
+.guten-highlight {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 28px;
+    padding: 30px 36px;
+    border-radius: 28px;
+    background: linear-gradient(135deg, var(--guten-ink) 0%, #2c3346 100%);
+    box-shadow: 0 20px 46px rgba(27, 32, 48, 0.28);
+    margin-bottom: 8px;
+
+    @include md {
+        padding: 24px 22px;
+    }
+
+    &__num {
+        flex-shrink: 0;
+        font-size: 34px;
+        font-weight: 900;
+        color: var(--color-white);
+        white-space: nowrap;
+    }
+
+    &__body {
+        flex: 1 1 320px;
+    }
+
+    &__label {
+        display: block;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--color-white);
+        margin-bottom: 8px;
+    }
+
+    &__note {
+        margin: 0;
+        font-size: 13.5px;
+        line-height: 1.6;
+        color: var(--color-white);
+        opacity: 0.8;
+    }
+}
+
+/* ---------- Мягкое завершение (без хард-CTA — материал не про услугу) ---------- */
+.guten-outro {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 24px;
+    padding: 32px 36px;
+    border-radius: 28px;
+    background: linear-gradient(135deg, var(--guten-accent) 0%, var(--guten-ink) 100%);
+    box-shadow: 0 20px 46px rgba(27, 32, 48, 0.28);
+
+    @include md {
+        padding: 26px 22px;
+    }
+
+    &__text {
+        color: var(--color-white);
+        flex: 1 1 320px;
+    }
+
+    &__title {
+        margin: 0 0 8px;
+        font-size: 20px;
+        font-weight: 800;
+    }
+
+    &__desc {
+        margin: 0;
+        font-size: 14.5px;
+        line-height: 1.6;
+        opacity: 0.92;
+    }
+
+    .guten-btn--ghost {
+        background: var(--color-white);
+        border-color: transparent;
+        flex-shrink: 0;
+
+        &:hover {
+            background: var(--guten-ink);
+            color: var(--color-white);
+        }
+    }
+}
