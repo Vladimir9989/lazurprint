@@ -1,0 +1,481 @@
+// Оформление новости про ИИ-консультанта Paynelia Txiki (news61.html).
+// Префикс .txk — не пересекается с другими материалами. Палитра —
+// «ночной чат»: тёмный графит + бирюза + мягкий мятный фон, не повторяет
+// синий .cal-, сиреневый .news-feature, фуксию .uvp, терракоту .expo-,
+// зелёные .zont-/.znak-, жёлто-сланцевый .etrn- и остальные (см. CLAUDE.md).
+.txk-page {
+  --txk-ink: #0f1a2a;
+  --txk-ink2: #1b2b42;
+  --txk-teal: #0fb5a8;
+  --txk-teal-dark: #0a8a80;
+  --txk-mint: #e6f8f5;
+  --txk-line: rgba(15, 26, 42, 0.12);
+  --txk-radius: 22px;
+  --txk-shadow: 0 16px 44px rgba(15, 26, 42, 0.14);
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #f3fbfa 0%, #eaf3f6 100%);
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(70px);
+  }
+
+  &::before {
+    top: -140px;
+    right: -160px;
+    width: 460px;
+    height: 460px;
+    background: rgba(15, 181, 168, 0.22);
+  }
+
+  &::after {
+    bottom: -160px;
+    left: -140px;
+    width: 420px;
+    height: 420px;
+    background: rgba(15, 26, 42, 0.10);
+  }
+
+  .news__container {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.txk {
+  color: var(--color-night-rider);
+
+  // ---------- HERO ----------
+  &__hero {
+    margin: 22px 0 26px;
+    padding: 38px 40px;
+    border-radius: 30px;
+    background:
+      radial-gradient(90% 130% at 100% 0%, rgba(15, 181, 168, 0.35), transparent 60%),
+      linear-gradient(135deg, var(--txk-ink) 0%, var(--txk-ink2) 100%);
+    color: #fff;
+
+    @include md {
+      padding: 24px 18px;
+      border-radius: 20px;
+    }
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding: 7px 16px;
+    border-radius: 50px;
+    background: rgba(15, 181, 168, 0.18);
+    border: 1px solid rgba(15, 181, 168, 0.6);
+    color: #7ff0e6;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+
+    &::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--txk-teal);
+      box-shadow: 0 0 0 4px rgba(15, 181, 168, 0.3);
+    }
+  }
+
+  &__title {
+    margin: 0 0 14px;
+    font-size: clamp(26px, 3.4vw, 42px);
+    line-height: 1.18;
+    color: #fff;
+
+    span {
+      color: #5eeadb;
+    }
+  }
+
+  &__lead {
+    margin: 0;
+    max-width: 780px;
+    font-size: 19px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.86);
+  }
+
+  // ---------- Цифры ----------
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    list-style: none;
+    margin: 0 0 30px;
+    padding: 0;
+
+    @include lg {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include md {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__stat {
+    padding: 20px 18px;
+    border-radius: 18px;
+    background: #fff;
+    border: 1px solid var(--txk-line);
+    border-bottom: 5px solid var(--txk-teal);
+    box-shadow: 0 8px 22px rgba(15, 26, 42, 0.07);
+  }
+
+  &__stat-num {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--txk-ink);
+  }
+
+  &__stat-label {
+    display: block;
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--color-dim-gray);
+  }
+
+  // ---------- Фото ----------
+  &__photo {
+    margin: 26px 0;
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: var(--txk-radius);
+      box-shadow: var(--txk-shadow);
+    }
+
+    figcaption {
+      margin-top: 10px;
+      font-size: 13px;
+      line-height: 1.4;
+      color: var(--color-dim-gray);
+    }
+  }
+
+  &__ph {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 260px;
+    padding: 24px;
+    border: 2px dashed rgba(15, 26, 42, 0.35);
+    border-radius: var(--txk-radius);
+    background: rgba(255, 255, 255, 0.6);
+    color: var(--txk-ink);
+    text-align: center;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  // ---------- Текст ----------
+  &__text {
+    margin: 0 0 16px;
+    font-size: 17px;
+    line-height: 1.75;
+  }
+
+  &__h2 {
+    margin: 38px 0 14px;
+    font-size: clamp(22px, 2.6vw, 30px);
+    line-height: 1.25;
+    color: var(--txk-ink);
+
+    &::after {
+      content: '';
+      display: block;
+      width: 64px;
+      height: 4px;
+      margin-top: 10px;
+      border-radius: 4px;
+      background: var(--txk-teal);
+    }
+  }
+
+  // ---------- Цитата ----------
+  &__quote {
+    position: relative;
+    margin: 26px 0;
+    padding: 24px 28px 24px 72px;
+    border-radius: var(--txk-radius);
+    background: var(--txk-mint);
+    border: 1px solid rgba(15, 181, 168, 0.4);
+    font-size: 19px;
+    line-height: 1.55;
+    font-weight: 600;
+    color: var(--txk-ink);
+
+    @include md {
+      padding: 56px 18px 18px;
+    }
+
+    &::before {
+      content: '«';
+      position: absolute;
+      top: 6px;
+      left: 22px;
+      font-size: 72px;
+      line-height: 1;
+      font-weight: 800;
+      color: var(--txk-teal);
+    }
+
+    cite {
+      display: block;
+      margin-top: 8px;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 600;
+      color: var(--txk-teal-dark);
+    }
+  }
+
+  // ---------- Карточки «что умеет» ----------
+  &__cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    list-style: none;
+    margin: 20px 0;
+    padding: 0;
+
+    @include md {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__card {
+    padding: 22px 22px 20px;
+    border-radius: var(--txk-radius);
+    background: #fff;
+    border: 1px solid var(--txk-line);
+    box-shadow: 0 8px 22px rgba(15, 26, 42, 0.07);
+  }
+
+  &__card-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    background: var(--txk-mint);
+    color: var(--txk-teal-dark);
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  &__card-title {
+    margin: 0 0 6px;
+    font-size: 18px;
+    line-height: 1.3;
+    color: var(--txk-ink);
+  }
+
+  &__card-text {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--color-dim-gray);
+  }
+
+  // ---------- Чат-макет ----------
+  &__chat {
+    margin: 26px 0;
+    border-radius: 26px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--txk-line);
+    box-shadow: var(--txk-shadow);
+  }
+
+  &__chat-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 22px;
+    background: var(--txk-ink);
+    color: #fff;
+    font-weight: 700;
+
+    small {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #7ff0e6;
+    }
+  }
+
+  &__chat-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--txk-teal);
+    color: var(--txk-ink);
+    font-weight: 800;
+  }
+
+  &__chat-body {
+    display: grid;
+    gap: 12px;
+    padding: 22px;
+    background: linear-gradient(180deg, #f7fbfc 0%, #eef5f7 100%);
+  }
+
+  &__msg {
+    max-width: 78%;
+    padding: 13px 18px;
+    border-radius: 18px;
+    font-size: 15px;
+    line-height: 1.55;
+
+    @include md {
+      max-width: 92%;
+    }
+
+    &--user {
+      justify-self: end;
+      border-bottom-right-radius: 4px;
+      background: var(--txk-ink);
+      color: #fff;
+    }
+
+    &--bot {
+      justify-self: start;
+      border-bottom-left-radius: 4px;
+      background: #fff;
+      border: 1px solid rgba(15, 181, 168, 0.5);
+      color: var(--txk-ink);
+    }
+  }
+
+  &__chat-note {
+    margin: 0;
+    padding: 12px 22px;
+    border-top: 1px solid var(--txk-line);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--color-dim-gray);
+  }
+
+  // ---------- Врезка ----------
+  &__callout {
+    display: flex;
+    gap: 16px;
+    margin: 24px 0;
+    padding: 20px 24px;
+    border-radius: var(--txk-radius);
+    background: var(--txk-ink);
+    color: rgba(255, 255, 255, 0.88);
+
+    @include md {
+      flex-direction: column;
+      gap: 8px;
+      padding: 18px;
+    }
+
+    strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 17px;
+      color: #5eeadb;
+    }
+
+    p {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.65;
+    }
+  }
+
+  &__callout-icon {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(15, 181, 168, 0.25);
+    color: #5eeadb;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  // ---------- Хэштеги / источник ----------
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin: 26px 0 0;
+    padding: 0;
+
+    li {
+      padding: 6px 14px;
+      border-radius: 50px;
+      background: var(--txk-mint);
+      color: var(--txk-teal-dark);
+      font-size: 13px;
+      font-weight: 700;
+    }
+  }
+
+  &__credit {
+    margin: 28px 0 10px;
+    padding: 20px 24px;
+    border-radius: var(--txk-radius);
+    background: linear-gradient(135deg, var(--txk-ink) 0%, var(--txk-ink2) 100%);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 15px;
+    line-height: 1.65;
+
+    b {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #5eeadb;
+    }
+
+    a {
+      color: #5eeadb;
+      font-weight: 700;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+  }
+}

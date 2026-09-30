@@ -18,7 +18,6 @@ const gulpif = require('gulp-if')
 const ttf2woff = require('gulp-ttf2woff')
 const ttf2woff2 = require('gulp-ttf2woff2')
 const plumber = require('gulp-plumber')
-const sitemap = require('gulp-sitemap')
 const pkg = require('./package.json')
 
 
@@ -185,23 +184,43 @@ const watchFiles = () => {
     watch('src/resources/**', resources);
 }
 
-const sitemapTask = () => {
-    return src('build/**/*.html', { read: false })
-        .pipe(sitemap({
-            siteUrl: 'https://lazurprint.ru',
-            mappings: {
-                'index.html': {
-                    priority: 1.0,
-                    changefreq: 'daily'
-                },
-                '*.html': {
-                    priority: 0.8,
-                    changefreq: 'weekly'
-                }
-            }
-        }))
-        .pipe(dest('build/resources'))
-        .pipe(dest('dist/resources'))
+// sitemap.xml собирается из реальных страниц src/*.html (а не из статичной копии в resources).
+// lastmod — дата последнего коммита файла (git), иначе mtime: значение стабильно между сборками,
+// поэтому sitemap.xml не «меняется» на пустом месте и инкрементальный деплой его не перезаливает.
+const sitemapTask = (done) => {
+    const { execSync } = require('child_process')
+    const fs = require('fs')
+    const path = require('path')
+    const site = 'https://lazurprint.ru'
+    const EOL = String.fromCharCode(10)
+    // служебные страницы, которые не должны попадать в индекс
+    const exclude = /^(google.*|yandex_.*|thanks|forms).html$/
+    const lastmod = (file) => {
+        try {
+            const d = execSync(`git log -1 --format=%cs -- "src/${file}"`, { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim()
+            if (d) return d
+        } catch (e) { /* нет git — берём mtime */ }
+        return fs.statSync(path.join('src', file)).mtime.toISOString().slice(0, 10)
+    }
+    const pages = fs.readdirSync('src').filter(f => f.endsWith('.html') && !exclude.test(f))
+    const rows = pages.map(f => {
+        const isIndex = f === 'index.html'
+        return ['<url>',
+            `	<loc>${site}/${isIndex ? '' : f}</loc>`,
+            `	<lastmod>${lastmod(f)}</lastmod>`,
+            `	<changefreq>${isIndex ? 'daily' : 'weekly'}</changefreq>`,
+            `	<priority>${isIndex ? '1.0' : '0.8'}</priority>`,
+            '</url>'].join(EOL)
+    })
+    const xml = ['<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+        ...rows,
+        '</urlset>', ''].join(EOL)
+    for (const dir of ['build', 'dist']) {
+        fs.mkdirSync(dir, { recursive: true })
+        fs.writeFileSync(path.join(dir, 'sitemap.xml'), xml)
+    }
+    done()
 }
 
 exports.styles = styles

@@ -51,7 +51,13 @@
             fd.append('product_id', productId);
             fd.append('csrf_token', getCsrfToken());
             return fetch('photo-upload.php', { method: 'POST', body: fd, credentials: 'same-origin' })
-                .then(function (r) { return r.json(); });
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    if (!data || !data.ok) {
+                        throw new Error(data && data.error ? data.error : 'Не удалось загрузить фото.');
+                    }
+                    return data;
+                });
         });
     }
 
@@ -86,8 +92,8 @@
             });
             chain.then(function () {
                 window.location.reload();
-            }).catch(function () {
-                alert('Не удалось загрузить одно из фото.');
+            }).catch(function (err) {
+                alert(err && err.message ? err.message : 'Не удалось загрузить одно из фото.');
                 window.location.reload();
             });
         }

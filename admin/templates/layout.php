@@ -12,6 +12,7 @@ function render_header($title, $user = null, $active_tab = null) {
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
+<?php if ($user): ?><input type="hidden" name="csrf_token" id="global-csrf-token" value="<?php echo h(csrf_token()); ?>"><?php endif; ?>
 <header class="topbar">
     <div class="topbar__inner">
         <a href="index.php" class="topbar__logo">Лазурь — учёт продукции</a>
