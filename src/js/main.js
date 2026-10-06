@@ -78,6 +78,25 @@ let selector = document.querySelector('.form__tel');
 let im = new Inputmask('+7 (999) 999-99-99');
 im.mask(selector);
 
+// антиспам: запоминаем момент загрузки страницы; при отправке в form_ts уходит, сколько мс прошло
+// (сервер отсекает слишком быстрые отправки; длительность, а не время — чтобы не зависеть от часов посетителя).
+// Поля добавляются отсюда, а не в разметку: так защита работает на всех страницах без перевыкладки HTML.
+const pageLoadedAt = Date.now();
+(function () {
+    const antispamForm = document.getElementById('form');
+    if (!antispamForm) return;
+    const trap = document.createElement('div');
+    trap.setAttribute('aria-hidden', 'true');
+    trap.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;';
+    trap.innerHTML = '<label>Сайт <input type="text" name="website" tabindex="-1" autocomplete="off"></label>';
+    const ts = document.createElement('input');
+    ts.type = 'hidden';
+    ts.name = 'form_ts';
+    ts.id = 'form_ts';
+    antispamForm.appendChild(trap);
+    antispamForm.appendChild(ts);
+})();
+
 let validateForms = function (selector, rules) {
     new window.JustValidate(selector, {
         rules: rules,
@@ -88,6 +107,8 @@ let validateForms = function (selector, rules) {
         },
 
         submitHandler: function (form) {
+            const formTs = document.getElementById('form_ts');
+            if (formTs) formTs.value = Date.now() - pageLoadedAt;
             let formData = new FormData(form);
 
             let xhr = new XMLHttpRequest();

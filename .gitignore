@@ -10,3 +10,5 @@
 /admin/config.local.php
 /admin/uploads/*
 !/admin/uploads/.htaccess
+/mail-config.php
+/mail-password-new.local.txt

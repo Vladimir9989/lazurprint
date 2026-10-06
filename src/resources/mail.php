@@ -1,8 +1,64 @@
 <?php 
 
+// Секреты (пароль SMTP, ключ reCAPTCHA) лежат вне git и вне веб-корня: на хостинге это
+// /home/c112136/lazurprint.ru/mail-config.php (на уровень выше www). Шаблон — mail-config.example.php в корне репозитория.
+$configFile = dirname(__DIR__) . '/mail-config.php';
+$config = is_file($configFile) ? include $configFile : null;
+if (!is_array($config) || empty($config['smtp_password']) || empty($config['recaptcha_secret'])) {
+    error_log('mail.php: не найден или неполон ' . $configFile);
+    exit('Произошла ошибка');
+}
+
 require_once('phpmailer/PHPMailerAutoload.php');
 $mail = new PHPMailer;
 $mail->CharSet = 'utf-8';
+
+// --- Антиспам: тихо отбрасываем ботов (отвечаем 200, чтобы они не искали обход) ---
+
+// 1. Honeypot: скрытое поле, человек его не видит и не заполняет
+if (trim($_POST['website'] ?? '') !== '') {
+    error_log('mail.php: spam (honeypot) ' . $_SERVER['REMOTE_ADDR']);
+    exit;
+}
+
+// 2. Время заполнения: форма присылает, сколько мс прошло с загрузки страницы; быстрее 3 секунд — бот
+// ПЕРЕХОДНЫЙ РЕЖИМ: у посетителей со старым закэшированным app.js поля form_ts ещё нет — их заявки пропускаем,
+// чтобы не терять настоящих клиентов. Когда на хостинге обновятся все страницы (новый ?_v=), поставить true.
+$requireTimestamp = false;
+$hasTimestamp = isset($_POST['form_ts']) && $_POST['form_ts'] !== '';
+$elapsedMs = (int)($_POST['form_ts'] ?? 0);
+if (($requireTimestamp || $hasTimestamp) && $elapsedMs < 3000) {
+    error_log('mail.php: spam (too fast / no timestamp) ' . $_SERVER['REMOTE_ADDR']);
+    exit;
+}
+
+// 3. Частота: не больше 5 заявок в час с одного IP
+$rateLimit = 5;
+$rateWindow = 3600;
+$rateFile = sys_get_temp_dir() . '/lazur_mail_' . md5($_SERVER['REMOTE_ADDR']) . '.json';
+$fh = @fopen($rateFile, 'c+');
+if ($fh && flock($fh, LOCK_EX)) {
+    $times = json_decode(stream_get_contents($fh), true);
+    $times = is_array($times) ? $times : array();
+    $now = time();
+    $times = array_values(array_filter($times, function ($t) use ($now, $rateWindow) {
+        return $now - $t < $rateWindow;
+    }));
+    if (count($times) >= $rateLimit) {
+        flock($fh, LOCK_UN);
+        fclose($fh);
+        error_log('mail.php: spam (rate limit) ' . $_SERVER['REMOTE_ADDR']);
+        exit;
+    }
+    $times[] = $now;
+    ftruncate($fh, 0);
+    rewind($fh);
+    fwrite($fh, json_encode($times));
+    flock($fh, LOCK_UN);
+}
+if ($fh) {
+    fclose($fh);
+}
 
 $name = trim($_POST['name'] ?? '');
 $phone = trim($_POST['tel'] ?? '');
@@ -27,8 +83,8 @@ $text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
 $mail->isSMTP();                                      // Set mailer to use SMTP
 $mail->Host = 'mail.netangels.ru';  																							// Specify main and backup SMTP servers
 $mail->SMTPAuth = true;                               // Enable SMTP authentication
-$mail->Username = 'noreply@info.lazurprint.ru'; // Ваш логин от почты с которой будут отправляться письма
-$mail->Password = 'Lazurprint1998'; // Ваш пароль от почты с которой будут отправляться письма
+$mail->Username = $config['smtp_user']; // логин и пароль почты, с которой уходят письма, — из mail-config.php
+$mail->Password = $config['smtp_password'];
 $mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
 $mail->Port = 2525; // TCP port to connect to / этот порт может отличаться у других провайдеров
 
@@ -67,7 +123,7 @@ if (!$_POST["g-recaptcha-response"]) {
     // URL куда отправлять запрос для проверки
     $url = "https://www.google.com/recaptcha/api/siteverify";
     // Ключ для сервера
-    $key = "6LfEyyEnAAAAAP6IGbe5zCygkBrB5MetacMF7wc1";
+    $key = $config['recaptcha_secret'];
     
     $response = null;
     // Данные для запроса
