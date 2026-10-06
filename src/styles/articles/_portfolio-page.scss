@@ -1,0 +1,247 @@
+/* ============================================================
+   Страница «Портфолио» (portfolio.html).
+   Оформление намеренно ПОВТОРЯЕТ статью про календари (articles111.html):
+   страница использует те же классы .cal-* (hero, чипы-якоря, секции со
+   слайдерами, характеристики, «Кому подходит», таймлайн, CTA) — как это
+   уже делает articles112.html. Здесь только то, чего в .cal- нет (.pf-).
+   ============================================================ */
+
+/* ссылки на страницы услуг под лидом секции */
+.pf-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+    margin: -8px 0 22px;
+}
+
+.pf-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-primary);
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+
+    svg {
+        width: 16px;
+        height: 16px;
+        stroke: currentColor;
+        transition: transform 0.25s ease;
+    }
+
+    &:hover {
+        color: var(--color-planetary);
+
+        svg {
+            transform: translateX(4px);
+        }
+    }
+}
+
+/* подпись под слайдером (например, что фото — образцы нейросети) */
+.pf-note {
+    margin: 10px 0 0;
+    font-size: 13px;
+    color: var(--color-dim-gray);
+    text-align: center;
+}
+
+/* блок «С чего начать заказ» — карточки в стиле .cal-why / .cal-flow */
+.pf-help {
+    margin: 64px 0 40px;
+
+    &__list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+
+        @media (max-width: 786px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__item {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        background: var(--color-white);
+        border: 1px solid var(--color-whisper);
+        border-radius: var(--cal-radius);
+        padding: 26px 24px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+
+        &:hover {
+            transform: translateY(-6px);
+            border-color: rgba(62, 119, 251, 0.4);
+            box-shadow: var(--cal-shadow);
+        }
+
+        .pf-link {
+            margin-top: auto;
+        }
+    }
+
+    &__title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--color-galaxy);
+        margin: 0 0 8px;
+    }
+
+    &__desc {
+        font-size: 15px;
+        line-height: 1.55;
+        color: var(--color-dim-gray);
+        margin: 0 0 14px;
+    }
+
+    .cal-flow__icon {
+        margin-bottom: 16px;
+    }
+}
+
+/* кнопка + телефон в финальном баннере */
+.pf-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.pf-phone {
+    color: var(--color-white);
+    font-size: 22px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+/* слайды кликабельны — открывают фото крупно */
+.pf-page .cal-slide {
+    cursor: zoom-in;
+
+    &:focus-visible {
+        outline: 3px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+}
+
+/* просмотр фото крупно (создаётся из portfolio.js) */
+.pf-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(8, 20, 54, 0.88);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+
+    &.is-open {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    &__figure {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: min(1100px, 100%);
+        max-height: 100%;
+        margin: 0;
+    }
+
+    &__img {
+        display: block;
+        max-width: 100%;
+        max-height: calc(100vh - 120px);
+        border-radius: 14px;
+        background: #fff;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    &__caption {
+        margin-top: 14px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    &__btn {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.16);
+        color: #fff;
+        cursor: pointer;
+        transition: background 0.2s ease;
+
+        &[hidden] {
+            display: none;
+        }
+
+        svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        &:hover,
+        &:focus-visible {
+            background: rgba(255, 255, 255, 0.32);
+        }
+
+        &--close {
+            top: 16px;
+            right: 16px;
+        }
+
+        &--prev,
+        &--next {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        &--prev {
+            left: 16px;
+        }
+
+        &--next {
+            right: 16px;
+        }
+
+        @media (max-width: 576px) {
+            width: 40px;
+            height: 40px;
+
+            &--prev {
+                left: 6px;
+            }
+
+            &--next {
+                right: 6px;
+            }
+        }
+    }
+}
+
+body.pf-lock {
+    overflow: hidden;
+}
