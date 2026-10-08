@@ -12,6 +12,7 @@
 | Фото товаров, новая продукция, карточки `catalog-suvenir.html`, `tools/img-tools/` | [`docs/claude/catalog-photos.md`](docs/claude/catalog-photos.md) |
 | Создание **новой** статьи/новости (`articlesNNN`/`newsNN`) | [`docs/claude/articles-design.md`](docs/claude/articles-design.md) |
 | Чистка JS 2026-10: итог, инструкция для проверки, открытые вопросы | [`docs/claude/js-cleanup.md`](docs/claude/js-cleanup.md) |
+| Аудит собственного JS (ТЗ, идёт по партиям), решение по ES-модулям | [`docs/claude/js-audit.md`](docs/claude/js-audit.md) |
 | Админ-панель `admin/` | [`admin/README.md`](admin/README.md), ТЗ — [`docs/admin-panel.md`](docs/admin-panel.md) |
 | Продажи, клиенты, рассылки, портфолио, развитие сайта | [`growth.md`](growth.md), [`docs/growth/`](docs/growth/), ТЗ портфолио — [`docs/portfolio-spec.md`](docs/portfolio-spec.md) |
 | Тендеры | [`tender.md`](tender.md) |
