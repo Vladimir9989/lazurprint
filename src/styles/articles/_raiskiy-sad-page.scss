@@ -1,0 +1,677 @@
+/* ============================================================
+   Страница магазина «Райский сад» (raiskiy-sad.html). Префикс .sad-
+   Палитра: розовая роза + листовой изумруд на тёплой «кремовой» подложке
+   (не пересекается с .cal- синим, .news-feature сиреневым, .expo- терракотовым,
+   .ord- коралловым).
+   ============================================================ */
+
+.sad-page {
+    --sad-ink: #2b2433;
+    --sad-ink-soft: #5b5266;
+    --sad-rose: #d6336c;
+    --sad-rose-dark: #b02556;
+    --sad-rose-soft: #fdeef4;
+    --sad-leaf: #2f9e6b;
+    --sad-leaf-dark: #1f7a50;
+    --sad-leaf-soft: #e6f6ee;
+    --sad-cream: #fffaf7;
+    --sad-line: #f3e3ea;
+    --sad-radius: 22px;
+    --sad-shadow: 0 18px 48px rgba(43, 36, 51, 0.12);
+    --sad-shadow-soft: 0 8px 24px rgba(43, 36, 51, 0.08);
+}
+
+/* ---------- появление при скролле (только при работающем JS) ---------- */
+.sad-js .sad-reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.sad-js .sad-reveal.sad-reveal--in {
+    opacity: 1;
+    transform: none;
+}
+
+/* ---------- кнопки ---------- */
+.sad-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 28px;
+    border-radius: 14px;
+    border: 2px solid transparent;
+    font: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+
+    &:hover {
+        transform: translateY(-3px);
+    }
+
+    &--primary {
+        color: #fff;
+        background: var(--sad-rose);
+        box-shadow: 0 10px 24px rgba(214, 51, 108, 0.32);
+
+        &:hover {
+            background: var(--sad-rose-dark);
+        }
+    }
+
+    &--ghost {
+        color: var(--sad-leaf-dark);
+        background: #fff;
+        border-color: var(--sad-leaf);
+
+        &:hover {
+            background: var(--sad-leaf);
+            color: #fff;
+        }
+    }
+
+    &--light {
+        color: var(--sad-rose-dark);
+        background: #fff;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+    }
+}
+
+/* ---------- hero ---------- */
+.sad-hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 48px;
+    align-items: center;
+    padding: 48px;
+    margin-bottom: 28px;
+    border-radius: 32px;
+    background: linear-gradient(135deg, var(--sad-rose-soft) 0%, var(--sad-cream) 55%, var(--sad-leaf-soft) 100%);
+    overflow: hidden;
+
+    &__blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(6px);
+        pointer-events: none;
+
+        &--1 {
+            width: 280px;
+            height: 280px;
+            top: -90px;
+            right: 26%;
+            background: radial-gradient(circle, rgba(214, 51, 108, 0.22), rgba(214, 51, 108, 0) 70%);
+        }
+
+        &--2 {
+            width: 320px;
+            height: 320px;
+            bottom: -120px;
+            left: -60px;
+            background: radial-gradient(circle, rgba(47, 158, 107, 0.24), rgba(47, 158, 107, 0) 70%);
+        }
+    }
+
+    &__text {
+        position: relative;
+        z-index: 1;
+        color: var(--sad-ink-soft);
+        font-size: 17px;
+        line-height: 1.65;
+
+        p {
+            margin: 0 0 14px;
+        }
+    }
+
+    &__eyebrow {
+        display: inline-block;
+        padding: 6px 14px;
+        margin-bottom: 16px;
+        border-radius: 50px;
+        background: #fff;
+        color: var(--sad-rose-dark);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        box-shadow: var(--sad-shadow-soft);
+    }
+
+    &__lead {
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 1.5;
+        color: var(--sad-ink);
+    }
+
+    &__facts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px 24px;
+        margin: 20px 0 24px;
+        padding: 0;
+        list-style: none;
+
+        li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            color: var(--sad-ink);
+        }
+
+        svg {
+            flex: none;
+            width: 24px;
+            height: 24px;
+            padding: 5px;
+            box-sizing: content-box;
+            border-radius: 50%;
+            background: var(--sad-leaf-soft);
+            color: var(--sad-leaf-dark);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+
+            &:hover {
+                color: var(--sad-rose-dark);
+            }
+        }
+    }
+
+    &__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+    }
+
+    &__media {
+        position: relative;
+        z-index: 1;
+        justify-self: center;
+        width: 100%;
+        max-width: 380px;
+    }
+
+    &__frame {
+        border-radius: 190px 190px 24px 24px;
+        overflow: hidden;
+        border: 6px solid #fff;
+        box-shadow: var(--sad-shadow);
+        aspect-ratio: 3 / 4;
+        background: #fff;
+
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    &__tag {
+        position: absolute;
+        left: 50%;
+        bottom: -16px;
+        transform: translateX(-50%);
+        padding: 10px 20px;
+        border-radius: 50px;
+        background: var(--sad-leaf);
+        color: #fff;
+        font-size: 14px;
+        font-weight: 700;
+        white-space: nowrap;
+        box-shadow: var(--sad-shadow-soft);
+    }
+}
+
+/* ---------- чипы-навигация ---------- */
+.sad-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.sad-chip {
+    padding: 10px 20px;
+    border-radius: 50px;
+    border: 1px solid var(--sad-line);
+    background: #fff;
+    color: var(--sad-ink);
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+
+    &:hover,
+    &.is-active {
+        background: var(--sad-rose);
+        border-color: var(--sad-rose);
+        color: #fff;
+    }
+}
+
+/* ---------- секции ---------- */
+.sad-section {
+    padding-top: 56px;
+    scroll-margin-top: 90px;
+
+    &__lead {
+        max-width: 760px;
+        margin: 0 0 28px;
+        font-size: 18px;
+        line-height: 1.65;
+        color: var(--sad-ink-soft);
+    }
+}
+
+.sad-title {
+    margin: 0 0 14px;
+    font-size: clamp(26px, 3.4vw, 38px);
+    line-height: 1.2;
+    font-weight: 800;
+    color: var(--sad-ink);
+
+    span {
+        background: linear-gradient(135deg, var(--sad-rose), var(--sad-leaf));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+}
+
+/* ---------- карточки «о магазине» ---------- */
+.sad-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sad-card {
+    padding: 28px 26px;
+    border-radius: var(--sad-radius);
+    background: var(--sad-cream);
+    border: 1px solid var(--sad-line);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--sad-shadow);
+    }
+
+    &__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 56px;
+        height: 56px;
+        margin-bottom: 16px;
+        border-radius: 16px;
+        background: var(--sad-leaf-soft);
+        color: var(--sad-leaf-dark);
+
+        svg {
+            width: 30px;
+            height: 30px;
+        }
+    }
+
+    &:nth-child(2) &__icon {
+        background: var(--sad-rose-soft);
+        color: var(--sad-rose-dark);
+    }
+
+    &__title {
+        margin: 0 0 8px;
+        font-size: 20px;
+        color: var(--sad-ink);
+    }
+
+    &__text {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.6;
+        color: var(--sad-ink-soft);
+    }
+}
+
+/* ---------- слайдеры ---------- */
+.sad-slider {
+    position: relative;
+    padding-bottom: 44px;
+    overflow: hidden;
+
+    &__pagination {
+        bottom: 6px !important;
+
+        .swiper-pagination-bullet {
+            width: 10px;
+            height: 10px;
+            background: var(--sad-rose);
+            opacity: 0.3;
+
+            &-active {
+                opacity: 1;
+            }
+        }
+    }
+
+    &__btn {
+        position: absolute;
+        top: calc(50% - 22px);
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: #fff;
+        color: var(--sad-rose-dark);
+        box-shadow: var(--sad-shadow-soft);
+        cursor: pointer;
+        transition: background-color 0.25s ease, color 0.25s ease, opacity 0.25s ease;
+
+        svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        &:hover {
+            background: var(--sad-rose);
+            color: #fff;
+        }
+
+        &--prev {
+            left: 10px;
+        }
+
+        &--next {
+            right: 10px;
+        }
+
+        &.swiper-button-disabled {
+            opacity: 0;
+            pointer-events: none;
+        }
+    }
+}
+
+.sad-slide {
+    position: relative;
+    margin: 0;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--sad-radius);
+    overflow: hidden;
+    background: var(--sad-cream);
+    box-shadow: var(--sad-shadow-soft);
+
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    &--contain img {
+        object-fit: contain;
+    }
+
+    figcaption {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 40px 18px 16px;
+        background: linear-gradient(0deg, rgba(43, 36, 51, 0.78), rgba(43, 36, 51, 0));
+        color: #fff;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.3;
+    }
+}
+
+/* ---------- блок «зонты» ---------- */
+.sad-feature {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 36px;
+    align-items: center;
+    margin-top: 40px;
+    padding: 28px;
+    border-radius: 28px;
+    background: var(--sad-leaf-soft);
+
+    &__img {
+        border-radius: 20px;
+        overflow: hidden;
+        aspect-ratio: 4 / 5;
+
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    &__text {
+        h3 {
+            margin: 0 0 12px;
+            font-size: 24px;
+            color: var(--sad-ink);
+        }
+
+        p {
+            margin: 0 0 20px;
+            max-width: 560px;
+            font-size: 17px;
+            line-height: 1.65;
+            color: var(--sad-ink-soft);
+        }
+    }
+}
+
+/* ---------- как найти ---------- */
+.sad-where {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 0.55fr;
+    gap: 24px;
+    align-items: stretch;
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+        padding: 28px;
+        border-radius: var(--sad-radius);
+        background: var(--sad-cream);
+        border: 1px solid var(--sad-line);
+    }
+
+    &__list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 16px;
+
+        li {
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--sad-ink);
+        }
+
+        a {
+            color: var(--sad-rose-dark);
+            text-decoration: none;
+        }
+    }
+
+    &__label {
+        display: block;
+        margin-bottom: 2px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--sad-leaf-dark);
+    }
+
+    &__note {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--sad-ink-soft);
+    }
+
+    &__photo,
+    &__banner {
+        border-radius: var(--sad-radius);
+        overflow: hidden;
+        box-shadow: var(--sad-shadow-soft);
+
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    &__banner img {
+        object-fit: contain;
+        background: #f1f1f3;
+    }
+}
+
+/* ---------- финальный CTA ---------- */
+.sad-final {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+    margin-top: 56px;
+    padding: 40px 44px;
+    border-radius: 28px;
+    background: linear-gradient(135deg, var(--sad-rose) 0%, #a8266a 55%, var(--sad-leaf-dark) 130%);
+    color: #fff;
+    overflow: hidden;
+
+    &__blob {
+        position: absolute;
+        right: -60px;
+        top: -80px;
+        width: 260px;
+        height: 260px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.12);
+        pointer-events: none;
+    }
+
+    &__text {
+        position: relative;
+        max-width: 640px;
+
+        p {
+            margin: 0;
+            font-size: 17px;
+            line-height: 1.6;
+            opacity: 0.92;
+        }
+    }
+
+    &__title {
+        margin: 0 0 10px;
+        font-size: clamp(24px, 3vw, 32px);
+        line-height: 1.2;
+        color: #fff;
+    }
+
+    .sad-btn {
+        position: relative;
+        flex: none;
+    }
+}
+
+/* ---------- адаптив ---------- */
+@media (max-width: 1100px) {
+    .sad-where {
+        grid-template-columns: 1fr 1fr;
+
+        &__info {
+            grid-column: 1 / -1;
+        }
+
+        &__banner {
+            display: flex;
+            justify-content: center;
+        }
+    }
+}
+
+@media (max-width: 900px) {
+    .sad-hero {
+        grid-template-columns: 1fr;
+        padding: 32px 24px 44px;
+        gap: 36px;
+    }
+
+    .sad-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .sad-feature {
+        grid-template-columns: 1fr;
+        padding: 20px;
+
+        &__img {
+            max-width: 320px;
+            width: 100%;
+            margin: 0 auto;
+        }
+    }
+
+    .sad-final {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 32px 24px;
+    }
+}
+
+@media (max-width: 600px) {
+    .sad-section {
+        padding-top: 40px;
+    }
+
+    .sad-where {
+        grid-template-columns: 1fr;
+    }
+
+    .sad-hero__lead {
+        font-size: 18px;
+    }
+
+    .sad-slider__btn {
+        display: none;
+    }
+
+    .sad-btn {
+        width: 100%;
+    }
+}

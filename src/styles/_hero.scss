@@ -252,18 +252,37 @@
         }
     }
 
-    // Правая колонка — карточки преимуществ
+    // Правая колонка — карточка магазина «Райский сад»
     &__content-right {
         animation: fadeInUp 0.8s ease-out 0.5s both;
     }
 
-    &__features {
+    &__shop {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
+        grid-template-columns: 0.9fr 1fr;
+        background: var(--color-white);
+        border: 1px solid rgba(214, 51, 108, 0.18);
+        border-radius: 24px;
+        box-shadow: 0 16px 44px rgba(20, 50, 120, 0.1);
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s ease, border-color 0.35s ease;
 
-        @include xl {
-            gap: 14px;
+        @media (any-hover: hover) {
+            &:hover {
+                transform: translateY(-6px);
+                border-color: rgba(214, 51, 108, 0.4);
+                box-shadow: 0 24px 54px rgba(214, 51, 108, 0.18);
+
+                .hero__shop-photo img {
+                    transform: scale(1.05);
+                }
+
+                .hero__shop-btn svg {
+                    transform: translateX(4px);
+                }
+            }
         }
 
         @include sm {
@@ -271,60 +290,101 @@
         }
     }
 
-    &__feature-card {
+    &__shop-photo {
         position: relative;
-        padding: 24px 22px;
-        background: var(--color-white);
-        border: 1px solid rgba(62, 119, 251, 0.14);
-        border-radius: 16px;
-        box-shadow: 0 8px 30px rgba(20, 50, 120, 0.06);
-        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        display: block;
+        min-height: 360px;
+        overflow: hidden;
 
-        @media (any-hover: hover) {
-            &:hover {
-                transform: translateY(-5px);
-                border-color: rgba(62, 119, 251, 0.3);
-                box-shadow: 0 16px 40px rgba(62, 119, 251, 0.16);
+        img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
 
-                .hero__feature-icon {
-                    transform: scale(1.08) rotate(4deg);
-                }
-            }
+        @include sm {
+            min-height: 0;
+            aspect-ratio: 4 / 3;
         }
     }
 
-    &__feature-icon {
-        width: 52px;
-        height: 52px;
+    &__shop-label {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        padding: 6px 14px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #fff;
+        background: #2f9e6b;
+        border-radius: 50px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    &__shop-body {
         display: flex;
-        align-items: center;
+        flex-direction: column;
         justify-content: center;
-        background: linear-gradient(135deg, rgba(62, 119, 251, 0.12) 0%, rgba(109, 226, 235, 0.16) 100%);
-        border-radius: 14px;
-        margin-bottom: 14px;
-        transition: transform 0.35s ease;
-
-        svg {
-            width: 28px;
-            height: 28px;
-            stroke: #3E77FB;
-            fill: none;
-        }
+        align-items: flex-start;
+        gap: 14px;
+        padding: 28px 26px;
+        background: linear-gradient(160deg, #fff 0%, #fdeef4 100%);
     }
 
-    &__feature-title {
-        font-size: 16px;
+    &__shop-title {
+        margin: 0;
+        font-size: clamp(24px, 2.4vw, 30px);
+        line-height: 1.15;
+        font-weight: 800;
+        color: var(--color-galaxy);
+    }
+
+    &__shop-text {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.55;
+        color: var(--color-dim-gray);
+    }
+
+    &__shop-address {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
         font-weight: 700;
         color: var(--color-galaxy);
-        margin: 0 0 6px 0;
-        line-height: 1.3;
+
+        svg {
+            flex: none;
+            width: 20px;
+            height: 20px;
+            color: #d6336c;
+        }
     }
 
-    &__feature-desc {
-        font-size: 14px;
-        color: var(--color-dim-gray);
-        margin: 0;
-        line-height: 1.5;
+    &__shop-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 4px;
+        padding: 12px 22px;
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+        background: #d6336c;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(214, 51, 108, 0.3);
+
+        svg {
+            width: 18px;
+            height: 18px;
+            transition: transform 0.3s ease;
+        }
     }
 
     // Баннер-слайдер
