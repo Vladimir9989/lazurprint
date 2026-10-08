@@ -107,33 +107,56 @@ let validateForms = function (selector, rules) {
         },
 
         submitHandler: function (form) {
+            // капча и модалка — src/js/components/form-modal.js
+            const lazurForm = window.lazurForm;
+            const captchaMsg = document.getElementById('captcha');
+            const submitBtn = form.querySelector('.form__btn');
+            const say = (text) => { if (captchaMsg) captchaMsg.textContent = text; };
+
+            const captcha = lazurForm ? lazurForm.getCaptchaResponse() : null;
+            if (captcha === null) {
+                if (lazurForm) lazurForm.loadCaptcha();
+                say('Проверка «Я не робот» ещё не загрузилась. Подождите пару секунд и отправьте снова.');
+                return;
+            }
+            if (captcha === '') {
+                say('Поставьте галочку «Я не робот»');
+                return;
+            }
+
             const formTs = document.getElementById('form_ts');
             if (formTs) formTs.value = Date.now() - pageLoadedAt;
             let formData = new FormData(form);
 
+            say('Отправляем…');
+            if (submitBtn) submitBtn.disabled = true;
+
             let xhr = new XMLHttpRequest();
 
             xhr.onreadystatechange = function () {
-
-                if (grecaptcha.getResponse() == "") {
-                    document.getElementById('captcha').innerHTML = "Поставьте галочку";
-                } else {
-                    document.getElementById('captcha').innerHTML = "Отправлено";
+                if (xhr.readyState !== 4) return;
+                // mail.php об ошибке сообщает текстом при статусе 200
+                const answer = (xhr.responseText || '').trim();
+                let error = '';
+                if (xhr.status !== 200 || answer.indexOf('Произошла ошибка') !== -1) {
+                    error = 'Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.';
+                } else if (answer.indexOf('ВЫ РОБОТ') !== -1) {
+                    error = 'Проверка «Я не робот» не пройдена. Поставьте галочку ещё раз.';
+                } else if (answer.indexOf('Заполните обязательные поля') !== -1 || answer.indexOf('Некорректный email') !== -1) {
+                    error = answer;
+                }
+                if (!error) {
                     form.reset();
+                    if (lazurForm) lazurForm.close();
+                    window.location = 'thanks.html';
+                    return;
                 }
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        formModal.classList.remove('modal--active');
-                        window.location = 'thanks.html';
-                        console.log('отправленно');
-                    }
-                }
-            }
+                if (submitBtn) submitBtn.disabled = false;
+                if (lazurForm) lazurForm.resetCaptcha();
+                say(error);
+            };
             xhr.open('POST', 'mail.php', true);
             xhr.send(formData);
-            grecaptcha.reset();
-
-            // fileInput.closest('label').querySelector('span').textContent = 'Прикрепить файл';
         }
     });
 }
