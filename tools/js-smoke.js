@@ -117,6 +117,23 @@ function run(page, verbose) {
         if (!modal || !modal.classList.contains('modal--active')) res.notOpened++
     }
     res.captcha = d.querySelectorAll('script[src*="recaptcha/api.js"]').length
+    // видео «Коротко о нас» (about.js)
+    const play = d.querySelector('.play-1')
+    const video = d.querySelector('.video-1')
+    if (play && video) {
+        play.click()
+        if (!video.classList.contains('modal--active')) errors.push('видео .play-1 не открывает .video-1')
+        const close = d.querySelector('.about__close')
+        if (close) { close.dispatchEvent(new w.MouseEvent('click', { bubbles: true })); if (video.classList.contains('modal--active')) errors.push('.about__close не закрывает видео') }
+    }
+    // «Читать дальше» в отзывах (work.js)
+    const review = d.querySelector('.reviews__item')
+    const reviewBottom = review && review.querySelector('.reviews__item-bottom')
+    if (reviewBottom) {
+        const before = reviewBottom.classList.contains('reviews__item-bottom--active')
+        review.click()
+        if (reviewBottom.classList.contains('reviews__item-bottom--active') === before) errors.push('клик по отзыву не раскрывает текст')
+    }
     // слайдеры: .swiper-wrapper, чей контейнер Swiper инициализировал (класс swiper-initialized)
     const wrappers = [...d.querySelectorAll('.swiper-wrapper')]
     res.sliders = wrappers.length
