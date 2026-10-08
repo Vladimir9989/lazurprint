@@ -95,6 +95,10 @@ function normalize(page, opts) {
     const movable = pageLocal.filter(t => fs.existsSync(path.join(SRC, 'resources', t.name)))
 
     const present = new Set(managed.map(t => t.name))
+    // Служебные страницы без шапки и формы (thanks.html, файлы подтверждения google*/yandex_*) — app.js им не нужен
+    if (!present.has('app.js') && !doc.querySelector('.burger, #form')) {
+        return { page, changed: false, report: ['нет app.js, шапки и формы — страница не трогается'], scripts: [] }
+    }
     const keep = new Set()
     for (const name of ORDER) {
         if (name === 'swiper-bundle.min.js') continue

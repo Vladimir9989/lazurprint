@@ -36,11 +36,12 @@
     <meta property="og:description" content="Фоторепортаж: как коллега в костюме Деда Мороза поздравил сотрудников типографии «Лазурь» с Новым 2025 годом. Создание праздничной атмосферы на производстве.">
     <meta property="og:image" content="https://lazurprint.ru/images/img/news/news40-img-1.jpg">
     <meta name="twitter:card" content="summary_large_image">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="swiper-bundle.min.css">
     <link rel="stylesheet" href="main.css">
     <link rel="icon" href="images/img/favicon.ico">
     <script defer src="inputmask.min.js"></script>
     <script defer src="just-validate.min.js"></script>
+    <script defer src="swiper-bundle.min.js"></script>
     <script defer src="app.js"></script>
     <style>
         .swiper-pagination-bullet {
@@ -258,9 +259,9 @@
         <span class="img__modal-close pm__module-close">Закрыть</span>
         <div class="img-modal__cnt"></div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script defer>
-        const newsSwiper1 = new Swiper('.news__img-cnt', {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        const newsSwiper1 = new Swiper('.news__img-cnt.swiper', {
             slidesPerView: 4,
             spaceBetween: 20,
             pagination: {
@@ -282,6 +283,7 @@
                 },
             },
         })
+        });
     </script>
     <script type="application/ld+json">
         {
