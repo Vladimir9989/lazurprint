@@ -41,7 +41,59 @@
         initCityFilter();
         initHitFilter();
         initTshirtSliders();
+        rememberOriginalOrder();
         restoreCategoryFromURL();
+        // «Назад»/«Вперёд» браузера между вкладками: адрес меняется — показываем его вкладку
+        window.addEventListener('popstate', function () {
+            const categoryId = new URLSearchParams(window.location.search).get('category') || '1';
+            if (document.querySelector(`.catalog__category-btn[data-category="${categoryId}"]`)) {
+                switchCategory(categoryId, { history: false });
+            }
+        });
+    }
+
+    /**
+     * Исходное место каждого товара (список + порядок) — чтобы «По умолчанию»
+     * после сортировки вернуло товары по своим подгруппам, как в разметке.
+     */
+    const originalPlace = new Map();
+    function rememberOriginalOrder() {
+        document.querySelectorAll('.catalog__list').forEach(list => {
+            Array.from(list.children).forEach((child, index) => {
+                originalPlace.set(child, { list, index });
+            });
+        });
+    }
+
+    function restoreOriginalOrder(section) {
+        section.querySelectorAll('.catalog__list').forEach(list => {
+            const own = [];
+            originalPlace.forEach((place, child) => {
+                if (place.list === list) own.push(child);
+            });
+            own.sort((a, b) => originalPlace.get(a).index - originalPlace.get(b).index)
+                .forEach(child => list.appendChild(child));
+        });
+    }
+
+    /**
+     * Цена товара для сортировки: число перед «руб»/«р» (а не первое число в строке —
+     * в «от 6 шт - 391 р/шт» это 6). «Цена уточняется» — null, такие товары идут в конец.
+     */
+    function itemPrice(item) {
+        const el = item.querySelector('.catalog-item__price');
+        const text = el ? el.textContent.replace(/\u00a0/g, ' ') : '';
+        const m = text.match(/(\d[\d ]*)\s*р/);
+        return m ? parseInt(m[1].replace(/ /g, ''), 10) : null;
+    }
+
+    function comparePrice(a, b, dir) {
+        const pa = itemPrice(a);
+        const pb = itemPrice(b);
+        if (pa === null && pb === null) return 0;
+        if (pa === null) return 1;
+        if (pb === null) return -1;
+        return dir * (pa - pb);
     }
 
     /**
@@ -93,17 +145,17 @@
     function initCategoryNavigation() {
         // Обработчик клика по табу категории
         document.addEventListener('click', function(e) {
-            if (e.target.matches('.catalog__category-btn')) {
-                const categoryId = e.target.dataset.category;
-                switchCategory(categoryId);
-            }
+            const btn = e.target.closest('.catalog__category-btn');
+            if (btn) switchCategory(btn.dataset.category);
         });
     }
 
     /**
      * Переключение категории
      */
-    function switchCategory(categoryId) {
+    // options.history: 'push' (клик, по умолчанию) | 'replace' (из адреса при загрузке) | false (popstate)
+    function switchCategory(categoryId, options) {
+        const historyMode = options && options.history !== undefined ? options.history : 'push';
         const wasHitOnly = state.hitOnly;
         if (!wasHitOnly && state.currentCategory === categoryId) return;
 
@@ -140,9 +192,12 @@
         }
 
         // Обновляем URL
-        const url = new URL(window.location);
-        url.searchParams.set('category', categoryId);
-        window.history.pushState({ categoryId }, '', url);
+        if (historyMode) {
+            const url = new URL(window.location);
+            url.searchParams.set('category', categoryId);
+            if (historyMode === 'replace') window.history.replaceState({ categoryId }, '', url);
+            else window.history.pushState({ categoryId }, '', url);
+        }
 
         // Переключаем секцию
         document.querySelectorAll('.catalog__section').forEach(section => {
@@ -346,6 +401,8 @@
      * Сортировка товаров
      */
     function sortProducts(section) {
+        // каждая сортировка — от исходного порядка; прошлая могла собрать товары подгрупп в первый список
+        restoreOriginalOrder(section);
         const lists = section.querySelectorAll('.catalog__list');
         const allVisibleItems = [];
 
@@ -359,32 +416,10 @@
 
         switch (state.sortBy) {
             case 'price-asc':
-                allVisibleItems.sort((a, b) => {
-                    const priceElA = a.querySelector('.catalog-item__price');
-                    const priceElB = b.querySelector('.catalog-item__price');
-                    // Берём первую цену из списка (для товаров с оптовыми ценами)
-                    const priceTextA = priceElA ? priceElA.textContent.trim() : '0';
-                    const priceTextB = priceElB ? priceElB.textContent.trim() : '0';
-                    // Извлекаем первое число из строки (например, "от 6 шт - 391 р/шт" -> 391)
-                    const priceMatchA = priceTextA.match(/(\d+)/);
-                    const priceMatchB = priceTextB.match(/(\d+)/);
-                    const priceA = priceMatchA ? parseInt(priceMatchA[1]) : 0;
-                    const priceB = priceMatchB ? parseInt(priceMatchB[1]) : 0;
-                    return priceA - priceB;
-                });
+                allVisibleItems.sort((a, b) => comparePrice(a, b, 1));
                 break;
             case 'price-desc':
-                allVisibleItems.sort((a, b) => {
-                    const priceElA = a.querySelector('.catalog-item__price');
-                    const priceElB = b.querySelector('.catalog-item__price');
-                    const priceTextA = priceElA ? priceElA.textContent.trim() : '0';
-                    const priceTextB = priceElB ? priceElB.textContent.trim() : '0';
-                    const priceMatchA = priceTextA.match(/(\d+)/);
-                    const priceMatchB = priceTextB.match(/(\d+)/);
-                    const priceA = priceMatchA ? parseInt(priceMatchA[1]) : 0;
-                    const priceB = priceMatchB ? parseInt(priceMatchB[1]) : 0;
-                    return priceB - priceA;
-                });
+                allVisibleItems.sort((a, b) => comparePrice(a, b, -1));
                 break;
             case 'name-asc':
                 allVisibleItems.sort((a, b) => {
@@ -408,7 +443,7 @@
                 });
                 break;
             default:
-                // Сортировка по умолчанию - восстанавливаем исходный порядок
+                // «По умолчанию» — товары уже на своих местах (вернули в начале функции)
                 return;
         }
 
@@ -430,7 +465,7 @@
             // Переключаем таб
             const activeBtn = document.querySelector(`.catalog__category-btn[data-category="${categoryId}"]`);
             if (activeBtn) {
-                switchCategory(categoryId);
+                switchCategory(categoryId, { history: 'replace' });
             }
         }
     }

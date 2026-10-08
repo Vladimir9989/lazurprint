@@ -1,6 +1,6 @@
 /**
- * Модуль генерации PDF для каталога сувенирной продукции
- * Финальная версия на pdfmake с поддержкой кириллицы
+ * Кнопки «Скачать PDF» в каталоге сувениров (catalog-suvenir.html): PDF подгруппы товаров на pdfmake.
+ * pdfmake (~700 КБ с шрифтами) грузится с CDN только при первом нажатии, а не вместе со страницей.
  */
 (function() {
     'use strict';
@@ -38,15 +38,22 @@
         });
     }
 
+    // В PDF картинка ~150 pt — больше 500 px по длинной стороне не нужно: PDF легче, на телефоне быстрее.
+    const MAX_IMG_SIDE = 500;
+
     function imageToDataUrl(img) {
         return new Promise((resolve) => {
-            if (!img) { resolve(null); return; }
+            if (!img || !img.naturalWidth) { resolve(null); return; }
             try {
+                const k = Math.min(1, MAX_IMG_SIDE / Math.max(img.naturalWidth, img.naturalHeight));
                 const canvas = document.createElement('canvas');
-                canvas.width = img.naturalWidth;
-                canvas.height = img.naturalHeight;
+                canvas.width = Math.round(img.naturalWidth * k);
+                canvas.height = Math.round(img.naturalHeight * k);
                 const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0);
+                // белый фон: прозрачные PNG в JPEG иначе становятся чёрными
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 resolve(canvas.toDataURL('image/jpeg', 0.85));
             } catch (e) {
                 resolve(null);
@@ -54,12 +61,44 @@
         });
     }
 
+    // pdfmake + шрифты с кириллицей — по первому требованию, один раз
+    const PDFMAKE_URLS = [
+        'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js',
+    ];
+    let pdfMakeLoading = null;
+
+    function loadScript(src) {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = resolve;
+            script.onerror = () => {
+                script.remove();
+                reject(new Error('не загрузился ' + src));
+            };
+            document.head.appendChild(script);
+        });
+    }
+
+    function loadPdfMake() {
+        if (typeof pdfMake !== 'undefined' && pdfMake.vfs) return Promise.resolve();
+        if (!pdfMakeLoading) {
+            // шрифты (vfs_fonts) — строго после самой библиотеки
+            pdfMakeLoading = loadScript(PDFMAKE_URLS[0])
+                .then(() => loadScript(PDFMAKE_URLS[1]))
+                .catch((e) => {
+                    pdfMakeLoading = null; // следующее нажатие попробует снова
+                    throw e;
+                });
+        }
+        return pdfMakeLoading;
+    }
+
     function init() {
-        console.log('=== ИНИЦИАЛИЗАЦИЯ PDF-КНОПОК ===');
         document.querySelectorAll('.catalog__pdf-btn[data-initialized]').forEach(b => b.remove());
         
         const sections = document.querySelectorAll('.catalog__section');
-        console.log('Найдено секций:', sections.length);
         
         sections.forEach(section => {
             // Ищем все списки товаров в секции
@@ -90,8 +129,6 @@
                     titleEl = null; // Заголовка нет
                 }
                 
-                console.log('Добавляю кнопку для:', categoryName, 'товаров:', itemCount);
-                
                 const btn = document.createElement('button');
                 btn.className = 'catalog__pdf-btn';
                 btn.setAttribute('data-initialized', 'true');
@@ -107,38 +144,43 @@
                 list.parentNode.insertBefore(btn, list);
             });
         });
-        
-        console.log('=== ИНИЦИАЛИЗАЦИЯ ЗАВЕРШЕНА ===');
     }
 
     async function generatePdf(button, productsList, categoryName) {
-        console.log('=== НАЧАЛО ГЕНЕРАЦИИ PDF ===');
-        console.log('Категория:', categoryName);
-        
-        if (typeof pdfMake === 'undefined') {
-            console.error('pdfMake не найден');
-            alert('Библиотека не загружена. Обновите страницу.');
-            return;
-        }
-        
         if (!productsList || !productsList.classList.contains('catalog__list')) {
             alert('Ошибка: не найден список товаров');
             return;
         }
-        
+        const items = Array.from(productsList.querySelectorAll('.catalog-item'));
+        if (!items.length) {
+            alert('В этом разделе сейчас нет товаров для PDF.');
+            return;
+        }
+
         const origText = button.innerHTML;
         button.innerHTML = 'Генерация...';
         button.disabled = true;
-        
+
         try {
-            const items = productsList.querySelectorAll('.catalog-item');
-            const products = [];
-            
-            for (const item of items) {
+            try {
+                await loadPdfMake();
+            } catch (e) {
+                console.error('PDF каталога:', e.message);
+                alert('Не удалось загрузить модуль PDF. Проверьте интернет и нажмите ещё раз.');
+                return;
+            }
+
+            // картинки грузим параллельно (по очереди с таймаутом 5 с на каждую было долго)
+            const images = await Promise.all(items.map((item) => {
                 const imgEl = item.querySelector('.catalog-item__img-cnt img');
-                const img = imgEl ? await loadImage(imgEl) : null;
-                const dataUrl = img ? await imageToDataUrl(img) : null;
-                
+                return loadImage(imgEl).then(imageToDataUrl);
+            }));
+            const products = [];
+
+            for (let idx = 0; idx < items.length; idx++) {
+                const item = items[idx];
+                const dataUrl = images[idx];
+
                 const name = (item.querySelector('.catalog-item__name')?.textContent || 'Без названия').trim();
                 const price = (item.querySelector('.catalog-item__price')?.textContent || '0 руб.').trim();
                 const article = (item.querySelector('.catalog-item__number')?.textContent || '').trim();
@@ -148,8 +190,7 @@
                 if (dataUrl) {
                     cardContent.push({
                         image: dataUrl,
-                        width: 150,
-                        height: 110,
+                        fit: [150, 110], // в рамку 150×110 с сохранением пропорций (было width/height — фото растягивалось)
                         alignment: 'center',
                         margin: [5, 5, 5, 3]
                     });
@@ -191,8 +232,6 @@
                 });
             }
             
-            console.log('Загружено товаров:', products.length);
-            
             const tableBody = [];
             let row = [];
             
@@ -216,8 +255,7 @@
             const docDefinition = { pageSize: 'A4', pageMargins: [20, 20, 20, 20], content: content, defaultStyle: { font: 'Roboto' } };
             
             pdfMake.createPdf(docDefinition).download(generateFileName(categoryName));
-            console.log('=== PDF СОХРАНЁН ===');
-            
+
         } catch (e) {
             console.error('ОШИБКА:', e.message, e.stack);
             alert('Ошибка при генерации PDF: ' + e.message);
@@ -229,5 +267,4 @@
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
     else init();
-    document.addEventListener('catalog:tabChanged', init);
 })();
