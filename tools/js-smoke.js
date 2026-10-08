@@ -4,6 +4,10 @@
 //   node tools/js-smoke.js index.html books.html ...   — отдельные страницы
 //   node tools/js-smoke.js --all                        — все src/*.html
 //   node tools/js-smoke.js -v page.html                 — подробно: какие скрипты выполнены/пропущены
+//   node tools/js-smoke.js --all --list > after.txt     — строка по каждой странице (сравнивать с прогоном «до»)
+//
+// «слайдеров запущено: 3/4» — из 4 блоков .swiper-wrapper Swiper инициализировал 3. Сравнивать с прогоном
+// до правок: если число запущенных упало — убран нужный скрипт или сломана инициализация.
 //
 // Страница берётся из src/ с подставленными партиалами @@include. Локальные скрипты из src/resources
 // и бандл dist/app.js встраиваются как настоящие <script> в исходном порядке (sync — на своём месте,
@@ -92,6 +96,7 @@ function run(page, verbose) {
         if (/Not implemented: (navigation|HTMLCanvasElement|window\.scrollTo)|Could not parse CSS/i.test(msg)) return
         const who = win ? win.__smokeScript : ''
         errors.push((who ? '[' + who + '] ' : '') + msg.split('\n')[0])
+        if (verbose && e.detail && e.detail.stack) console.log(e.detail.stack.split('\n').slice(0, 5).join('\n'))
     })
     vc.on('error', e => errors.push(String(e)))
     let win = null
@@ -112,6 +117,10 @@ function run(page, verbose) {
         if (!modal || !modal.classList.contains('modal--active')) res.notOpened++
     }
     res.captcha = d.querySelectorAll('script[src*="recaptcha/api.js"]').length
+    // слайдеры: .swiper-wrapper, чей контейнер Swiper инициализировал (класс swiper-initialized)
+    const wrappers = [...d.querySelectorAll('.swiper-wrapper')]
+    res.sliders = wrappers.length
+    res.slidersInit = wrappers.filter(wr => wr.parentElement && wr.parentElement.classList.contains('swiper-initialized')).length
     if (res.hasForm && !w.lazurForm) errors.push('нет window.lazurForm — app.js не выполнился?')
     w.close()
     return res
@@ -119,6 +128,7 @@ function run(page, verbose) {
 
 const args = process.argv.slice(2)
 const verbose = args.includes('-v')
+const list = args.includes('--list') // печатать и успешные страницы (для сравнения прогонов до/после)
 let pages = args.filter(a => !a.startsWith('-')).map(a => path.basename(a))
 if (args.includes('--all')) pages = fs.readdirSync(SRC).filter(f => f.endsWith('.html')).sort()
 if (!pages.length) { console.log('Укажите страницы или --all'); process.exit(1) }
@@ -136,8 +146,8 @@ for (const page of pages) {
         bad++
         console.log(`FAIL ${page}`)
         problems.forEach(p => console.log('     ' + p))
-    } else if (verbose || pages.length <= 30) {
-        console.log(`ok   ${page}  (кнопок формы: ${r.openers})`)
+    } else if (verbose || list || pages.length <= 30) {
+        console.log(`ok   ${page}  (кнопок формы: ${r.openers}; слайдеров запущено: ${r.slidersInit}/${r.sliders})`)
     }
 }
 console.log(`\nСтраниц: ${pages.length}, с проблемами: ${bad}`)
