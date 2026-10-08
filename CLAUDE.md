@@ -11,6 +11,7 @@
 | Деплой, `.env`, хостинг NetAngels, сбои заливки | [`docs/claude/deploy.md`](docs/claude/deploy.md) |
 | Фото товаров, новая продукция, карточки `catalog-suvenir.html`, `tools/img-tools/` | [`docs/claude/catalog-photos.md`](docs/claude/catalog-photos.md) |
 | Создание **новой** статьи/новости (`articlesNNN`/`newsNN`) | [`docs/claude/articles-design.md`](docs/claude/articles-design.md) |
+| Подключение JS на страницах, `<script>`, форма заявки/капча (идёт чистка по партиям) | [`docs/claude/js-cleanup.md`](docs/claude/js-cleanup.md) |
 | Админ-панель `admin/` | [`admin/README.md`](admin/README.md), ТЗ — [`docs/admin-panel.md`](docs/admin-panel.md) |
 | Продажи, клиенты, рассылки, портфолио, развитие сайта | [`growth.md`](growth.md), [`docs/growth/`](docs/growth/), ТЗ портфолио — [`docs/portfolio-spec.md`](docs/portfolio-spec.md) |
 | Тендеры | [`tender.md`](tender.md) |
@@ -32,6 +33,7 @@ npm run deploy   # build + заливка build/ на хостинг (deploy.js,
 ```bash
 npm run check                          # битые ссылки/картинки/скрипты, регистр имён, canonical — по src/, без сборки
 node tools/check-links.js page.html    # то же для отдельных страниц
+node tools/js-inventory.js [page.html] # какие скрипты где подключены, дубли, страницы без капчи, неиспользуемые файлы
 npm run new-page -- article|news "Заголовок" --prefix xyz [--desc "..."]   # заготовка нового материала
 ```
 
