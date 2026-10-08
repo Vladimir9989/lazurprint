@@ -1,5 +1,4 @@
 // events.js — скрипты для страницы мероприятий
-console.log(1);
 document.addEventListener('DOMContentLoaded', function() {
     // Инициализация Swiper для слайдера встречи гостей
     if (document.querySelector('.events__slider--greeting')) {

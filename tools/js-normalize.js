@@ -50,7 +50,13 @@ const needsWrap = (code) => {
     return dcl < 0 || dcl > code.search(/new\s+Swiper\s*\(/)
 }
 
+// Расставлены вручную — нормализатор переставил бы постраничный скрипт раньше внешней библиотеки
+const MANUAL = {
+    'catalog-suvenir.html': 'catalog-pdf.js должен идти после pdfmake с CDN',
+}
+
 function normalize(page, opts) {
+    if (MANUAL[page]) return { page, changed: false, report: ['расставлена вручную: ' + MANUAL[page]], scripts: [] }
     const file = path.join(SRC, page)
     const raw = fs.readFileSync(file, 'utf8')
     const eol = raw.includes('\r\n') ? '\r\n' : '\n'

@@ -14,15 +14,14 @@
     <meta property="og:description" content="Короткие видео о полиграфии: как печатают книги и каталоги, словарь печатника, советы по макетам и проекты наших клиентов.">
     <meta property="og:image" content="https://lazurprint.ru/images/img/social/lazur.jpg">
     <meta name="twitter:card" content="summary_large_image">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="swiper-bundle.min.css">
     <link rel="stylesheet" href="main.css">
     <link rel="canonical" href="https://lazurprint.ru/socials.html">
     <link rel="icon" href="images/img/favicon.ico">
     <script defer src="inputmask.min.js"></script>
     <script defer src="just-validate.min.js"></script>
-    <script defer src="swiper-JS.js"></script>
-    <script defer src="work.js"></script>
-    <script src="socials.js"></script>
+    <script defer src="swiper-bundle.min.js"></script>
+    <script defer src="socials.js"></script>
     <script defer src="app.js"></script>
     <title>Соцсети типографии «Лазурь»: видео о полиграфии и жизни производства</title>
     <script type="text/javascript">
@@ -1016,8 +1015,8 @@
         </section>
     </main>
     @@include('html/footer.html', {})
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
         // Swiper для тематических разделов
         if (typeof Swiper !== 'undefined') {
             new Swiper('.topics-swiper', {
@@ -1048,6 +1047,7 @@
                 },
             });
         }
+        });
     </script>
 </body>
 
