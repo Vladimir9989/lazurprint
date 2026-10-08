@@ -25,11 +25,12 @@
     <!-- /Yandex.Metrika counter -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="swiper-bundle.min.css">
     <link rel="stylesheet" href="main.css">
     <link rel="icon" href="images/img/favicon.ico">
     <script defer src="inputmask.min.js"></script>
     <script defer src="just-validate.min.js"></script>
+    <script defer src="swiper-bundle.min.js"></script>
     <script defer src="app.js"></script>
     <style>
         .swiper-pagination-bullet {
@@ -215,8 +216,8 @@
     </section>
     @@include('html/footer.html', {})
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script defer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
         const newsSwiper1 = new Swiper('.news__img-cnt', {
             slidesPerView: 4,
             spaceBetween: 20,
@@ -236,6 +237,7 @@
                 },
             },
         })
+        });
     </script>
     <script type="application/ld+json">
         {

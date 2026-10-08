@@ -36,11 +36,12 @@
     <meta property="og:description" content="ИПК «Лазурь» создает качественную полиграфическую продукцию: от книг и журналов до упаковки и сувениров. Профессиональный дизайн, современное оборудование, индивидуальный подход и соблюдение сроков. Превращаем идеи в яркие визуальные решения.">
     <meta property="og:image" content="https://lazurprint.ru/images/img/articles/news33-img-13.jpg">
     <meta name="twitter:card" content="summary_large_image">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="swiper-bundle.min.css">
     <link rel="stylesheet" href="main.css">
     <link rel="icon" href="images/img/favicon.ico">
     <script defer src="inputmask.min.js"></script>
     <script defer src="just-validate.min.js"></script>
+    <script defer src="swiper-bundle.min.js"></script>
     <script defer src="app.js"></script>
     <title>ИПК “Лазурь”: профессиональный дизайн и печать полиграфической продукции</title>
     <style>
@@ -189,8 +190,8 @@
         </div>
     </section>
     @@include('html/footer.html', {})
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script defer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
         const newsSwiper1 = new Swiper('.news__img-cnt', {
             slidesPerView: 4,
             spaceBetween: 20,
@@ -210,6 +211,7 @@
                 },
             },
         })
+        });
     </script>
     <script type="application/ld+json">
         {

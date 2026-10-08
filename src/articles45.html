@@ -35,11 +35,12 @@
     <meta property="og:description" content="Узнайте, почему сувенирная продукция является мощным инструментом брендинга и маркетинга. В нашем каталоге представлена широкая линейка печатной сувенирной продукции на Урале с возможностью нанесения вашего уникального дизайна или логотипа. Мы гарантируем высокое качество и индивидуальный подход.">
     <meta property="og:image" content="https://lazurprint.ru/images/img/rs/Magnity/_MG_0423.jpg">
     <meta name="twitter:card" content="summary_large_image">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="swiper-bundle.min.css">
     <link rel="stylesheet" href="main.css">
     <link rel="icon" href="images/img/favicon.ico">
     <script defer src="inputmask.min.js"></script>
     <script defer src="just-validate.min.js"></script>
+    <script defer src="swiper-bundle.min.js"></script>
     <script defer src="app.js"></script>
     <style>
         .swiper-pagination-bullet {
@@ -262,8 +263,8 @@
     </section>
     @@include('html/footer.html', {})
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script defer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
         const newsSwiper1 = new Swiper('.news__img-cnt', {
             slidesPerView: 4,
             spaceBetween: 20,
@@ -283,6 +284,7 @@
                 },
             },
         })
+        });
     </script>
     <script type="application/ld+json">
         {
