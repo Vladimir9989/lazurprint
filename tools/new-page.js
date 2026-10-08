@@ -144,7 +144,9 @@ const pageHtml = `<!DOCTYPE html>
     <link rel="stylesheet" href="main.css">
     <link rel="icon" href="images/img/favicon.ico">
     <link rel="canonical" href="${pageUrl}">
-    <!-- Нужен слайдер — добавить swiper-bundle.min.css / swiper-bundle.min.js; свой скрипт страницы — в src/resources/ -->
+    <!-- Порядок: inputmask → just-validate → [swiper-bundle.min.js, если есть слайдер; + swiper-bundle.min.css] → [свой скрипт из src/resources/] → app.js, всё defer -->
+    <script defer src="inputmask.min.js"></script>
+    <script defer src="just-validate.min.js"></script>
     <script defer src="app.js"></script>
 </head>
 

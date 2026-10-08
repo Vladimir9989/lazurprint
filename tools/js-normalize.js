@@ -43,6 +43,12 @@ const BLOCKS = {
 }
 const ALWAYS_ADD = ['inputmask.min.js', 'just-validate.min.js']
 const usesSwiper = (code) => /new\s+Swiper\s*\(/.test(code)
+// new Swiper вызывается сразу, а не внутри обработчика DOMContentLoaded, объявленного выше по тексту
+const needsWrap = (code) => {
+    if (!usesSwiper(code)) return false
+    const dcl = code.search(/DOMContentLoaded/)
+    return dcl < 0 || dcl > code.search(/new\s+Swiper\s*\(/)
+}
 
 function normalize(page, opts) {
     const file = path.join(SRC, page)
@@ -117,7 +123,7 @@ function normalize(page, opts) {
     }
     if (!present.has('swiper-bundle.min.js') && keep.has('swiper-bundle.min.js')) report.push('добавлен swiper-bundle.min.js (его использует ' + consumers.join(', ') + ')')
 
-    if (inlineSwiper.length && keep.has('swiper-bundle.min.js') && !opts.wrapInline) {
+    if (inlineSwiper.some(t => needsWrap(t.body)) && keep.has('swiper-bundle.min.js') && !opts.wrapInline) {
         return { page, skipped: 'инлайн-скрипт с new Swiper — запустить с --wrap-inline', report }
     }
 
@@ -151,7 +157,7 @@ function normalize(page, opts) {
     // Инлайны с Swiper — в DOMContentLoaded (defer-скрипты выполняются раньше этого события)
     if (opts.wrapInline && keep.has('swiper-bundle.min.js')) {
         out = out.replace(/(<script\b(?![^>]*\bsrc=)[^>]*>)([\s\S]*?)(<\/script>)/gi, (all, open, body, close) => {
-            if (!usesSwiper(body) || /DOMContentLoaded/.test(body)) return all
+            if (!needsWrap(body)) return all
             report.push('инлайн с new Swiper обёрнут в DOMContentLoaded')
             const openClean = open.replace(/\s+defer\b/i, '')
             return openClean + eol + indent + indent + "document.addEventListener('DOMContentLoaded', function () {" + body.replace(/\s+$/, '') + eol + indent + indent + '});' + eol + indent + close

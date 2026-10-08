@@ -88,7 +88,7 @@ function build(page, verbose) {
     return html
 }
 
-function run(page, verbose) {
+async function run(page, verbose) {
     const errors = []
     const vc = new VirtualConsole()
     vc.on('jsdomError', e => {
@@ -107,6 +107,12 @@ function run(page, verbose) {
     })
     const w = dom.window
     const d = w.document
+    // ждём load: часть скриптов инициализируется в обработчике DOMContentLoaded
+    await new Promise((resolve) => {
+        if (d.readyState === 'complete') return resolve()
+        w.addEventListener('load', () => resolve())
+        setTimeout(resolve, 3000)
+    })
     const res = { page, errors, openers: 0, notOpened: 0, captcha: 0, hasForm: !!d.querySelector('.form__modal') }
     const modal = d.querySelector('.form__modal')
     const openers = [...d.querySelectorAll('[data-open-form]')]
@@ -151,11 +157,12 @@ if (args.includes('--all')) pages = fs.readdirSync(SRC).filter(f => f.endsWith('
 if (!pages.length) { console.log('Укажите страницы или --all'); process.exit(1) }
 if (!fs.existsSync(APP)) { console.error('Нет dist/app.js — сначала npx gulp scripts'); process.exit(2) }
 
+;(async () => {
 let bad = 0
 for (const page of pages) {
     if (verbose) console.log(page)
     let r
-    try { r = run(page, verbose) } catch (e) { r = { page, errors: ['тест упал: ' + e.message], openers: 0, notOpened: 0, captcha: 0, hasForm: false } }
+    try { r = await run(page, verbose) } catch (e) { r = { page, errors: ['тест упал: ' + e.message], openers: 0, notOpened: 0, captcha: 0, hasForm: false } }
     const problems = [...r.errors]
     if (r.notOpened) problems.push(`кнопок не открыли форму: ${r.notOpened} из ${r.openers}`)
     if (r.openers && r.captcha !== 1) problems.push(`скриптов капчи после открытия: ${r.captcha}`)
@@ -169,3 +176,4 @@ for (const page of pages) {
 }
 console.log(`\nСтраниц: ${pages.length}, с проблемами: ${bad}`)
 process.exit(bad ? 1 : 0)
+})()

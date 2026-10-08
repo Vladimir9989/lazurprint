@@ -74,9 +74,15 @@ function hideSub(e) {
 
 // валидация
 
+// inputmask.min.js и just-validate.min.js должны стоять на странице перед app.js (см. CLAUDE.md, «Форма заявки»)
 let selector = document.querySelector('.form__tel');
-let im = new Inputmask('+7 (999) 999-99-99');
-im.mask(selector);
+const formLibsReady = typeof window.Inputmask !== 'undefined' && typeof window.JustValidate !== 'undefined';
+if (document.getElementById('form') && !formLibsReady) {
+    console.error('Форма заявки: не подключены inputmask.min.js / just-validate.min.js перед app.js');
+}
+if (selector && typeof window.Inputmask !== 'undefined') {
+    new Inputmask('+7 (999) 999-99-99').mask(selector);
+}
 
 // антиспам: запоминаем момент загрузки страницы; при отправке в form_ts уходит, сколько мс прошло
 // (сервер отсекает слишком быстрые отправки; длительность, а не время — чтобы не зависеть от часов посетителя).
@@ -161,7 +167,7 @@ let validateForms = function (selector, rules) {
     });
 }
 
-validateForms('#form', {
+if (document.getElementById('form') && formLibsReady) validateForms('#form', {
     name: {
         required: true,
         minLength: 2,
@@ -173,7 +179,7 @@ validateForms('#form', {
     tel: {
         required: true,
         function: () => {
-            const phone = selector.inputmask.unmaskedvalue();
+            const phone = selector && selector.inputmask ? selector.inputmask.unmaskedvalue() : '';
             return phone.length === 10;
         }
     }
