@@ -1,6 +1,6 @@
 // Постраничный скрипт статьи articles112.html «Открытки».
-// Инициализирует слайдеры Swiper по разделам статьи и навешивает
-// обработчики на CTA-кнопки, открывающие модальную форму расчёта.
+// Слайдеры Swiper по разделам статьи, плавное появление блоков, подсветка чипов-якорей.
+// CTA-кнопки открывают форму сами (data-open-form, form-modal.js в app.js).
 
 document.addEventListener('DOMContentLoaded', function () {
     if (typeof Swiper !== 'undefined') {

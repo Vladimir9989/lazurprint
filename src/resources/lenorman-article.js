@@ -1,5 +1,5 @@
 // Постраничный скрипт статьи articles123.html «Учебник переплётного дела».
-// Слайдеры Swiper, подсветка чипов навигации и CTA-кнопка модальной формы.
+// Слайдеры Swiper и подсветка чипов навигации. CTA-кнопка открывает форму сама (data-open-form).
 
 document.addEventListener('DOMContentLoaded', function () {
     if (typeof Swiper !== 'undefined') {

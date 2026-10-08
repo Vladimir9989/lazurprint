@@ -1,100 +1,34 @@
-// events.js — скрипты для страницы мероприятий
+// events.js — страница мероприятий (events.html): фотослайдеры разделов, подпись картин «Андеграунда»,
+// увеличение фото (модалка со слайдером), видео, аккордеон программы, «пароль» к архиву фото.
+// Нужен swiper-bundle.min.js раньше этого файла.
 document.addEventListener('DOMContentLoaded', function() {
-    // Инициализация Swiper для слайдера встречи гостей
-    if (document.querySelector('.events__slider--greeting')) {
-        new Swiper('.events__slider--greeting', {
-            loop: true,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev'
-            },
+    // Фотослайдеры разделов. Два вида: «сетка» — 1/2/3 фото в ряд по ширине экрана,
+    // «auto» — ширина слайда из CSS. Общее: loop, отступ 20, свои стрелки и точки внутри блока.
+    const GRID = { slidesPerView: 1, breakpoints: { 768: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } } };
+    const AUTO = { slidesPerView: 'auto' };
+    const SLIDERS = {
+        'greeting': GRID,
+        'installations': AUTO,
+        'exhibition-halls': GRID,
+        'endograund': AUTO,
+        'irbit': GRID,
+        'women': AUTO,
+        'workshops': AUTO,
+        'living-paintings': GRID,
+        'lazur-collection': AUTO,
+        'noskova': AUTO,
+        'vyatkin': AUTO,
+        'models': GRID,
+        'models-horizontal': {
             slidesPerView: 1,
-            spaceBetween: 20,
-            centeredSlides: false,
-            slidesOffsetBefore: 0,
-            slidesOffsetAfter: 0,
-            breakpoints: {
-                768: {
-                    slidesPerView: 2,
-                    spaceBetween: 20
-                },
-                1024: {
-                    slidesPerView: 3,
-                    spaceBetween: 20
-                }
-            }
-        });
-    }
+            breakpoints: { 768: { slidesPerView: 2, spaceBetween: 20 }, 1024: { slidesPerView: 2, spaceBetween: 30 } },
+        },
+        'banquet': AUTO,
+        'guests': AUTO,
+        'jazz': GRID,
+    };
 
-    // Инициализация Swiper для слайдера конкурса инсталляций
-    if (document.querySelector('.events__slider--installations')) {
-        new Swiper('.events__slider--installations', {
-            loop: true,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev'
-            },
-            slidesPerView: 'auto',
-            spaceBetween: 20,
-            centeredSlides: false,
-            slidesOffsetBefore: 0,
-            slidesOffsetAfter: 0,
-            breakpoints: {
-                370: {
-                    slidesPerView: 'auto',
-                    spaceBetween: 20
-                },
-                768: {
-                    slidesPerView: 'auto',
-                    spaceBetween: 20
-                },
-                1024: {
-                    slidesPerView: 'auto',
-                    spaceBetween: 20
-                }
-            }
-        });
-    }
-
-    // Инициализация Swiper для слайдера выставочных залов
-    if (document.querySelector('.events__slider--exhibition-halls')) {
-        new Swiper('.events__slider--exhibition-halls', {
-            loop: true,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev'
-            },
-            slidesPerView: 1,
-            spaceBetween: 20,
-            centeredSlides: false,
-            slidesOffsetBefore: 0,
-            slidesOffsetAfter: 0,
-            breakpoints: {
-                768: {
-                    slidesPerView: 2,
-                    spaceBetween: 20
-                },
-                1024: {
-                    slidesPerView: 3,
-                    spaceBetween: 20
-                }
-            }
-        });
-    }
-
-    // Массив с информацией о картинах для слайдера endograund
+    // Подписи к картинам слайдера «Андеграунд» — по порядку слайдов
     const endograundPaintings = [
         'Гущина Дарья Алексеевна — искусствовед, сотрудница музея Андеграунда',
         'Полисский Николай (р. 1957). Общая тельняшка. 1996. Холст, масло. Санкт-Петербург',
@@ -119,404 +53,26 @@ document.addEventListener('DOMContentLoaded', function() {
         'Павлов Валерий (р. 1949). Цветы проходящему. 1978. Холст, масло. Екатеринбург'
     ];
 
+
     const endograundInfoEl = document.getElementById('endograundInfo');
     const endograundAuthorEl = endograundInfoEl ? endograundInfoEl.querySelector('.events__painting-author') : null;
 
-    // Инициализация слайдера endograund с обновлением подписи
-    // Инициализация слайдера endograund с обновлением подписи
-if (document.querySelector('.events__slider--endograund')) {
-   const endograundSwiper = new Swiper('.events__slider--endograund', {
-       loop: true,
-       centeredSlides: false,
-       slidesOffsetBefore: 0,
-       slidesOffsetAfter: 0,
-       pagination: {
-           el: '.events__slider--endograund .swiper-pagination',
-           clickable: true
-       },
-       navigation: {
-           nextEl: '.events__slider--endograund .swiper-button-next',
-           prevEl: '.events__slider--endograund .swiper-button-prev'
-       },
-       slidesPerView: 'auto',
-       spaceBetween: 20,
-       breakpoints: {
-           768: {
-               slidesPerView: 'auto',
-               spaceBetween: 20
-           },
-           1024: {
-               slidesPerView: 'auto',
-               spaceBetween: 20
-           }
-       },
-       on: {
-           init: function() {
-               updateEndograundInfo(this.realIndex);
-           },
-           slideChange: function() {
-               updateEndograundInfo(this.realIndex);
-           }
-       }
-   });
-
-   function updateEndograundInfo(index) {
-       if (endograundAuthorEl) {
-           endograundAuthorEl.textContent = endograundPaintings[index] || '';
-       }
-   }
-}
-
-    // Инициализация Swiper для слайдера Ирбитского музея
-    if (document.querySelector('.events__slider--irbit')) {
-        new Swiper('.events__slider--irbit', {
-            loop: true,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev'
-            },
-            slidesPerView: 1,
-            spaceBetween: 20,
-            breakpoints: {
-                768: {
-                    slidesPerView: 2,
-                    spaceBetween: 20
-                },
-                1024: {
-                    slidesPerView: 3,
-                    spaceBetween: 20
-                }
-            }
-        });
+    function updateEndograundInfo(swiper) {
+        if (endograundAuthorEl) endograundAuthorEl.textContent = endograundPaintings[swiper.realIndex] || '';
     }
 
-    // Инициализация Swiper для слайдера ART-выставка WOMEN
-    if (document.querySelector('.events__slider--women')) {
-        new Swiper('.events__slider--women', {
-            loop: true,
-            centeredSlides: false,
-            slidesOffsetBefore: 0,
-            slidesOffsetAfter: 0,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev'
-            },
-            slidesPerView: 'auto',
-            spaceBetween: 20,
-            breakpoints: {
-                768: {
-                    slidesPerView: 'auto',
-                    spaceBetween: 20
-                },
-                1024: {
-                    slidesPerView: 'auto',
-                    spaceBetween: 20
-                }
-            }
-        });
-    }
-
-    // Инициализация Swiper для слайдера Мастер-классы
-    if (document.querySelector('.events__slider--workshops')) {
-        new Swiper('.events__slider--workshops', {
-            loop: true,
-            centeredSlides: false,
-            slidesOffsetBefore: 0,
-            slidesOffsetAfter: 0,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev'
-            },
-            slidesPerView: 'auto',
-            spaceBetween: 20,
-            breakpoints: {
-                370: {
-                    slidesPerView: 'auto',
-                    spaceBetween: 20
-                },
-                768: {
-                    slidesPerView: 'auto',
-                    spaceBetween: 20
-                },
-                1024: {
-                    slidesPerView: 'auto',
-                    spaceBetween: 20
-                }
-            }
-        });
-    }
-
-    // Инициализация Swiper для слайдера Живые полотна
-    if (document.querySelector('.events__slider--living-paintings')) {
-        new Swiper('.events__slider--living-paintings', {
-            loop: true,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev'
-            },
-            slidesPerView: 1,
-            spaceBetween: 20,
-            breakpoints: {
-                768: {
-                    slidesPerView: 2,
-                    spaceBetween: 20
-                },
-                1024: {
-                    slidesPerView: 3,
-                    spaceBetween: 20
-                }
-            }
-        });
-    }
-
-    // Инициализация Swiper для слайдера Коллекции «Лазури»
-    if (document.querySelector('.events__slider--lazur-collection')) {
-        new Swiper('.events__slider--lazur-collection', {
-            loop: true,
-            centeredSlides: false,
-            slidesOffsetBefore: 0,
-            slidesOffsetAfter: 0,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev'
-            },
-            slidesPerView: 'auto',
-            spaceBetween: 20,
-            breakpoints: {
-                370: {
-                    slidesPerView: 'auto',
-                    spaceBetween: 20
-                },
-                768: {
-                    slidesPerView: 'auto',
-                    spaceBetween: 20
-                },
-                1024: {
-                    slidesPerView: 'auto',
-                    spaceBetween: 20
-                }
-            }
-        });
-    }
-
-    // Инициализация Swiper для слайдера Коллекция Людмилы Носковой
-    if (document.querySelector('.events__slider--noskova')) {
-        new Swiper('.events__slider--noskova', {
-            loop: true,
-            centeredSlides: false,
-            slidesOffsetBefore: 0,
-            slidesOffsetAfter: 0,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev'
-            },
-            slidesPerView: 'auto',
-            spaceBetween: 20,
-            breakpoints: {
-                768: {
-                    slidesPerView: 'auto',
-                    spaceBetween: 20
-                },
-                1024: {
-                    slidesPerView: 'auto',
-                    spaceBetween: 20
-                }
-            }
-        });
-    }
-
-    // Инициализация Swiper для слайдера Сумки Андрея Вяткина
-    if (document.querySelector('.events__slider--vyatkin')) {
-        new Swiper('.events__slider--vyatkin', {
-            loop: true,
-            centeredSlides: false,
-            slidesOffsetBefore: 0,
-            slidesOffsetAfter: 0,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev'
-            },
-            slidesPerView: 'auto',
-            spaceBetween: 20,
-            breakpoints: {
-                768: {
-                    slidesPerView: 'auto',
-                    spaceBetween: 20
-                },
-                1024: {
-                    slidesPerView: 'auto',
-                    spaceBetween: 20
-                }
-            }
-        });
-    }
-
-    // Инициализация Swiper для слайдера Модели — наши сотрудники
-    if (document.querySelector('.events__slider--models')) {
-        new Swiper('.events__slider--models', {
-            loop: true,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev'
-            },
-            slidesPerView: 1,
-            spaceBetween: 20,
-            breakpoints: {
-                768: {
-                    slidesPerView: 2,
-                    spaceBetween: 20
-                },
-                1024: {
-                    slidesPerView: 3,
-                    spaceBetween: 20
-                }
-            }
-        });
-    }
-
-    // Инициализация Swiper для слайдера Модели горизонтальные
-    if (document.querySelector('.events__slider--models-horizontal')) {
-        new Swiper('.events__slider--models-horizontal', {
-            loop: true,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev'
-            },
-            slidesPerView: 1,
-            spaceBetween: 20,
-            breakpoints: {
-                768: {
-                    slidesPerView: 2,
-                    spaceBetween: 20
-                },
-                1024: {
-                    slidesPerView: 2,
-                    spaceBetween: 30
-                }
-            }
-        });
-    }
-
-    // Инициализация Swiper для слайдера Фуршет
-    if (document.querySelector('.events__slider--banquet')) {
-        new Swiper('.events__slider--banquet', {
-            loop: true,
-            centeredSlides: false,
-            slidesOffsetBefore: 0,
-            slidesOffsetAfter: 0,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev'
-            },
-            slidesPerView: 'auto',
-            spaceBetween: 20,
-            breakpoints: {
-                768: {
-                    slidesPerView: 'auto',
-                    spaceBetween: 20
-                },
-                1024: {
-                    slidesPerView: 'auto',
-                    spaceBetween: 20
-                }
-            }
-        });
-    }
-
-    // Инициализация Swiper для слайдера Гости
-    if (document.querySelector('.events__slider--guests')) {
-        new Swiper('.events__slider--guests', {
-            loop: true,
-            centeredSlides: false,
-            slidesOffsetBefore: 0,
-            slidesOffsetAfter: 0,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev'
-            },
-            slidesPerView: 'auto',
-            spaceBetween: 20,
-            breakpoints: {
-                768: {
-                    slidesPerView: 'auto',
-                    spaceBetween: 20
-                },
-                1024: {
-                    slidesPerView: 'auto',
-                    spaceBetween: 20
-                }
-            }
-        });
-    }
-
-    // Инициализация Swiper для слайдера Джаз
-    if (document.querySelector('.events__slider--jazz')) {
-        new Swiper('.events__slider--jazz', {
-            loop: true,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev'
-            },
-            slidesPerView: 1,
-            spaceBetween: 20,
-            breakpoints: {
-                768: {
-                    slidesPerView: 2,
-                    spaceBetween: 20
-                },
-                1024: {
-                    slidesPerView: 3,
-                    spaceBetween: 20
-                }
-            }
+    if (typeof Swiper !== 'undefined') {
+        Object.keys(SLIDERS).forEach(function (name) {
+            const el = document.querySelector('.events__slider--' + name);
+            if (!el) return;
+            const options = Object.assign({
+                loop: true,
+                spaceBetween: 20,
+                pagination: { el: el.querySelector('.swiper-pagination'), clickable: true },
+                navigation: { nextEl: el.querySelector('.swiper-button-next'), prevEl: el.querySelector('.swiper-button-prev') },
+            }, JSON.parse(JSON.stringify(SLIDERS[name]))); // копия: GRID/AUTO общие для нескольких слайдеров
+            if (name === 'endograund') options.on = { init: updateEndograundInfo, slideChange: updateEndograundInfo };
+            new Swiper(el, options);
         });
     }
 
@@ -533,7 +89,8 @@ if (document.querySelector('.events__slider--endograund')) {
 
     // Модальное окно для изображений со слайдером
     const modal = document.getElementById('eventsModal');
-    const modalClose = document.querySelector('.events__modal-close');
+    if (!modal || typeof Swiper === 'undefined') return;
+    const modalClose = modal.querySelector('.events__modal-close');
     const modalSwiperWrapper = modal.querySelector('.swiper-wrapper');
     const modalPrevBtn = modal.querySelector('.events__modal-prev');
     const modalNextBtn = modal.querySelector('.events__modal-next');
@@ -565,19 +122,14 @@ if (document.querySelector('.events__slider--endograund')) {
         }
     });
 
-    // Функция открытия модального окна
-    function openModal(sliderId, index) {
+    // Открытие модального окна: images — адреса фото, index — с какого начать
+    function openModal(images, index) {
         if (modalSwiperInstance) {
             modalSwiperInstance.destroy(true, true);
             modalSwiperInstance = null;
         }
 
         modalSwiperWrapper.innerHTML = '';
-
-        let images = [];
-        if (sliderId && eventsSliderData[sliderId]) {
-            images = eventsSliderData[sliderId];
-        }
 
         // Создаем слайды
         images.forEach((src, i) => {
@@ -616,21 +168,12 @@ if (document.querySelector('.events__slider--endograund')) {
                 prevEl: modalPrevBtn
             },
             watchSlidesProgress: true,
-            on: {
-                init: function() {
-                    // Принудительно показать кнопки после инициализации
-                    if (!isSingleImage) {
-                        modalNextBtn.style.display = 'flex';
-                        modalPrevBtn.style.display = 'flex';
-                    }
-                }
-            }
         });
 
         modal.classList.add('events__modal--open');
         document.body.style.overflow = 'hidden';
 
-        // Обновляем Swiper после открытия модалки
+        // Обновляем Swiper после открытия модалки (до этого она была скрыта — размеры нулевые)
         setTimeout(function() {
             if (modalSwiperInstance) {
                 modalSwiperInstance.update();
@@ -650,21 +193,6 @@ if (document.querySelector('.events__slider--endograund')) {
         document.body.style.overflow = '';
     }
 
-    // Observer для отслеживания открытия модалки
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if (mutation.target.classList.contains('events__modal--open')) {
-                setTimeout(function() {
-                    if (modalSwiperInstance) {
-                        modalSwiperInstance.update();
-                        modalSwiperInstance.navigation.update();
-                    }
-                }, 100);
-            }
-        });
-    });
-    observer.observe(modal, { attributes: true, attributeFilter: ['class'] });
-
     // Обработчик клика по изображениям внутри .events__img-cnt и .swiper-slide
     const images = document.querySelectorAll('.events__img-cnt img, .swiper-slide img');
     images.forEach(img => {
@@ -677,18 +205,13 @@ if (document.querySelector('.events__slider--endograund')) {
             const sliderId = this.getAttribute('data-slider');
             const index = parseInt(this.getAttribute('data-index'), 10);
             
-            if (sliderId && !isNaN(index)) {
-                // Изображение из слайдера
-                openModal(sliderId, index);
+            if (sliderId && eventsSliderData[sliderId] && !isNaN(index)) {
+                // Изображение из слайдера — листаются все фото этого слайдера
+                openModal(eventsSliderData[sliderId], index);
             } else {
                 // Одиночное изображение
                 const src = this.getAttribute('src');
-                if (src) {
-                    // Создаем временный слайдер для одиночного изображения
-                    const tempSliderId = 'single-' + Date.now();
-                    eventsSliderData[tempSliderId] = [src];
-                    openModal(tempSliderId, 0);
-                }
+                if (src) openModal([src], 0);
             }
         });
     });
@@ -697,65 +220,65 @@ if (document.querySelector('.events__slider--endograund')) {
     const videoModal = document.getElementById('eventsVideoModal');
     const videoPlayer = document.getElementById('eventsVideoPlayer');
 
-    // Открытие видео при клике на заглушку
-    document.querySelectorAll('.events__video-thumb').forEach(function(thumb) {
-        thumb.addEventListener('click', function(e) {
-            // Не открываем фото-модалку при клике на видео-заглушку
-            e.stopPropagation();
-            
-            const videoSrc = this.getAttribute('data-video');
-            videoPlayer.src = videoSrc;
-            videoModal.classList.add('events__modal--open');
-            document.body.style.overflow = 'hidden';
-            videoPlayer.play();
+    if (videoModal && videoPlayer) {
+        // Открытие видео при клике на заглушку
+        document.querySelectorAll('.events__video-thumb').forEach(function(thumb) {
+            thumb.addEventListener('click', function(e) {
+                // Не открываем фото-модалку при клике на видео-заглушку
+                e.stopPropagation();
+
+                videoPlayer.src = this.getAttribute('data-video');
+                videoModal.classList.add('events__modal--open');
+                document.body.style.overflow = 'hidden';
+                // браузер может запретить автозапуск — тогда посетитель нажмёт «play» сам, без ошибки в консоли
+                const playing = videoPlayer.play();
+                if (playing && playing.catch) playing.catch(function () {});
+            });
         });
-    });
 
-    // Закрытие видео-модалки
-    function closeVideoModal() {
-        videoModal.classList.remove('events__modal--open');
-        document.body.style.overflow = '';
-        videoPlayer.pause();
-        videoPlayer.src = '';
+        // Закрытие видео-модалки
+        const closeVideoModal = function () {
+            videoModal.classList.remove('events__modal--open');
+            document.body.style.overflow = '';
+            videoPlayer.pause();
+            // src = '' заставлял браузер запрашивать адрес самой страницы как видео
+            videoPlayer.removeAttribute('src');
+            videoPlayer.load();
+        };
+
+        // Закрытие по крестику
+        const videoClose = videoModal.querySelector('.events__modal-close');
+        if (videoClose) videoClose.addEventListener('click', closeVideoModal);
+
+        // Закрытие по клику на фон (пустое место вокруг видео)
+        videoModal.addEventListener('click', function(e) {
+            if (e.target === videoModal || e.target.classList.contains('events__video-container')) {
+                closeVideoModal();
+            }
+        });
+
+        // Закрытие по Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && videoModal.classList.contains('events__modal--open')) {
+                closeVideoModal();
+            }
+        });
     }
-
-    // Закрытие по крестику
-    videoModal.querySelector('.events__modal-close').addEventListener('click', closeVideoModal);
-
-    // Закрытие по клику на фон (пустое место вокруг видео)
-    videoModal.addEventListener('click', function(e) {
-        if (e.target === videoModal || e.target.classList.contains('events__video-container')) {
-            closeVideoModal();
-        }
-    });
-
-    // Закрытие по Escape
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && videoModal.classList.contains('events__modal--open')) {
-            closeVideoModal();
-        }
-    });
 
     // Обработчик клика по кнопке закрытия
     if (modalClose) {
         modalClose.addEventListener('click', closeModal);
     }
 
-    // Обработчик клика по фону модального окна
-    if (modal) {
-        modal.addEventListener('click', function(e) {
-            // Закрываем модалку, если клик не попал на:
-            // - img (картинка внутри слайдера)
-            // - кнопки навигации (.events__modal-prev, .events__modal-next)
-            // - пагинацию (.events__modal-pagination)
-            const isClickOnImage = e.target.tagName === 'IMG';
-            const isClickOnNav = e.target.closest('.events__modal-prev, .events__modal-next, .events__modal-pagination');
-            
-            if (!isClickOnImage && !isClickOnNav) {
-                closeModal();
-            }
-        });
-    }
+    // Обработчик клика по фону модального окна: закрываем, если клик не по картинке,
+    // стрелкам (.events__modal-prev/-next) или точкам (.events__modal-pagination)
+    modal.addEventListener('click', function(e) {
+        const isClickOnImage = e.target.tagName === 'IMG';
+        const isClickOnNav = e.target.closest('.events__modal-prev, .events__modal-next, .events__modal-pagination');
+        if (!isClickOnImage && !isClickOnNav) {
+            closeModal();
+        }
+    });
 
     // Обработчик нажатия клавиши Escape
     document.addEventListener('keydown', function(e) {
@@ -764,7 +287,8 @@ if (document.querySelector('.events__slider--endograund')) {
         }
     });
 
-    // Проверка пароля для архива фотографий
+    // «Пароль» к архиву фотографий. ВНИМАНИЕ: это не защита — пароль и ссылка на Яндекс.Диск видны
+    // в коде страницы любому. Настоящая защита — пароль на самой папке Яндекс.Диска.
     const photoArchiveBtn = document.getElementById('photoArchiveBtn');
     const photoArchivePassword = document.getElementById('photoArchivePassword');
     const photoArchiveError = document.getElementById('photoArchiveError');
@@ -772,7 +296,8 @@ if (document.querySelector('.events__slider--endograund')) {
 
     if (photoArchiveBtn) {
         photoArchiveBtn.addEventListener('click', function() {
-            const password = photoArchivePassword.value;
+            if (!photoArchivePassword || !photoArchiveError || !photoArchiveLink) return;
+            const password = photoArchivePassword.value.trim();
             
             if (password === 'Lazur29') {
                 photoArchiveError.classList.remove('events__password-error--visible');

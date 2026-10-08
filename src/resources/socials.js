@@ -1,6 +1,8 @@
+// Страница «Мы в соцсетях» (socials.html): фильтр публикаций по темам (кнопки и карточки тем),
+// счётчики публикаций, выбранный фильтр запоминается (адрес #filter=… и localStorage).
 document.addEventListener('DOMContentLoaded', function () {
     // Элементы
-    let filterButtons = document.querySelectorAll('.filter-btn');
+    const filterButtons = document.querySelectorAll('.filter-btn');
     const topicCards = document.querySelectorAll('.topic-card');
     const galleryItems = document.querySelectorAll('.gallery-item');
     const resetFilterBtn = document.getElementById('resetFilter');
@@ -24,17 +26,15 @@ document.addEventListener('DOMContentLoaded', function () {
     // Собираем все существующие категории из публикаций
     const allCategories = new Set(['all']);
 
+    function itemCategories(item) {
+        return (item.dataset.category || '').split(' ').map(c => c.trim()).filter(Boolean);
+    }
+
     // Функция для сбора категорий из всех публикаций
     function collectCategoriesFromPosts() {
         galleryItems.forEach(item => {
-            const categories = item.dataset.category.split(' ');
-            categories.forEach(cat => {
-                if (cat && cat.trim() !== '') {
-                    allCategories.add(cat.trim());
-                }
-            });
+            itemCategories(item).forEach(cat => allCategories.add(cat));
         });
-        console.log('Найденные категории:', Array.from(allCategories));
     }
 
     // Функция для ПРАВИЛЬНОГО подсчета публикаций по категориям
@@ -48,38 +48,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Считаем публикации по категориям
         galleryItems.forEach(item => {
-            const itemCategories = item.dataset.category.split(' ');
-
             // Увеличиваем счетчик для 'all' для каждой публикации
             counts['all']++;
 
             // Увеличиваем счетчики для каждой категории публикации
-            itemCategories.forEach(cat => {
-                const trimmedCat = cat.trim();
-                if (trimmedCat && trimmedCat !== 'all' && counts[trimmedCat] !== undefined) {
-                    counts[trimmedCat]++;
+            itemCategories(item).forEach(cat => {
+                if (cat !== 'all' && counts[cat] !== undefined) {
+                    counts[cat]++;
                 }
             });
         });
 
-        console.log('Подсчет публикаций:', counts);
         return counts;
     }
 
     // Функция для обновления счетчиков в интерфейсе
     function updateCountersInUI(counts) {
-        console.log('Обновляем счетчики в UI:', counts);
-
         // Обновляем счетчики в кнопках фильтров
         filterButtons.forEach(button => {
             const filter = button.dataset.filter;
             const countElement = button.querySelector('.filter-count');
             if (countElement && counts[filter] !== undefined) {
                 countElement.textContent = counts[filter];
-                console.log(`Фильтр "${filter}": ${counts[filter]} публикаций`);
             } else if (countElement) {
                 countElement.textContent = '0';
-                console.log(`Фильтр "${filter}": не найден в counts`);
             }
         });
 
@@ -111,40 +103,20 @@ document.addEventListener('DOMContentLoaded', function () {
     function countVisibleItems(category) {
         let count = 0;
         galleryItems.forEach(item => {
-            const itemCategories = item.dataset.category.split(' ').map(c => c.trim());
-            if (category === 'all' || itemCategories.includes(category)) {
+            if (category === 'all' || itemCategories(item).includes(category)) {
                 count++;
             }
         });
-        console.log(`Видимых элементов для "${category}": ${count}`);
         return count;
     }
 
-    // Функция для отладки - показывает все публикации и их категории
-    function debugPostsAndCategories() {
-        console.log('=== ОТЛАДКА: Все публикации и категории ===');
-        galleryItems.forEach((item, index) => {
-            const categories = item.dataset.category.split(' ').map(c => c.trim());
-            console.log(`Публикация ${index + 1}:`, {
-                title: item.querySelector('.gallery-item__title')?.textContent,
-                categories: categories,
-                dataCategory: item.dataset.category
-            });
-        });
-
-        console.log('=== ОТЛАДКА: Все кнопки фильтров ===');
-        filterButtons.forEach(button => {
-            console.log(`Фильтр: "${button.dataset.filter}", Текст: "${button.textContent}"`);
-        });
-    }
+    const fadeTimers = new Map();
 
     // Функция фильтрации
     function filterContent(category, event) {
         if (event) {
             event.preventDefault();
         }
-
-        console.log(`Фильтруем по категории: "${category}"`);
 
         const visibleCount = countVisibleItems(category);
 
@@ -159,22 +131,22 @@ document.addEventListener('DOMContentLoaded', function () {
         // Обновляем URL без прокрутки страницы
         updateURLHash(category);
 
-        // Показываем/скрываем элементы галереи
+        // Показываем/скрываем элементы галереи (плавно). Таймер прошлого переключения отменяем:
+        // иначе при быстрой смене фильтра «спрятать через 300 мс» срабатывал после «показать».
         galleryItems.forEach(item => {
-            const itemCategories = item.dataset.category.split(' ').map(c => c.trim());
-
-            if (category === 'all' || itemCategories.includes(category)) {
+            clearTimeout(fadeTimers.get(item));
+            if (category === 'all' || itemCategories(item).includes(category)) {
                 item.style.display = 'block';
-                setTimeout(() => {
+                fadeTimers.set(item, setTimeout(() => {
                     item.style.opacity = '1';
                     item.style.transform = 'translateY(0)';
-                }, 10);
+                }, 10));
             } else {
                 item.style.opacity = '0';
                 item.style.transform = 'translateY(20px)';
-                setTimeout(() => {
+                fadeTimers.set(item, setTimeout(() => {
                     item.style.display = 'none';
-                }, 300);
+                }, 300));
             }
         });
 
@@ -290,14 +262,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Проверка соответствия фильтров и категорий
     function validateFiltersAndPosts() {
-        console.log('=== ПРОВЕРКА СООТВЕТСТВИЯ ===');
-
         // Проверяем, что у всех кнопок есть соответствующие категории в публикациях
         filterButtons.forEach(button => {
             const filter = button.dataset.filter;
             if (filter !== 'all' && !allCategories.has(filter)) {
-                console.warn(`Фильтр "${filter}" не имеет публикаций!`);
-                // Можно скрыть или деактивировать такие фильтры
+                // тема без публикаций — кнопка неактивна
                 button.style.opacity = '0.5';
                 button.disabled = true;
                 button.title = 'Публикаций по этой теме пока нет';
@@ -322,15 +291,8 @@ document.addEventListener('DOMContentLoaded', function () {
         // Настраиваем обработчики
         setupEventListeners();
 
-        // Восстанавливаем фильтр
-        const hasRestoredFilter = restoreFilterOnLoad();
-
-        if (!hasRestoredFilter) {
-            filterContent('all');
-        }
-
-        // Отладка
-        debugPostsAndCategories();
+        // Восстанавливаем фильтр (или «Все публикации»)
+        restoreFilterOnLoad();
     }
 
     // Настройка обработчиков событий
@@ -346,9 +308,7 @@ document.addEventListener('DOMContentLoaded', function () {
             card.addEventListener('click', function (event) {
                 event.preventDefault();
                 const category = this.dataset.category;
-                const counts = countPostsByCategory();
-
-                if (category !== 'all' && counts[category] === 0) {
+                if (category !== 'all' && countVisibleItems(category) === 0) {
                     return;
                 }
 
@@ -373,26 +333,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         filterContent(savedFilter);
-
-        return savedFilter !== 'all';
     }
 
     // Запускаем инициализацию
     initialize();
-
-    // Глобальные функции для отладки
-    window.debugFilters = {
-        recount: () => {
-            const counts = countPostsByCategory();
-            updateCountersInUI(counts);
-            return counts;
-        },
-        showAllCategories: () => Array.from(allCategories),
-        showPostCategories: (index) => {
-            if (galleryItems[index]) {
-                return galleryItems[index].dataset.category.split(' ').map(c => c.trim());
-            }
-            return null;
-        }
-    };
 });

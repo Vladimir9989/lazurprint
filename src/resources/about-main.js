@@ -1,5 +1,5 @@
 // Страница «О компании»: три видео — кнопки .play-1/2/3 открывают модалки .video-1/2/3;
-// крестик .about__close и клик по фону закрывают все и ставят видео на паузу.
+// крестик .about__close, клик по фону и Esc закрывают все и ставят видео на паузу.
 (function () {
     const pairs = [1, 2, 3].map(function (n) {
         return { play: document.querySelector('.play-' + n), modal: document.querySelector('.video-' + n) };
@@ -27,5 +27,9 @@
 
     document.querySelectorAll('.about__close').forEach(function (btn) {
         btn.addEventListener('click', closeAboutModals);
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeAboutModals();
     });
 })();

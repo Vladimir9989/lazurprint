@@ -1,3 +1,4 @@
+// Страница «Музей печати»: видео в модалке (.museum-card__play[data-video]) и длительность роликов на карточках.
 document.addEventListener('DOMContentLoaded', function() {
     const modal = document.querySelector('.museum-modal');
     const videoPlayer = document.querySelector('.museum-modal__video');
@@ -25,7 +26,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function closeModal() {
         modal.classList.remove('museum-modal--active');
         videoPlayer.pause();
-        videoPlayer.src = '';
+        // src = '' заставлял браузер запрашивать адрес самой страницы как видео
+        videoPlayer.removeAttribute('src');
+        videoPlayer.load();
     }
 
     closeBtn.addEventListener('click', closeModal);
@@ -43,15 +46,19 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Предотвращаем закрытие при клике на контейнер с видео
-    document.querySelector('.museum-modal__container').addEventListener('click', function(e) {
-        e.stopPropagation();
-    });
+    const container = document.querySelector('.museum-modal__container');
+    if (container) {
+        container.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    }
 });
 
 // Автоматическое получение длительности видео
 document.querySelectorAll('.museum-card__play').forEach(button => {
     const videoSrc = button.getAttribute('data-video');
-    const durationSpan = button.closest('.museum-card').querySelector('.museum-card__duration');
+    const card = button.closest('.museum-card');
+    const durationSpan = card && card.querySelector('.museum-card__duration');
     
     if (videoSrc && durationSpan) {
         // Создаем скрытый элемент video для чтения метаданных

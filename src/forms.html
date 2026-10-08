@@ -1206,28 +1206,39 @@
     @@include('html/footer.html', {})
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Видео формы в окне: открывается кликом по карточке, при закрытии (крестик, фон, Esc) — останавливается
             const formItems = document.querySelectorAll('.forms__item');
             const videoModal = document.querySelector('.video-modal');
-            const videoElement = videoModal.querySelector('.video-forms');
-            const closeBtn = videoModal.querySelector('.close-btn');
+            const videoElement = videoModal && videoModal.querySelector('.video-forms');
+            const closeBtn = videoModal && videoModal.querySelector('.close-btn');
 
-            formItems.forEach(item => {
-                item.addEventListener('click', function () {
-                    const videoSrc = this.dataset.video;
-                    videoElement.src = videoSrc;
-                    videoModal.classList.add('active');
+            if (videoModal && videoElement) {
+                const closeVideo = function () {
+                    videoModal.classList.remove('active');
+                    // у видео autoplay: без паузы звук продолжал играть после закрытия окна
+                    videoElement.pause();
+                    videoElement.removeAttribute('src');
+                    videoElement.load();
+                };
+
+                formItems.forEach(item => {
+                    item.addEventListener('click', function () {
+                        if (!this.dataset.video) return;
+                        videoElement.src = this.dataset.video;
+                        videoModal.classList.add('active');
+                    });
                 });
-            });
 
-            closeBtn.addEventListener('click', function () {
-                videoModal.classList.remove('active');
-            });
+                if (closeBtn) closeBtn.addEventListener('click', closeVideo);
 
-            videoModal.addEventListener('click', function (e) {
-                if (e.target === this) {
-                    this.classList.remove('active');
-                }
-            });
+                videoModal.addEventListener('click', function (e) {
+                    if (e.target === this) closeVideo();
+                });
+
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape' && videoModal.classList.contains('active')) closeVideo();
+                });
+            }
 
             const tabButtons = document.querySelectorAll('.tabs-btn');
             const tabContents = document.querySelectorAll('.forms__elem');
@@ -1246,11 +1257,11 @@
 
                 // Добавляем класс active текущей кнопке
                 const currentButton = document.querySelector(`.tabs-btn[data-tab="${tabId}"]`);
-                currentButton.classList.add('tabs-btn--active');
+                if (currentButton) currentButton.classList.add('tabs-btn--active');
 
                 // Показываем соответствующий контент
                 const currentContent = document.querySelector(`.forms__elem[data-page="${tabId}"]`);
-                currentContent.classList.add('forms__elem--active');
+                if (currentContent) currentContent.classList.add('forms__elem--active');
             }
 
             // Обработчик кликов по кнопкам

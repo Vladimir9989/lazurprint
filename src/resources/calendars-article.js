@@ -1,6 +1,6 @@
 // Постраничный скрипт статьи articles111.html «Календари на заказ».
-// Инициализирует слайдеры Swiper по типам календарей и навешивает
-// обработчики на CTA-кнопки, открывающие модальную форму расчёта.
+// Слайдеры Swiper по типам календарей, плавное появление блоков, подсветка чипов-якорей.
+// CTA-кнопки открывают форму сами (data-open-form, form-modal.js в app.js).
 
 document.addEventListener('DOMContentLoaded', function () {
     if (typeof Swiper !== 'undefined') {

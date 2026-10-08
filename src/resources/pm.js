@@ -5,7 +5,10 @@
     const pmMobi = document.querySelectorAll('.pm__mobi');
     const pmModule = document.querySelector('.pm__module');
 
-    if (navigator.userAgent.match('iPhone') || navigator.userAgent.match('Android') || navigator.userAgent.match('iPad') || navigator.userAgent.match('RIM')) {
+    // iPad с iPadOS 13+ представляется как Mac — узнаём его по сенсорному экрану
+    const ua = navigator.userAgent;
+    const isIPadOS = /Macintosh/.test(ua) && navigator.maxTouchPoints > 1;
+    if (/iPhone|Android|iPad|RIM/.test(ua) || isIPadOS) {
         pmNext.forEach(el => {
             el.style.display = 'none';
         });
@@ -21,7 +24,9 @@
         item.addEventListener('click', (e) => {
             const self = e.currentTarget;
             const src = self.dataset.path;
-            const numberPm = self.closest('.pm__item').querySelector('.pm__number').textContent;
+            const item = self.closest('.pm__item');
+            const numberEl = item && item.querySelector('.pm__number');
+            const numberPm = numberEl ? numberEl.textContent : '';
             pmModule.innerHTML = '';
             pmModule.insertAdjacentHTML('afterbegin', generatePm(src, numberPm));
             pmModule.classList.add('pm__module--active');
