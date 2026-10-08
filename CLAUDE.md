@@ -58,7 +58,7 @@ npm run new-page -- article|news "Заголовок" --prefix xyz [--desc "..."
 **Подключение JS на странице** (наведено в 2026-10, проверяется `npm run js-smoke`):
 - Всё в `<head>`, всё `defer`, пути относительные (`app.js`, не `/app.js`), в таком порядке: `inputmask.min.js` → `just-validate.min.js` → [`swiper-bundle.min.js`] → [общие: `swiper-JS.js`, `about.js`, `work.js`, `map.js`] → [скрипт страницы] → `app.js`. Внешние счётчики — `async`. Синхронных `<script src>` и Swiper с CDN не ставить.
 - `inputmask` + `just-validate` нужны **на каждой странице с подвалом** (там форма заявки), иначе форма уходит без проверки.
-- Swiper — одна версия, локальные `swiper-bundle.min.js/.css` (11.2.10); подключать только при наличии слайдера. Общий скрипт — только если на странице есть его блоки: `swiper-JS.js` — `.steps__swiper`/`.benefit__right-cnt`/`.team-right__swiper`, `about.js` — видео `.play-1`, `work.js` — отзывы `.reviews__list`.
+- Swiper — одна версия, локальные `swiper-bundle.min.js/.css` (11.2.10); подключать только при наличии слайдера. Общий скрипт — только если на странице есть его блоки: `swiper-JS.js` — `.steps__swiper`/`.benefit__right-cnt`, `about.js` — видео `.play-1`, `work.js` — отзывы `.reviews__list`.
 - Каждый скрипт страницы — в IIFE или `DOMContentLoaded`, `querySelector` — с проверкой на `null` (у всех классических `<script>` одна глобальная область: повтор `const` в двух файлах ломает второй целиком). Инлайн с `new Swiper` — внутри `DOMContentLoaded` (Swiper грузится `defer`).
 - Привести страницу к шаблону: `node tools/js-normalize.js --dry page.html` (затем без `--dry`; `--wrap-inline` — обернуть инлайны со Swiper).
 

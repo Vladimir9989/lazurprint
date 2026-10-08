@@ -1,5 +1,5 @@
 // Общие слайдеры страниц услуг, «О компании», главной и др.: этапы работы (.steps__swiper),
-// преимущества (.benefit__right-cnt), команда (.team-right__swiper).
+// преимущества (.benefit__right-cnt).
 // Нужен swiper-bundle.min.js раньше этого файла. Слайдер создаётся, только если его блок есть на странице.
 (function () {
     if (typeof Swiper === 'undefined') return;
@@ -13,7 +13,6 @@
         breakpoints: {
             1024: {
                 slidesPerView: 3.5,
-                spaceBetweenSlides: 20,
             },
             720: {
                 slidesPerView: 2.5,
@@ -47,22 +46,6 @@
         navigation: {
             nextEl: '.swiper-button-next2',
             prevEl: '.swiper-button-prev2',
-        },
-    });
-
-    init('.team-right__swiper', {
-        spaceBetween: 30,
-        breakpoints: {
-            720: {
-                slidesPerView: 3,
-            },
-            320: {
-                slidesPerView: 2,
-            },
-        },
-        navigation: {
-            nextEl: '.swiper-button-next3',
-            prevEl: '.swiper-button-prev3',
         },
     });
 })();

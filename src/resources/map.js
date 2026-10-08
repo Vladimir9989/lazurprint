@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     items.forEach(function (item) {
         item.addEventListener('click', function () {
+            // уже выбранный офис не перезагружаем; без адреса карты — ничего не делаем
+            if (item.classList.contains('offices__item--active') || !item.dataset.map) return;
             items.forEach(function (i) {
                 i.classList.remove('offices__item--active');
             });

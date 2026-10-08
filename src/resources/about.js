@@ -1,5 +1,5 @@
 // Видео «Коротко о нас»: кнопка .play-1 открывает модалку .video-1, крестик .about__close и клик по фону
-// закрывают и ставят видео на паузу. Подключать только на страницах с .video-1.
+// закрывают (и Esc) и ставят видео на паузу. Подключать только на страницах с .video-1.
 (function () {
     const modal = document.querySelector('.video-1');
     if (!modal) return;
@@ -23,5 +23,9 @@
 
     modal.addEventListener('click', function (e) {
         if (e.target === modal) close();
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal.classList.contains('modal--active')) close();
     });
 })();

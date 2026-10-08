@@ -39,8 +39,10 @@
         if (caption && titleEl && textEl) {
             caption.classList.add('deal__caption--swap');
             setTimeout(function () {
-                titleEl.textContent = items[index].querySelector('.deal__subtitle').textContent;
-                textEl.textContent = details[index] || items[index].querySelector('.deal__descr').textContent;
+                const subtitle = items[index].querySelector('.deal__subtitle');
+                const descr = items[index].querySelector('.deal__descr');
+                if (subtitle) titleEl.textContent = subtitle.textContent;
+                textEl.textContent = details[index] || (descr ? descr.textContent : '');
                 caption.classList.remove('deal__caption--swap');
             }, 180);
         }
@@ -71,14 +73,18 @@
     });
 
     // курсор ушёл со списка — возобновляем автопоказ
-    section.querySelector('.deal__list').addEventListener('mouseleave', function () {
-        paused = false;
-        schedule();
-    });
-    section.querySelector('.deal__list').addEventListener('focusout', function () {
-        paused = false;
-        schedule();
-    });
+    const list = section.querySelector('.deal__list');
+    if (list) {
+        const resume = function () {
+            paused = false;
+            schedule();
+        };
+        list.addEventListener('mouseleave', resume);
+        list.addEventListener('focusout', function (e) {
+            // фокус перешёл на соседний шаг — это не уход со списка
+            if (!list.contains(e.relatedTarget)) resume();
+        });
+    }
 
     if ('IntersectionObserver' in window) {
         new IntersectionObserver(function (entries) {

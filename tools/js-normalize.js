@@ -9,7 +9,7 @@
 // Шаблон в <head>, всё defer, пути относительные, без ?_v= (его добавляет сборка):
 //   inputmask → just-validate → swiper-bundle → swiper-JS → about → work → map → постраничные (в прежнем порядке) → app.js
 // Общий скрипт остаётся, только если на собранной странице (с партиалами) есть его блоки:
-//   inputmask/just-validate — форма #form; swiper-JS — .steps__swiper/.benefit__right-cnt/.team-right__swiper;
+//   inputmask/just-validate — форма #form; swiper-JS — .steps__swiper/.benefit__right-cnt;
 //   about — .play-1; work — .reviews__list/.reviews__item; map — #officesMapFrame;
 //   swiper-bundle — если остался хоть один его потребитель (скрипт или инлайн с new Swiper) и на странице есть .swiper-wrapper.
 // Блоки есть, а скрипта не было — НЕ добавляется (кроме inputmask/just-validate), только пишется в отчёт.
@@ -36,7 +36,7 @@ const ORDER = ['inputmask.min.js', 'just-validate.min.js', 'swiper-bundle.min.js
 const BLOCKS = {
     'inputmask.min.js': '#form',
     'just-validate.min.js': '#form',
-    'swiper-JS.js': '.steps__swiper, .benefit__right-cnt, .team-right__swiper',
+    'swiper-JS.js': '.steps__swiper, .benefit__right-cnt',
     'about.js': '.play-1',
     'work.js': '.reviews__list, .reviews__item',
     'map.js': '#officesMapFrame',
