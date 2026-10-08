@@ -62,7 +62,7 @@ npm run new-page -- article|news "Заголовок" --prefix xyz [--desc "..."
 - Привести страницу к шаблону: `node tools/js-normalize.js --dry page.html` (затем без `--dry`; `--wrap-inline` — обернуть инлайны со Swiper).
 
 - **CSS:** все партиалы импортируются в `src/styles/styles.scss` → `main.css`. Новый `_*.scss` без `@import` в `styles.scss` в сборку не попадёт. Стили отдельных статей/страниц — в `src/styles/articles/` (`@import 'articles/имя';`).
-- **HTML:** страницы — `src/*.html`, общие блоки (header, footer, consultation, reviews, steps…) — `src/html/*.html`, вставка через gulp-file-include: `@@include('html/header.html', {})`. Шапку/подвал менять в `src/html/`, не в страницах.
+- **HTML:** страницы — `src/*.html`, общие блоки (header, footer, consultation, reviews, steps…) — `src/html/*.html`, вставка через gulp-file-include: `@@include('html/header.html', {})`. Шапку/подвал менять в `src/html/`, не в страницах. Счётчики (Яндекс.Метрика + Google Analytics) — `src/html/counters.html`, первой строкой `<head>` каждой страницы; копии кода счётчиков в страницы не вставлять.
 - **sitemap.xml** генерирует таск `sitemap` (последний шаг build) из `src/*.html`, `lastmod` — дата последнего git-коммита файла. Новая страница попадает туда сама. Служебные исключены regex'ом `exclude` в `sitemapTask` (`google*`, `yandex_*`, `thanks`, `forms`) — новую служебную страницу добавить туда.
 - **Шрифты:** `.ttf` из `src/fonts/` → `.woff`/`.woff2`. **Изображения:** png/jpg/svg — таск `images`; webp/mp4/mov/ico/pdf — `imagesCopy`; `src/images/svg/` → `sprite.svg`.
 
