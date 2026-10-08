@@ -1154,76 +1154,157 @@
                 </div>
             </div>
         </section>
-        <section class="steps">
-            <div class="container steps__container">
-                <div class="steps__wrapper">
-                    <h2 class="steps__title">Последовательность сделки</h2>
-                    <div class="steps__btn-cnt">
-                        <div class="swiper-button-prev swiper-button-prev5">
-                            <?xml version="1.0" encoding="utf-8"?>
-                            <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M11 9L8 12M8 12L11 15M8 12H16M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
-                                    stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                        </div>
-                        <div class="swiper-button-next swiper-button-next5">
-                            <?xml version="1.0" encoding="utf-8"?>
-                            <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M13 15L16 12M16 12L13 9M16 12H8M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
-                                    stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                        </div>
-                    </div>
+        <section class="deal" id="deal" aria-labelledby="deal-title">
+            <div class="container deal__container">
+                <div class="deal__head">
+                    <h2 class="deal__title" id="deal-title">Последовательность сделки</h2>
+                    <p class="deal__lead">От обсуждения задачи до готового тиража — шесть понятных шагов. Весь путь вас
+                        ведёт ваш персональный менеджер.</p>
                 </div>
-                <div class="steps__swiper swiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide steps__slide">
-                            <div class="steps__num">1</div>
-                            <div class="steps__text">
-                                <div class="steps__subtitle">Согласование ТЗ</div>
-                                <p class="steps__descr">Составляем, проговариваем и согласовываем тех. задание.</p>
+                <div class="deal__grid">
+                    <ol class="deal__list">
+                        <li class="deal__item deal__item--active" data-step="0" tabindex="0">
+                            <span class="deal__num">1</span>
+                            <div class="deal__text">
+                                <h3 class="deal__subtitle">Согласование ТЗ</h3>
+                                <p class="deal__descr">Составляем, проговариваем и согласовываем тех. задание.</p>
+                            </div>
+                            <span class="deal__bar" aria-hidden="true"></span>
+                        </li>
+                        <li class="deal__item" data-step="1" tabindex="0">
+                            <span class="deal__num">2</span>
+                            <div class="deal__text">
+                                <h3 class="deal__subtitle">Разработка КП</h3>
+                                <p class="deal__descr">Составляем экономический паспорт заказа и выставляем счёт.</p>
+                            </div>
+                            <span class="deal__bar" aria-hidden="true"></span>
+                        </li>
+                        <li class="deal__item" data-step="2" tabindex="0">
+                            <span class="deal__num">3</span>
+                            <div class="deal__text">
+                                <h3 class="deal__subtitle">Подписание документов</h3>
+                                <p class="deal__descr">Заключаем договор и начинаем совместное сотрудничество.</p>
+                            </div>
+                            <span class="deal__bar" aria-hidden="true"></span>
+                        </li>
+                        <li class="deal__item" data-step="3" tabindex="0">
+                            <span class="deal__num">4</span>
+                            <div class="deal__text">
+                                <h3 class="deal__subtitle">Сигнальный образец</h3>
+                                <p class="deal__descr">Изготавливаем образец и отправляем на подтверждение.</p>
+                            </div>
+                            <span class="deal__bar" aria-hidden="true"></span>
+                        </li>
+                        <li class="deal__item" data-step="4" tabindex="0">
+                            <span class="deal__num">5</span>
+                            <div class="deal__text">
+                                <h3 class="deal__subtitle">Контроль производства</h3>
+                                <p class="deal__descr">Предоставляем отчётность по проделанной работе.</p>
+                            </div>
+                            <span class="deal__bar" aria-hidden="true"></span>
+                        </li>
+                        <li class="deal__item" data-step="5" tabindex="0">
+                            <span class="deal__num">6</span>
+                            <div class="deal__text">
+                                <h3 class="deal__subtitle">Отгрузка готового тиража</h3>
+                                <p class="deal__descr">Подписываем акт выполненных работ.</p>
+                            </div>
+                            <span class="deal__bar" aria-hidden="true"></span>
+                        </li>
+                    </ol>
+
+                    <aside class="deal__aside">
+                        <div class="deal__stage">
+                            <span class="deal__stage-blob deal__stage-blob--1" aria-hidden="true"></span>
+                            <span class="deal__stage-blob deal__stage-blob--2" aria-hidden="true"></span>
+                            <span class="deal__stage-step">Шаг <b data-deal-current>1</b> из 6</span>
+                            <div class="deal__scenes" aria-hidden="true">
+                                <!-- 1. ТЗ -->
+                                <svg class="deal__scene deal__scene--active" viewBox="0 0 200 150" fill="none" stroke="#081f5c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="58" y="22" width="84" height="116" rx="10" fill="#fff"/>
+                                    <rect x="82" y="12" width="36" height="18" rx="6" fill="#6de2eb"/>
+                                    <path d="M72 56l5 5 9-10" stroke="#3E77FB"/><path d="M94 56h34"/>
+                                    <path d="M72 82l5 5 9-10" stroke="#3E77FB"/><path d="M94 82h34"/>
+                                    <path d="M72 108l5 5 9-10" stroke="#3E77FB"/><path d="M94 108h22"/>
+                                    <path d="M150 70l22-22 8 8-22 22-11 3z" fill="#3E77FB"/>
+                                </svg>
+                                <!-- 2. КП -->
+                                <svg class="deal__scene" viewBox="0 0 200 150" fill="none" stroke="#081f5c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="48" y="14" width="92" height="120" rx="10" fill="#fff"/>
+                                    <path d="M64 36h40"/><path d="M64 54h60"/><path d="M64 70h60"/><path d="M64 86h38"/>
+                                    <rect x="64" y="100" width="62" height="18" rx="5" fill="#eaf1ff"/>
+                                    <path d="M72 109h22" stroke="#3E77FB"/>
+                                    <circle cx="144" cy="104" r="26" fill="#6de2eb"/>
+                                    <text x="144" y="114" text-anchor="middle" font-size="30" font-weight="700" fill="#081f5c" stroke="none" font-family="Arial, sans-serif">₽</text>
+                                </svg>
+                                <!-- 3. Документы -->
+                                <svg class="deal__scene" viewBox="0 0 200 150" fill="none" stroke="#081f5c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="36" y="30" width="86" height="104" rx="9" fill="#eaf1ff"/>
+                                    <rect x="64" y="14" width="88" height="106" rx="9" fill="#fff"/>
+                                    <path d="M80 36h42"/><path d="M80 52h56"/><path d="M80 68h56"/>
+                                    <path d="M80 98c6-12 10 6 16-4s8 4 14-2" stroke="#3E77FB"/>
+                                    <circle cx="148" cy="108" r="24" fill="#6de2eb"/>
+                                    <path d="M137 108l8 8 15-17" stroke-width="3.2"/>
+                                </svg>
+                                <!-- 4. Сигнальный образец -->
+                                <svg class="deal__scene" viewBox="0 0 200 150" fill="none" stroke="#081f5c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M44 30l92-12 14 98-92 12z" fill="#fff"/>
+                                    <circle cx="74" cy="52" r="10" fill="#6de2eb" stroke="none"/>
+                                    <circle cx="100" cy="49" r="10" fill="#ff5fa2" stroke="none"/>
+                                    <circle cx="86" cy="72" r="10" fill="#ffd23f" stroke="none"/>
+                                    <circle cx="112" cy="69" r="10" fill="#081f5c" stroke="none"/>
+                                    <path d="M62 98l60-8" stroke="#3E77FB" stroke-width="5"/>
+                                    <path d="M64 112l40-5" stroke-width="2"/>
+                                    <circle cx="148" cy="106" r="24" fill="#3E77FB"/>
+                                    <path d="M137 106l8 8 15-17" stroke="#fff" stroke-width="3.4"/>
+                                </svg>
+                                <!-- 5. Контроль производства -->
+                                <svg class="deal__scene" viewBox="0 0 200 150" fill="none" stroke="#081f5c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="30" y="16" width="140" height="92" rx="10" fill="#fff"/>
+                                    <path d="M84 108v20M116 108v20M70 128h60"/>
+                                    <rect x="46" y="34" width="108" height="9" rx="4.5" fill="#eaf1ff" stroke="none"/>
+                                    <rect x="46" y="34" width="96" height="9" rx="4.5" fill="#3E77FB" stroke="none"/>
+                                    <rect x="46" y="56" width="108" height="9" rx="4.5" fill="#eaf1ff" stroke="none"/>
+                                    <rect x="46" y="56" width="70" height="9" rx="4.5" fill="#6de2eb" stroke="none"/>
+                                    <rect x="46" y="78" width="108" height="9" rx="4.5" fill="#eaf1ff" stroke="none"/>
+                                    <rect x="46" y="78" width="38" height="9" rx="4.5" fill="#3E77FB" stroke="none"/>
+                                </svg>
+                                <!-- 6. Отгрузка -->
+                                <svg class="deal__scene" viewBox="0 0 200 150" fill="none" stroke="#081f5c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="22" y="44" width="92" height="64" rx="8" fill="#fff"/>
+                                    <path d="M114 62h30l18 22v24h-48z" fill="#6de2eb"/>
+                                    <path d="M126 70h14l10 14h-24z" fill="#fff"/>
+                                    <circle cx="52" cy="112" r="11" fill="#fff"/><circle cx="52" cy="112" r="3" fill="#081f5c" stroke="none"/>
+                                    <circle cx="140" cy="112" r="11" fill="#fff"/><circle cx="140" cy="112" r="3" fill="#081f5c" stroke="none"/>
+                                    <rect x="32" y="56" width="30" height="26" rx="4" fill="#3E77FB"/>
+                                    <path d="M47 56v26M32 69h30" stroke="#fff" stroke-width="2"/>
+                                    <rect x="70" y="62" width="34" height="20" rx="4" fill="#eaf1ff"/>
+                                    <path d="M14 130h172" stroke-dasharray="2 8"/>
+                                </svg>
+                            </div>
+                            <div class="deal__caption" aria-live="polite">
+                                <div class="deal__caption-title" data-deal-title>Согласование ТЗ</div>
+                                <p class="deal__caption-text" data-deal-text>Менеджер выясняет задачу: что печатаем, какой тираж, формат и сроки, и вместе с вами фиксирует всё в техническом задании.</p>
+                            </div>
+                            <div class="deal__dots" aria-hidden="true">
+                                <span class="deal__dot deal__dot--active"></span><span class="deal__dot"></span><span class="deal__dot"></span><span class="deal__dot"></span><span class="deal__dot"></span><span class="deal__dot"></span>
                             </div>
                         </div>
-                        <div class="swiper-slide steps__slide">
-                            <div class="steps__num">2</div>
-                            <div class="steps__text">
-                                <div class="steps__subtitle">Разработка КП</div>
-                                <p class="steps__descr">Составляем экономический паспорт заказа и выставляем счёт.</p>
-                            </div>
+
+                        <div class="deal__manager">
+                            <span class="deal__manager-icon" aria-hidden="true">
+                                <svg width="30" height="30" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="23" cy="14" r="8" stroke="#3E77FB" stroke-width="2.6"></circle>
+                                    <path d="M6 41c0-9.4 7.6-15 17-15s17 5.6 17 15" stroke="#3E77FB" stroke-width="2.6" stroke-linecap="round"></path>
+                                    <path d="M30 31.5l3 3 6-6.5" stroke="#3E77FB" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </span>
+                            <p class="deal__manager-text"><b>Персональный менеджер</b> закреплён за каждым клиентом и ведёт заказ на всех шести шагах.</p>
+                            <a href="how-to-order.html" class="deal__more">Как заказать
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </a>
                         </div>
-                        <div class="swiper-slide steps__slide">
-                            <div class="steps__num">3</div>
-                            <div class="steps__text">
-                                <div class="steps__subtitle">Подписание документов</div>
-                                <p class="steps__descr">Заключаем договор и начинаем совместное сотрудничество.</p>
-                            </div>
-                        </div>
-                        <div class="swiper-slide steps__slide">
-                            <div class="steps__num">4</div>
-                            <div class="steps__text">
-                                <div class="steps__subtitle">Сигнальный образец</div>
-                                <p class="steps__descr">Изготавливаем образец и отправляем на подтверждение.</p>
-                            </div>
-                        </div>
-                        <div class="swiper-slide steps__slide">
-                            <div class="steps__num">5</div>
-                            <div class="steps__text">
-                                <div class="steps__subtitle">Контроль производства</div>
-                                <p class="steps__descr">Предоставляем отчётность по проделанной работе.</p>
-                            </div>
-                        </div>
-                        <div class="swiper-slide steps__slide">
-                            <div class="steps__num">6</div>
-                            <div class="steps__text">
-                                <div cОтlass="steps__subtitle">Отгрузка готового тиража</div>
-                                <p class="steps__descr">Подписываем акт выполненных работ.</p>
-                            </div>
-                        </div>
-                    </div>
+                    </aside>
                 </div>
             </div>
         </section>
