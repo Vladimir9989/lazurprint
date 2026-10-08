@@ -9,6 +9,7 @@
     "predeploy": "gulp build",
     "deploy": "node deploy.js",
     "check": "node tools/check-links.js",
+    "js-smoke": "node tools/js-smoke.js",
     "new-page": "node tools/new-page.js"
   },
   "author": "me",

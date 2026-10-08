@@ -1,16 +1,11 @@
-// accordion
-
-const vacancyItem = document.querySelectorAll('.vacancy__item');
-const vacancyPrice = document.querySelector('.vacancy__price');
-
-vacancyItem.forEach((item) => {
-    item.addEventListener('click', ()=> {
-        let self = item.querySelector('.vacancy__text');
-        let arrow = item.querySelector('.vacancy__price')
-        self.classList.toggle('vacancy__text--active');
-        arrow.classList.toggle('vacancy__price--active')
-    })
-    
-});
-
-
+// Страница вакансий: раскрытие описания вакансии по клику
+(function () {
+    document.querySelectorAll('.vacancy__item').forEach((item) => {
+        item.addEventListener('click', () => {
+            const text = item.querySelector('.vacancy__text');
+            const arrow = item.querySelector('.vacancy__price');
+            if (text) text.classList.toggle('vacancy__text--active');
+            if (arrow) arrow.classList.toggle('vacancy__price--active');
+        });
+    });
+})();

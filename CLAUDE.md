@@ -11,7 +11,7 @@
 | Деплой, `.env`, хостинг NetAngels, сбои заливки | [`docs/claude/deploy.md`](docs/claude/deploy.md) |
 | Фото товаров, новая продукция, карточки `catalog-suvenir.html`, `tools/img-tools/` | [`docs/claude/catalog-photos.md`](docs/claude/catalog-photos.md) |
 | Создание **новой** статьи/новости (`articlesNNN`/`newsNN`) | [`docs/claude/articles-design.md`](docs/claude/articles-design.md) |
-| Подключение JS на страницах, `<script>`, форма заявки/капча (идёт чистка по партиям) | [`docs/claude/js-cleanup.md`](docs/claude/js-cleanup.md) |
+| Чистка JS 2026-10: итог, инструкция для проверки, открытые вопросы | [`docs/claude/js-cleanup.md`](docs/claude/js-cleanup.md) |
 | Админ-панель `admin/` | [`admin/README.md`](admin/README.md), ТЗ — [`docs/admin-panel.md`](docs/admin-panel.md) |
 | Продажи, клиенты, рассылки, портфолио, развитие сайта | [`growth.md`](growth.md), [`docs/growth/`](docs/growth/), ТЗ портфолио — [`docs/portfolio-spec.md`](docs/portfolio-spec.md) |
 | Тендеры | [`tender.md`](tender.md) |
@@ -33,7 +33,9 @@ npm run deploy   # build + заливка build/ на хостинг (deploy.js,
 ```bash
 npm run check                          # битые ссылки/картинки/скрипты, регистр имён, canonical — по src/, без сборки
 node tools/check-links.js page.html    # то же для отдельных страниц
-node tools/js-inventory.js [page.html] # какие скрипты где подключены, дубли, страницы без капчи, неиспользуемые файлы
+node tools/js-inventory.js [page.html] # какие скрипты где подключены, дубли, страницы без app.js, неиспользуемые файлы
+npm run js-smoke -- --all | page.html  # JS страниц в jsdom: ошибки, кнопки формы, слайдеры, видео, отзывы (нужен jsdom — шапка tools/js-smoke.js)
+node tools/js-form-test.js             # сценарии формы заявки: капча, ошибки отправки, закрытие (после npx gulp scripts)
 npm run new-page -- article|news "Заголовок" --prefix xyz [--desc "..."]   # заготовка нового материала
 ```
 
@@ -51,6 +53,13 @@ npm run new-page -- article|news "Заголовок" --prefix xyz [--desc "..."
 2. **`src/resources/`** (таск `resources`): копируется **как есть** в корень `dist`/`build`. Постраничные скрипты (`index.js`, `catalog.js`, `events.js`, `about.js`, …) подключаются вручную `<script>` на нужных страницах; там же сторонние либы (swiper, choices, just-validate, inputmask, lazyload, rellax, simplebar), PHP формы и `robots.txt`.
 
 Новый общий JS → `src/js/`. Скрипт конкретной страницы или внешняя либа → `src/resources/` + тег `<script>`.
+
+**Подключение JS на странице** (наведено в 2026-10, проверяется `npm run js-smoke`):
+- Всё в `<head>`, всё `defer`, пути относительные (`app.js`, не `/app.js`), в таком порядке: `inputmask.min.js` → `just-validate.min.js` → [`swiper-bundle.min.js`] → [общие: `swiper-JS.js`, `about.js`, `work.js`, `map.js`] → [скрипт страницы] → `app.js`. Внешние счётчики — `async`. Синхронных `<script src>` и Swiper с CDN не ставить.
+- `inputmask` + `just-validate` нужны **на каждой странице с подвалом** (там форма заявки), иначе форма уходит без проверки.
+- Swiper — одна версия, локальные `swiper-bundle.min.js/.css` (11.2.10); подключать только при наличии слайдера. Общий скрипт — только если на странице есть его блоки: `swiper-JS.js` — `.steps__swiper`/`.benefit__right-cnt`/`.team-right__swiper`, `about.js` — видео `.play-1`, `work.js` — отзывы `.reviews__list`.
+- Каждый скрипт страницы — в IIFE или `DOMContentLoaded`, `querySelector` — с проверкой на `null` (у всех классических `<script>` одна глобальная область: повтор `const` в двух файлах ломает второй целиком). Инлайн с `new Swiper` — внутри `DOMContentLoaded` (Swiper грузится `defer`).
+- Привести страницу к шаблону: `node tools/js-normalize.js --dry page.html` (затем без `--dry`; `--wrap-inline` — обернуть инлайны со Swiper).
 
 - **CSS:** все партиалы импортируются в `src/styles/styles.scss` → `main.css`. Новый `_*.scss` без `@import` в `styles.scss` в сборку не попадёт. Стили отдельных статей/страниц — в `src/styles/articles/` (`@import 'articles/имя';`).
 - **HTML:** страницы — `src/*.html`, общие блоки (header, footer, consultation, reviews, steps…) — `src/html/*.html`, вставка через gulp-file-include: `@@include('html/header.html', {})`. Шапку/подвал менять в `src/html/`, не в страницах.

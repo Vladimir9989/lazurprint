@@ -140,6 +140,13 @@ async function run(page, verbose) {
         review.click()
         if (reviewBottom.classList.contains('reviews__item-bottom--active') === before) errors.push('клик по отзыву не раскрывает текст')
     }
+    // раскрытие вакансии (components/vacancy.js в бандле)
+    const vacancy = d.querySelector('.vacancy__item')
+    const vacancyText = vacancy && vacancy.querySelector('.vacancy__text')
+    if (vacancyText) {
+        vacancy.click()
+        if (!vacancyText.classList.contains('vacancy__text--active')) errors.push('клик по вакансии не раскрывает описание')
+    }
     // слайдеры: .swiper-wrapper, чей контейнер Swiper инициализировал (класс swiper-initialized)
     const wrappers = [...d.querySelectorAll('.swiper-wrapper')]
     res.sliders = wrappers.length
