@@ -82,7 +82,7 @@
                         для цветочных магазинов — от пробной партии до тиража на сезон высокого спроса.
                     </p>
                     <div class="petal-hero__actions">
-                        <button class="petal-btn petal-btn--primary petal-cta-open" type="button">Рассчитать упаковку под мой магазин</button>
+                        <button data-open-form class="petal-btn petal-btn--primary petal-cta-open" type="button">Рассчитать упаковку под мой магазин</button>
                         <a href="#petal-formats" class="petal-btn petal-btn--ghost">Какие форматы бывают</a>
                     </div>
                     <ul class="petal-hero__stats">
@@ -369,23 +369,12 @@
                     <h2 class="petal-cta__title">Соберём упаковку для вашего цветочного магазина</h2>
                     <p class="petal-cta__desc">Пришлите логотип и фото ваших букетов — подберём формат, посчитаем стоимость пробной партии и сроки печати.</p>
                 </div>
-                <button class="petal-btn petal-btn--ghost petal-cta-open" type="button">Обсудить упаковку</button>
+                <button data-open-form class="petal-btn petal-btn--ghost petal-cta-open" type="button">Обсудить упаковку</button>
             </div>
         </div>
     </section>
     @@include('html/footer.html', {})
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var formModal = document.querySelector('.form__modal');
-            if (!formModal) return;
-            document.querySelectorAll('.petal-cta-open').forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    formModal.classList.add('modal--active');
-                });
-            });
-        });
-    </script>
 
     <script type="application/ld+json">
     {

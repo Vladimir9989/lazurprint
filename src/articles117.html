@@ -82,7 +82,7 @@
                         весь путь: от макета и сертификации до упаковки и доставки готового тиража.
                     </p>
                     <div class="rsk-hero__actions">
-                        <button class="rsk-btn rsk-btn--primary rsk-cta-open" type="button">Обсудить проект</button>
+                        <button data-open-form class="rsk-btn rsk-btn--primary rsk-cta-open" type="button">Обсудить проект</button>
                         <a href="#rsk-works" class="rsk-btn rsk-btn--ghost">Наши работы</a>
                     </div>
                     <ul class="rsk-hero__stats">
@@ -463,23 +463,12 @@
                     <h2 class="rsk-cta__title">Обсудим тираж вашей раскраски</h2>
                     <p class="rsk-cta__desc">Опишите тему, формат и примерный тираж — подберём технологию печати, посчитаем сроки и стоимость, поможем с сертификацией под крупный заказ.</p>
                 </div>
-                <button class="rsk-btn rsk-btn--ghost rsk-cta-open" type="button">Обсудить проект</button>
+                <button data-open-form class="rsk-btn rsk-btn--ghost rsk-cta-open" type="button">Обсудить проект</button>
             </div>
         </div>
     </section>
     @@include('html/footer.html', {})
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var formModal = document.querySelector('.form__modal');
-            if (!formModal) return;
-            document.querySelectorAll('.rsk-cta-open').forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    formModal.classList.add('modal--active');
-                });
-            });
-        });
-    </script>
 
     <script type="application/ld+json">
     {

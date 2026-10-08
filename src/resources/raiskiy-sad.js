@@ -24,18 +24,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // CTA-кнопки открывают модальную форму расчёта (та же, что в футере).
-    const formModal = document.querySelector('.form__modal');
-    const form = document.querySelector('.form');
-    if (formModal && form) {
-        document.querySelectorAll('.sad-cta').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                formModal.classList.add('modal--active');
-                form.classList.remove('hidden');
-            });
-        });
-    }
-
     // Плавное появление блоков при скролле (скрытое стартовое состояние
     // включается только при работающем JS — без него контент виден).
     const page = document.querySelector('.sad-page');

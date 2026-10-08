@@ -82,7 +82,7 @@
                         игры под ключ — от идеи и вёрстки до готового тиража в коробке.
                     </p>
                     <div class="play-hero__actions">
-                        <button class="play-btn play-btn--primary play-cta-open" type="button">Обсудить проект</button>
+                        <button data-open-form class="play-btn play-btn--primary play-cta-open" type="button">Обсудить проект</button>
                         <a href="#play-set" class="play-btn play-btn--ghost">Что можно напечатать</a>
                     </div>
                     <ul class="play-hero__stats">
@@ -357,23 +357,12 @@
                     <h2 class="play-cta__title">Придумаем формат под ваш проект</h2>
                     <p class="play-cta__desc">Опишите тему и примерный тираж — предложим формат карт или игры, посчитаем стоимость и сроки печати.</p>
                 </div>
-                <button class="play-btn play-btn--ghost play-cta-open" type="button">Обсудить проект</button>
+                <button data-open-form class="play-btn play-btn--ghost play-cta-open" type="button">Обсудить проект</button>
             </div>
         </div>
     </section>
     @@include('html/footer.html', {})
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var formModal = document.querySelector('.form__modal');
-            if (!formModal) return;
-            document.querySelectorAll('.play-cta-open').forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    formModal.classList.add('modal--active');
-                });
-            });
-        });
-    </script>
 
     <script type="application/ld+json">
     {

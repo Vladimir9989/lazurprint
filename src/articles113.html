@@ -83,7 +83,7 @@
                         компанию узнавали ещё до того, как к ней подошли.
                     </p>
                     <div class="expo-hero__actions">
-                        <button class="expo-btn expo-btn--primary expo-cta-open" type="button">Заказать комплект для выставки</button>
+                        <button data-open-form class="expo-btn expo-btn--primary expo-cta-open" type="button">Заказать комплект для выставки</button>
                         <a href="#expo-set" class="expo-btn expo-btn--ghost">Что входит в комплект</a>
                     </div>
                     <ul class="expo-hero__stats">
@@ -373,23 +373,12 @@
                     <h2 class="expo-cta__title">Собираем комплект для вашей выставки</h2>
                     <p class="expo-cta__desc">Пришлите список нужной продукции — посчитаем стоимость и сроки печати под дату вашего мероприятия.</p>
                 </div>
-                <button class="expo-btn expo-btn--ghost expo-cta-open" type="button">Обсудить проект</button>
+                <button data-open-form class="expo-btn expo-btn--ghost expo-cta-open" type="button">Обсудить проект</button>
             </div>
         </div>
     </section>
     @@include('html/footer.html', {})
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var formModal = document.querySelector('.form__modal');
-            if (!formModal) return;
-            document.querySelectorAll('.expo-cta-open').forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    formModal.classList.add('modal--active');
-                });
-            });
-        });
-    </script>
 
     <script type="application/ld+json">
     {

@@ -83,7 +83,7 @@
                         на трёх реальных заказах, как это выглядит вживую.
                     </p>
                     <div class="zont-hero__actions">
-                        <button class="zont-btn zont-btn--primary zont-cta-open" type="button">Заказать зонт с принтом</button>
+                        <button data-open-form class="zont-btn zont-btn--primary zont-cta-open" type="button">Заказать зонт с принтом</button>
                         <a href="catalog-suvenir.html?category=11" class="zont-btn zont-btn--ghost">Смотреть в каталоге</a>
                     </div>
                     <ul class="zont-hero__stats">
@@ -345,23 +345,12 @@
                     <h2 class="zont-cta__title">Хотите такой же зонт со своим принтом?</h2>
                     <p class="zont-cta__desc">Пришлите логотип или идею — посчитаем стоимость и сроки печати под ваш тираж.</p>
                 </div>
-                <button class="zont-btn zont-btn--ghost zont-cta-open" type="button">Обсудить заказ</button>
+                <button data-open-form class="zont-btn zont-btn--ghost zont-cta-open" type="button">Обсудить заказ</button>
             </div>
         </div>
     </section>
     @@include('html/footer.html', {})
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var formModal = document.querySelector('.form__modal');
-            if (!formModal) return;
-            document.querySelectorAll('.zont-cta-open').forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    formModal.classList.add('modal--active');
-                });
-            });
-        });
-    </script>
 
     <script type="application/ld+json">
     {

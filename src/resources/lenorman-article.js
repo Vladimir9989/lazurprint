@@ -24,13 +24,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    var formModal = document.querySelector('.form__modal');
-    if (formModal) {
-        document.querySelectorAll('.len-cta-open').forEach(function (btn) {
-            btn.addEventListener('click', function () { formModal.classList.add('modal--active'); });
-        });
-    }
-
     var chips = document.querySelectorAll('.len-nav__chip[data-spy]');
     if (!chips.length || !('IntersectionObserver' in window)) return;
     var map = {};

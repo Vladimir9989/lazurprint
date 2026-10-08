@@ -275,7 +275,7 @@
                     <p class="etrn-ours__text">
                         Мы изучили новые требования заранее, подключились к электронному документообороту и отработали весь путь накладной от оформления до приёмки груза. Отгрузка тиража идёт в штатном режиме, а вам не нужно вникать в детали: перевозочные документы мы оформляем сами. Программу и внутренние процессы продолжаем дорабатывать по мере появления новых требований.
                     </p>
-                    <button class="etrn-ours__btn etrn-cta-open" type="button">Обсудить заказ и доставку</button>
+                    <button data-open-form class="etrn-ours__btn etrn-cta-open" type="button">Обсудить заказ и доставку</button>
                 </div>
             </div>
 
@@ -314,12 +314,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var formModal = document.querySelector('.form__modal');
-            if (formModal) {
-                document.querySelectorAll('.etrn-cta-open').forEach(function (btn) {
-                    btn.addEventListener('click', function () { formModal.classList.add('modal--active'); });
-                });
-            }
             var chips = document.querySelectorAll('.etrn-nav__chip[data-spy]');
             if (!chips.length || !('IntersectionObserver' in window)) return;
             var map = {};

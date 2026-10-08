@@ -5,7 +5,8 @@
 //   node tools/js-inventory.js books.html ...  — подробно по отдельным страницам
 //
 // Показывает: какие <script src> на скольких страницах и каким способом (sync/defer/async, head/body),
-// дубли на одной странице, страницы с формой заявки без скрипта reCAPTCHA, файлы src/resources/*.js,
+// дубли на одной странице, страницы с формой заявки без app.js (форму и ленивую капчу открывает он),
+// оставшиеся статические recaptcha/api.js, файлы src/resources/*.js,
 // которые нигде не подключены. Нужен для чистки подключения JS (docs/claude/js-cleanup.md):
 // прогонять до и после каждой партии страниц и сравнивать.
 
@@ -34,15 +35,16 @@ const scan = (page) => {
         scripts.push({ src: srcM[1].replace(/\?.*$/, '').replace(/^\.?\//, ''), mode, where: m.index < headEnd ? 'head' : 'body' })
     }
     const hasFooter = /@@include\(\s*['"]html\/footer\.html/.test(t)
-    const hasCaptcha = scripts.some(s => /recaptcha\/api\.js/.test(s.src))
-    return { page, scripts, inline, hasFooter, hasCaptcha }
+    const hasApp = scripts.some(s => s.src === 'app.js')
+    const staticCaptcha = scripts.some(s => /recaptcha\/api\.js/.test(s.src))
+    return { page, scripts, inline, hasFooter, hasApp, staticCaptcha }
 }
 
 const args = process.argv.slice(2)
 if (args.length) {
     for (const a of args) {
         const r = scan(path.basename(a))
-        console.log(`\n${r.page}  (инлайн-скриптов без JSON-LD: ${r.inline}; подвал с формой: ${r.hasFooter ? 'да' : 'нет'}; reCAPTCHA: ${r.hasCaptcha ? 'да' : 'НЕТ'})`)
+        console.log(`\n${r.page}  (инлайн-скриптов без JSON-LD: ${r.inline}; подвал с формой: ${r.hasFooter ? 'да' : 'нет'}; app.js (форма + капча): ${r.hasApp ? 'да' : 'НЕТ'}${r.staticCaptcha ? '; статический recaptcha/api.js — убрать' : ''})`)
         r.scripts.forEach((s, i) => console.log(`  ${i + 1}. ${s.src}  [${s.mode}, ${s.where}]`))
     }
     process.exit(0)
@@ -73,9 +75,13 @@ for (const r of rows) {
 }
 if (!dups) console.log('  нет')
 
-const noCaptcha = rows.filter(r => r.hasFooter && !r.hasCaptcha)
-console.log(`\n== Форма заявки (подвал) есть, а скрипта reCAPTCHA нет: ${noCaptcha.length} стр. ==`)
-if (noCaptcha.length) console.log('  ' + noCaptcha.map(r => r.page).join(' '))
+const noApp = rows.filter(r => r.hasFooter && !r.hasApp)
+console.log(`\n== Форма заявки (подвал) есть, а app.js нет — форма не откроется: ${noApp.length} стр. ==`)
+if (noApp.length) console.log('  ' + noApp.map(r => r.page).join(' '))
+
+const staticCaptcha = rows.filter(r => r.staticCaptcha)
+console.log(`\n== Статический recaptcha/api.js (капчу лениво грузит app.js — убрать): ${staticCaptcha.length} стр. ==`)
+if (staticCaptcha.length) console.log('  ' + staticCaptcha.map(r => r.page).join(' '))
 
 const all = rows.map(r => r.scripts.map(s => s.src).join(' ')).join(' ') + ' ' + partials
 const unused = fs.readdirSync(path.join(SRC, 'resources')).filter(f => f.endsWith('.js'))

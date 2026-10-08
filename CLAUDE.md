@@ -69,7 +69,7 @@ npm run new-page -- article|news "Заголовок" --prefix xyz [--desc "..."
 
 ## Форма заявки (mail.php)
 
-Секреты (пароль SMTP-ящика noreply, ключ reCAPTCHA) в коде не хранятся: `mail.php` читает их из `mail-config.php` на хостинге уровнем выше `www` (`/home/c112136/lazurprint.ru/mail-config.php`). Локальная копия — `mail-config.php` в корне (в `.gitignore`), в git — шаблон `mail-config.example.php`. Деплой конфиг НЕ заливает. Антиспам: honeypot + минимальное время заполнения (поля добавляет `main.js`; `$requireTimestamp = true`) + не больше 5 заявок/час с IP.
+Секреты (пароль SMTP-ящика noreply, ключ reCAPTCHA) в коде не хранятся: `mail.php` читает их из `mail-config.php` на хостинге уровнем выше `www` (`/home/c112136/lazurprint.ru/mail-config.php`). Локальная копия — `mail-config.php` в корне (в `.gitignore`), в git — шаблон `mail-config.example.php`. Деплой конфиг НЕ заливает. **Кнопка, открывающая форму, — атрибут `data-open-form`** (необязательно `data-form-title` / `data-form-desc` / `data-form-text`), своих обработчиков открытия не писать; логика и ленивая загрузка reCAPTCHA — `src/js/components/form-modal.js` в `app.js`, `recaptcha/api.js` на страницы не подключать. Антиспам: honeypot + минимальное время заполнения (поля добавляет `main.js`; `$requireTimestamp = true`) + не больше 5 заявок/час с IP.
 
 ## Админ-панель (admin/)
 

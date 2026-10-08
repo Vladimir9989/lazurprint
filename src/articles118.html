@@ -83,7 +83,7 @@
                         подарок, а понимать, что на нём написано.
                     </p>
                     <div class="vkus-hero__actions">
-                        <button class="vkus-btn vkus-btn--primary vkus-cta-open" type="button">Обсудить оптовую партию</button>
+                        <button data-open-form class="vkus-btn vkus-btn--primary vkus-cta-open" type="button">Обсудить оптовую партию</button>
                         <a href="#vkus-gallery" class="vkus-btn vkus-btn--ghost">Наши сувениры</a>
                     </div>
                     <ul class="vkus-hero__stats">
@@ -555,23 +555,12 @@
                     <h2 class="vkus-cta__title">Обсудим оптовую партию сладких сувениров</h2>
                     <p class="vkus-cta__desc">Расскажите, для какого повода нужен подарок — соберём набор из шоколада и чая под бюджет и тираж, посчитаем стоимость с учётом оптовой скидки.</p>
                 </div>
-                <button class="vkus-btn vkus-btn--ghost vkus-cta-open" type="button">Обсудить проект</button>
+                <button data-open-form class="vkus-btn vkus-btn--ghost vkus-cta-open" type="button">Обсудить проект</button>
             </div>
         </div>
     </section>
     @@include('html/footer.html', {})
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var formModal = document.querySelector('.form__modal');
-            if (!formModal) return;
-            document.querySelectorAll('.vkus-cta-open').forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    formModal.classList.add('modal--active');
-                });
-            });
-        });
-    </script>
 
     <script type="application/ld+json">
     {

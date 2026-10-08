@@ -1010,7 +1010,7 @@
                         <h2 class="calc-title">Обратная связь</h2>
                         <p class="calc-subtitle">Оставьте заявку — мы свяжемся с вами в ближайшее время</p>
                     </div>
-                    <button class="calc-submit calc-submit--feedback" id="openFeedbackForm">Написать нам</button>
+                    <button data-open-form data-form-title="Обратная связь" data-form-desc="Оставьте заявку — мы свяжемся с вами в ближайшее время." class="calc-submit calc-submit--feedback" id="openFeedbackForm">Написать нам</button>
                 </div>
             </div>
         </section>
@@ -1046,25 +1046,6 @@
                         spaceBetween: 32,
                     },
                 },
-            });
-        }
-
-        // Кнопка обратной связи — открывает модальное окно из футера
-        const openFeedbackForm = document.getElementById('openFeedbackForm');
-        if (openFeedbackForm) {
-            openFeedbackForm.addEventListener('click', function () {
-                const formModal = document.querySelector('.form__modal');
-                const form = document.querySelector('.form');
-                const formTitle = document.querySelector('.form__title');
-                const formDesc = document.querySelector('.form__desc');
-                const formTextarea = document.querySelector('#textarea');
-                if (formModal) {
-                    if (formTitle) formTitle.textContent = 'Обратная связь';
-                    if (formDesc) formDesc.textContent = 'Оставьте заявку — мы свяжемся с вами в ближайшее время.';
-                    if (formTextarea) formTextarea.value = '';
-                    formModal.classList.add('modal--active');
-                    if (form) form.classList.remove('hidden');
-                }
             });
         }
     </script>

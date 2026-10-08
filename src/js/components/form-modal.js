@@ -19,23 +19,6 @@
         desc: desc ? desc.textContent : '',
     };
 
-    // Старые классы кнопок — пока разметка не переведена на data-open-form (партия 2 ТЗ docs/claude/js-cleanup.md).
-    const LEGACY = [
-        '.hero__btn', '.consultation__btn', '.footer__contacts-btn', '.catalog__btn', '.banner-reklama',
-        '.ord-cta', '.sad-cta', '.cal-cta', '.len-cta-open', '.expo-cta-open', '.play-cta-open',
-        '.rsk-cta-open', '.vkus-cta-open', '.petal-cta-open', '.zont-cta-open', '.etrn-cta-open',
-        '#openFeedbackForm',
-    ].join(', ');
-
-    // Тексты кнопки рекламного баннера (раньше задавал work.js)
-    const PRESETS = {
-        'banner-reklama': {
-            title: 'Заказать рекламу',
-            desc: 'Оставьте заявку для заказа рекламы на нашем сайте и мы свяжемся с Вами в ближайшее время.',
-            text: 'Здравствуйте, мы бы хотели заказать рекламу на вашем сайте https://lazurprint.ru',
-        },
-    };
-
     function open(options) {
         const o = options || {};
         if (o.title && title) title.textContent = o.title;
@@ -63,7 +46,6 @@
 
     function renderCaptcha() {
         if (!captchaBox || !window.grecaptcha || typeof window.grecaptcha.render !== 'function') return;
-        // На части страниц api.js ещё подключён статически и сам отрисовал виджет — второй раз не рисуем
         if (captchaBox.childElementCount === 0) {
             try {
                 widgetId = window.grecaptcha.render(captchaBox, { sitekey: captchaBox.getAttribute('data-sitekey') });
@@ -80,8 +62,6 @@
             renderCaptcha();
             return;
         }
-        // Статический api.js уже на странице — он отрисует виджет сам
-        if (document.querySelector('script[src*="recaptcha/api.js"]')) return;
 
         captchaState = 'loading';
         window.lazurCaptchaOnload = function () {
@@ -120,26 +100,14 @@
     }
 
     // --- события ---
-    function isOpener(el) {
-        if (el.hasAttribute('data-open-form')) return true;
-        // ссылка со старым классом, ведущая на другую страницу (например, WhatsApp в articles3), форму не открывает
-        const href = el.tagName === 'A' ? el.getAttribute('href') : null;
-        return !href || href.charAt(0) === '#';
-    }
-
     document.addEventListener('click', function (e) {
-        const btn = e.target.closest('[data-open-form], ' + LEGACY);
-        if (!btn || !isOpener(btn)) return;
+        const btn = e.target.closest('[data-open-form]');
+        if (!btn) return;
         if (btn.tagName === 'A') e.preventDefault();
-
-        let preset = {};
-        Object.keys(PRESETS).forEach(function (cls) {
-            if (btn.classList.contains(cls)) preset = PRESETS[cls];
-        });
         open({
-            title: btn.getAttribute('data-form-title') || preset.title,
-            desc: btn.getAttribute('data-form-desc') || preset.desc,
-            text: btn.getAttribute('data-form-text') || preset.text,
+            title: btn.getAttribute('data-form-title'),
+            desc: btn.getAttribute('data-form-desc'),
+            text: btn.getAttribute('data-form-text'),
         });
     });
 
