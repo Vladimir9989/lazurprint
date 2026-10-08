@@ -7,8 +7,8 @@
     }
 
     // Слайдер продукции (блок «Наша продукция»). Подпись справа (заголовок + описание) меняется
-    // вместе со слайдом — берём data-title/data-desc с активного слайда (в т.ч. клонов loop-режима,
-    // у них те же data-атрибуты, что и у оригинала).
+    // вместе со слайдом — берём data-title/data-desc с активного слайда. В Swiper 11 loop не клонирует
+    // слайды, а переставляет их, поэтому slides[activeIndex] — именно видимый слайд.
     const productsInfoTitle = document.querySelector('.products-showcase__info-title');
     const productsInfoDesc = document.querySelector('.products-showcase__info-desc');
     const productsInfoBlock = document.querySelector('.products-showcase__info');
@@ -23,8 +23,8 @@
 
         productsInfoBlock.classList.add('is-changing');
         setTimeout(function () {
-            productsInfoTitle.textContent = title;
-            productsInfoDesc.textContent = desc;
+            productsInfoTitle.textContent = title || '';
+            productsInfoDesc.textContent = desc || '';
             productsInfoBlock.classList.remove('is-changing');
         }, 200);
     }
@@ -61,16 +61,14 @@
         centeredSlides: true,
         loop: true,
         grabCursor: true,
+        // Swiper при смене брейкпоинта меняет только указанные в нём параметры, поэтому centeredSlides
+        // задан в обоих: иначе после сужения окна ниже 1320px и обратного расширения центровка не возвращалась.
         breakpoints: {
-            1720: {
-                slidesPerView: 'auto',
-            },
             1320: {
-                slidesPerView: 'auto',
+                centeredSlides: true,
             },
             300: {
                 centeredSlides: false,
-                slidesPerView: 'auto',
             },
         },
         pagination: {
@@ -99,20 +97,31 @@
         },
     });
 
-    // Счётчики цифр — запускаются, когда блок .counter появляется на экране
+    // Счётчики цифр — запускаются каждый раз, когда блок .counter появляется на экране
     const counter = document.querySelector('.counter');
     const COUNT_TIME = 1500;
+    const COUNTERS = [
+        // [id, итоговое число, шаг]
+        ['out-1', 114, 1],
+        ['out-2', 29, 1],
+        ['out-3', 98, 1],
+        ['out-4', 93, 1],
+        ['out-5', 445, 10],
+        ['out-6', 104, 1],
+    ];
+    const running = {}; // id → интервал: при повторном показе блока старый счёт останавливаем, а не запускаем второй поверх
 
-    function outNum(num, id, step) {
+    function outNum(id, num, step) {
         const el = document.getElementById(id);
         if (!el) return;
+        clearInterval(running[id]);
         let n = 0;
         const t = Math.round(COUNT_TIME / (num / step));
-        const interval = setInterval(function () {
+        running[id] = setInterval(function () {
             n = n + step;
             if (n >= num) {
                 n = num;
-                clearInterval(interval);
+                clearInterval(running[id]);
             }
             el.textContent = n;
         }, t);
@@ -122,15 +131,16 @@
         new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) {
                 if (entry.isIntersecting) {
-                    outNum(114, 'out-1', 1);
-                    outNum(29, 'out-2', 1);
-                    outNum(98, 'out-3', 1);
-                    outNum(93, 'out-4', 1);
-                    outNum(445, 'out-5', 10);
-                    outNum(104, 'out-6', 1);
+                    COUNTERS.forEach(function (c) { outNum(c[0], c[1], c[2]); });
                 }
             });
         }, { threshold: [0.5] }).observe(counter);
+    } else if (counter) {
+        // старый браузер без IntersectionObserver — сразу итоговые числа, а не пустые места
+        COUNTERS.forEach(function (c) {
+            const el = document.getElementById(c[0]);
+            if (el) el.textContent = c[1];
+        });
     }
 
     // Увеличение диплома по клику
@@ -158,5 +168,9 @@
 
     benefitModal.addEventListener('click', function (e) {
         if (e.target === benefitModal) benefitModal.classList.remove('benefit-modal--active');
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') benefitModal.classList.remove('benefit-modal--active');
     });
 })();
