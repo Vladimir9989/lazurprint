@@ -117,7 +117,13 @@ let validateForms = function (selector, rules) {
             const lazurForm = window.lazurForm;
             const captchaMsg = document.getElementById('captcha');
             const submitBtn = form.querySelector('.form__btn');
-            const say = (text) => { if (captchaMsg) captchaMsg.textContent = text; };
+            // ошибки — красным (как задано в разметке), «Отправляем…» — обычным цветом текста
+            const say = (text, neutral) => {
+                if (!captchaMsg) return;
+                captchaMsg.textContent = text;
+                captchaMsg.style.color = neutral ? '#333' : 'red';
+            };
+            if (form.dataset.sending === '1') return;
 
             const captcha = lazurForm ? lazurForm.getCaptchaResponse() : null;
             if (captcha === null) {
@@ -134,14 +140,17 @@ let validateForms = function (selector, rules) {
             if (formTs) formTs.value = Date.now() - pageLoadedAt;
             let formData = new FormData(form);
 
-            say('Отправляем…');
+            say('Отправляем…', true);
+            form.dataset.sending = '1';
             if (submitBtn) submitBtn.disabled = true;
 
             let xhr = new XMLHttpRequest();
 
             xhr.onreadystatechange = function () {
                 if (xhr.readyState !== 4) return;
-                // mail.php об ошибке сообщает текстом при статусе 200
+                form.dataset.sending = '';
+                // mail.php отвечает статусом 200: при успехе — пустым телом, при ошибке — текстом.
+                // Успех — только пустой ответ: любой другой текст (в т.ч. сообщение PHP о сбое) — ошибка.
                 const answer = (xhr.responseText || '').trim();
                 let error = '';
                 if (xhr.status !== 200 || answer.indexOf('Произошла ошибка') !== -1) {
@@ -150,18 +159,26 @@ let validateForms = function (selector, rules) {
                     error = 'Проверка «Я не робот» не пройдена. Поставьте галочку ещё раз.';
                 } else if (answer.indexOf('Заполните обязательные поля') !== -1 || answer.indexOf('Некорректный email') !== -1) {
                     error = answer;
+                } else if (answer !== '') {
+                    console.warn('Форма заявки: неожиданный ответ mail.php:', answer.slice(0, 300));
+                    error = 'Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.';
                 }
+                // кнопку разблокируем и при успехе: «Назад» со страницы «спасибо» может вернуть эту страницу из кэша браузера
+                if (submitBtn) submitBtn.disabled = false;
                 if (!error) {
+                    say('', true);
+                    if (lazurForm) lazurForm.resetCaptcha();
                     form.reset();
                     if (lazurForm) lazurForm.close();
                     window.location = 'thanks.html';
                     return;
                 }
-                if (submitBtn) submitBtn.disabled = false;
                 if (lazurForm) lazurForm.resetCaptcha();
                 say(error);
             };
             xhr.open('POST', 'mail.php', true);
+            // без ответа 30 с (обрыв связи) — readyState 4 со статусом 0, ветка ошибки выше разблокирует кнопку
+            xhr.timeout = 30000;
             xhr.send(formData);
         }
     });
@@ -173,8 +190,11 @@ if (document.getElementById('form') && formLibsReady) validateForms('#form', {
         minLength: 2,
         maxLength: 20,
     },
+    // email: true обязательно — свои правила поля заменяют встроенные just-validate целиком,
+    // без него формат адреса не проверялся до отправки
     email: {
-        required: true
+        required: true,
+        email: true,
     },
     tel: {
         required: true,

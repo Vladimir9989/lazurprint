@@ -19,21 +19,53 @@
         desc: desc ? desc.textContent : '',
     };
 
+    // для экранных читалок — это диалоговое окно; сама форма принимает фокус при открытии (без клавиатуры на телефоне)
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    if (title) {
+        if (!title.id) title.id = 'form-title';
+        modal.setAttribute('aria-labelledby', title.id);
+    }
+    form.setAttribute('tabindex', '-1');
+    form.style.outline = 'none';
+
+    let opener = null;     // кнопка, которой открыли форму, — вернуть на неё фокус при закрытии
+    let prefilled = '';    // текст комментария из data-form-text — стираем при закрытии, только если его не меняли
+
+    function isOpen() {
+        return modal.classList.contains('modal--active');
+    }
+
     function open(options) {
         const o = options || {};
         if (o.title && title) title.textContent = o.title;
         if (o.desc && desc) desc.textContent = o.desc;
-        if (o.text && textarea) textarea.value = o.text;
+        if (o.text && textarea) {
+            textarea.value = o.text;
+            prefilled = o.text;
+        }
+        if (!isOpen()) opener = document.activeElement;
         modal.classList.add('modal--active');
         form.classList.remove('hidden');
+        if (captchaState !== 'error') setCaptchaMsg('');
         loadCaptcha();
+        try {
+            form.focus({ preventScroll: true });
+        } catch (e) {
+            form.focus();
+        }
     }
 
     function close() {
+        const wasOpen = isOpen();
         modal.classList.remove('modal--active');
         if (title) title.textContent = defaults.title;
         if (desc) desc.textContent = defaults.desc;
-        if (textarea) textarea.value = '';
+        // свой комментарий посетителя не теряем при случайном закрытии; подставленный кнопкой — убираем
+        if (textarea && prefilled && textarea.value === prefilled) textarea.value = '';
+        prefilled = '';
+        if (wasOpen && opener && typeof opener.focus === 'function' && document.contains(opener)) opener.focus();
+        opener = null;
     }
 
     // --- reCAPTCHA ---
@@ -41,7 +73,9 @@
     let widgetId = null;
 
     function setCaptchaMsg(text) {
-        if (captchaMsg) captchaMsg.textContent = text;
+        if (!captchaMsg) return;
+        captchaMsg.textContent = text;
+        captchaMsg.style.color = 'red';
     }
 
     function renderCaptcha() {
@@ -119,7 +153,32 @@
     });
 
     document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && modal.classList.contains('modal--active')) close();
+        if (!isOpen()) return;
+        if (e.key === 'Escape') {
+            close();
+            return;
+        }
+        // Tab не уходит из открытой формы на страницу под ней
+        if (e.key === 'Tab') {
+            const items = Array.prototype.filter.call(
+                form.querySelectorAll('input:not([type="hidden"]):not([tabindex="-1"]), textarea:not([name="g-recaptcha-response"]), button, a[href], iframe'),
+                function (el) { return !el.disabled; }
+            );
+            if (!items.length) return;
+            const first = items[0];
+            const last = items[items.length - 1];
+            const active = document.activeElement;
+            if (e.shiftKey && (active === first || active === form)) {
+                e.preventDefault();
+                last.focus();
+            } else if (!e.shiftKey && active === last) {
+                e.preventDefault();
+                first.focus();
+            } else if (!form.contains(active)) {
+                e.preventDefault();
+                first.focus();
+            }
+        }
     });
 
     // на случай, если форма видна без открытия модалки

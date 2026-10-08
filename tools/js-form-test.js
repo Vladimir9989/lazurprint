@@ -19,7 +19,7 @@ function load(page) {
   const dom = new JSDOM(html, { runScripts: 'outside-only', virtualConsole: vc, url: 'https://lazurprint.ru/' + page });
   const w = dom.window; let handler;
   w.Inputmask = function () { return { mask(el) { if (el) el.inputmask = { unmaskedvalue: () => '9220000000' }; } }; };
-  w.JustValidate = function (sel, o) { handler = o.submitHandler; };
+  w.JustValidate = function (sel, o) { handler = o.submitHandler; w.__rules = o.rules; };
   w.matchMedia = () => ({ matches: false });
   w.eval(app);
   return { w, errors, submit: () => handler(w.document.getElementById('form')) };
@@ -46,7 +46,21 @@ w.XMLHttpRequest = function () { const x = this; x.open = (m, u) => x.u = u; x.s
 submit(); ok(sent.length === 1 && /не пройдена/.test(msg.textContent) && w.__reset, 'ответ ВЫ РОБОТ: ' + msg.textContent);
 ok(!d.querySelector('.form__btn').disabled, 'кнопка снова активна');
 answer = '';
-submit(); ok(sent.length === 2, 'успешная отправка ушла'); ok(!modal.classList.contains('modal--active'), 'модалка закрыта после успеха');
+ok(w.__rules && w.__rules.email && w.__rules.email.email === true, 'email проверяется по формату');
+answer = '<br /><b>Fatal error</b>: PHPMailer';
+submit(); ok(sent.length === 2 && /Не удалось/.test(msg.textContent) && !d.querySelector('.form__btn').disabled, 'непонятный ответ сервера — ошибка, не «спасибо»: ' + msg.textContent);
+// повторное нажатие, пока заявка уходит, — второй запрос не создаётся
+let pending = null;
+const RealXHR = w.XMLHttpRequest;
+w.XMLHttpRequest = function () { const x = this; x.open = () => {}; x.send = () => { pending = x; sent.push('p'); }; };
+submit(); submit();
+ok(sent.length === 3 && pending.timeout === 30000, 'двойное нажатие — один запрос, таймаут 30 с');
+ok(msg.style.color !== 'red', '«Отправляем…» не красным');
+pending.readyState = 4; pending.status = 0; pending.responseText = ''; pending.onreadystatechange();
+ok(/Не удалось/.test(msg.textContent) && !d.querySelector('.form__btn').disabled && msg.style.color === 'red', 'обрыв связи/таймаут — ошибка, кнопка снова активна');
+w.XMLHttpRequest = RealXHR;
+answer = '';
+submit(); ok(sent.length === 4 && !d.querySelector('.form__btn').disabled, 'успешная отправка ушла, кнопка не заблокирована'); ok(!modal.classList.contains('modal--active'), 'модалка закрыта после успеха');
 console.log('   errors:', errors.filter(e => !/navigation/i.test(e)));
 // banner / close / escape
 d.querySelector('.footer__contacts-btn').click();
@@ -55,6 +69,21 @@ ok(d.querySelector('.form__title').textContent === defTitle && d.querySelector('
 d.querySelector('.footer__contacts-btn').click();
 d.dispatchEvent(new w.KeyboardEvent('keydown', { key: 'Escape' }));
 ok(!modal.classList.contains('modal--active'), 'Esc закрывает');
+// доступность и комментарий
+const opener = d.querySelector('.footer__contacts-btn');
+opener.focus(); opener.click();
+ok(modal.getAttribute('role') === 'dialog' && modal.getAttribute('aria-modal') === 'true', 'role=dialog, aria-modal');
+ok(d.activeElement === d.getElementById('form'), 'фокус переходит в форму');
+d.getElementById('textarea').value = 'мой комментарий';
+d.dispatchEvent(new w.KeyboardEvent('keydown', { key: 'Escape' }));
+ok(d.activeElement === opener, 'фокус вернулся на кнопку');
+ok(d.getElementById('textarea').value === 'мой комментарий', 'свой комментарий не стирается при закрытии');
+opener.click();
+const btn = d.querySelector('.form__btn'); btn.focus();
+const tab = new w.KeyboardEvent('keydown', { key: 'Tab', cancelable: true }); d.dispatchEvent(tab);
+ok(tab.defaultPrevented && d.activeElement === d.getElementById('name'), 'Tab с последней кнопки — на первое поле');
+d.querySelector('.form__close').dispatchEvent(new w.MouseEvent('click', { bubbles: true }));
+ok(!modal.classList.contains('modal--active'), 'крестик закрывает');
 // articles3: WhatsApp-ссылка
 ({ w } = load('articles3.html'));
 const wa = w.document.querySelector('a.hero__btn[href^="https"]');
