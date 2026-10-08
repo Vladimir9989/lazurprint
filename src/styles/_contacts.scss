@@ -524,6 +524,11 @@ $contacts-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
 }
 
+// карточка адреса без действия (на «Контактах» нет карты, к которой вела ссылка #map)
+.contacts__link--static {
+    cursor: default;
+}
+
 // Плавный скролл к карте
 .contacts__link[href^="#map"] {
     scroll-behavior: smooth;

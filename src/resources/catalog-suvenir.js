@@ -491,3 +491,13 @@ if (galleryBtn) {
         form.classList.remove('hidden');
     });
 }
+
+// кнопка «Сделать заказ» в шапке каталога — открывает ту же форму заявки
+document.querySelectorAll('.catalog__btn').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (!formModal) return;
+        formModal.classList.add('modal--active');
+        if (form) form.classList.remove('hidden');
+    });
+});

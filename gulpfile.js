@@ -68,6 +68,26 @@ const styles = () => {
         .pipe(browserSync.stream())
 }
 
+// Версия для ?_v= в HTML: версия из package.json + короткий хеш исходников стилей и скриптов.
+// Любая правка css/js сама меняет версию (сброс кэша браузера без ручного бампа), а пока исходники
+// те же — значение стабильно между сборками и инкрементальный деплой не перезаливает HTML зря.
+const assetsVersion = () => {
+    const crypto = require('crypto')
+    const fs = require('fs')
+    const path = require('path')
+    const hash = crypto.createHash('sha256')
+    const walk = (dir) => {
+        if (!fs.existsSync(dir)) return
+        for (const name of fs.readdirSync(dir).sort()) {
+            const p = path.join(dir, name)
+            if (fs.statSync(p).isDirectory()) walk(p)
+            else if (/\.(scss|css|js)$/.test(name)) hash.update(p.split(path.sep).join('/')).update(fs.readFileSync(p))
+        }
+    }
+    ['src/styles', 'src/js', 'src/resources'].forEach(walk)
+    return `${pkg.version}.${hash.digest('hex').slice(0, 8)}`
+}
+
 const htmlMinify = () => {
     return src('src/**/*.html')
         .pipe(fileInclude())
@@ -77,7 +97,7 @@ const htmlMinify = () => {
             removeComments: true,
         })))
         .pipe(versionNumber({
-            'value': pkg.version,
+            'value': assetsVersion(),
             'append': {
                 'key': '_v',
                 'cover': 0,

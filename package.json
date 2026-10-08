@@ -7,7 +7,9 @@
     "dev": "gulp dev",
     "build": "gulp build",
     "predeploy": "gulp build",
-    "deploy": "node deploy.js"
+    "deploy": "node deploy.js",
+    "check": "node tools/check-links.js",
+    "new-page": "node tools/new-page.js"
   },
   "author": "me",
   "license": "ISC",
