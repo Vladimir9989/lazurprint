@@ -12,7 +12,7 @@
 | Фото товаров, новая продукция, карточки `catalog-suvenir.html`, `tools/img-tools/` | [`docs/claude/catalog-photos.md`](docs/claude/catalog-photos.md) |
 | Создание **новой** статьи/новости (`articlesNNN`/`newsNN`) | [`docs/claude/articles-design.md`](docs/claude/articles-design.md) |
 | Чистка JS 2026-10: итог, инструкция для проверки, открытые вопросы | [`docs/claude/js-cleanup.md`](docs/claude/js-cleanup.md) |
-| Аудит собственного JS (ТЗ, идёт по партиям), решение по ES-модулям | [`docs/claude/js-audit.md`](docs/claude/js-audit.md) |
+| Аудит собственного JS 2026-10: итог, инструкция для проверки, вопросы; решение по ES-модулям | [`docs/claude/js-audit.md`](docs/claude/js-audit.md) |
 | Админ-панель `admin/` | [`admin/README.md`](admin/README.md), ТЗ — [`docs/admin-panel.md`](docs/admin-panel.md) |
 | Продажи, клиенты, рассылки, портфолио, развитие сайта | [`growth.md`](growth.md), [`docs/growth/`](docs/growth/), ТЗ портфолио — [`docs/portfolio-spec.md`](docs/portfolio-spec.md) |
 | Тендеры | [`tender.md`](tender.md) |
@@ -60,6 +60,7 @@ npm run new-page -- article|news "Заголовок" --prefix xyz [--desc "..."
 - `inputmask` + `just-validate` нужны **на каждой странице с подвалом** (там форма заявки), иначе форма уходит без проверки.
 - Swiper — одна версия, локальные `swiper-bundle.min.js/.css` (11.2.10); подключать только при наличии слайдера. Общий скрипт — только если на странице есть его блоки: `swiper-JS.js` — `.steps__swiper`/`.benefit__right-cnt`, `about.js` — видео `.play-1`, `work.js` — отзывы `.reviews__list`.
 - Каждый скрипт страницы — в IIFE или `DOMContentLoaded`, `querySelector` — с проверкой на `null` (у всех классических `<script>` одна глобальная область: повтор `const` в двух файлах ломает второй целиком). Инлайн с `new Swiper` — внутри `DOMContentLoaded` (Swiper грузится `defer`).
+- Модалки: закрытие крестиком, фоном и Esc; видео при закрытии — `pause()` + `removeAttribute('src')` + `load()` (`src = ''` грузит адрес страницы). Swiper: в брейкпоинте менять только то, что задано и в соседних (параметр, не указанный в брейкпоинте, не возвращается к базовому при обратном ресайзе); один экземпляр на элемент. Тяжёлые библиотеки «по кнопке» (pdfmake в `catalog-pdf.js`) — грузить при первом нажатии, не тегом в `<head>`.
 - Привести страницу к шаблону: `node tools/js-normalize.js --dry page.html` (затем без `--dry`; `--wrap-inline` — обернуть инлайны со Swiper).
 
 - **CSS:** все партиалы импортируются в `src/styles/styles.scss` → `main.css`. Новый `_*.scss` без `@import` в `styles.scss` в сборку не попадёт. Стили отдельных статей/страниц — в `src/styles/articles/` (`@import 'articles/имя';`).
@@ -79,7 +80,7 @@ npm run new-page -- article|news "Заголовок" --prefix xyz [--desc "..."
 
 ## Форма заявки (mail.php)
 
-Секреты (пароль SMTP-ящика noreply, ключ reCAPTCHA) в коде не хранятся: `mail.php` читает их из `mail-config.php` на хостинге уровнем выше `www` (`/home/c112136/lazurprint.ru/mail-config.php`). Локальная копия — `mail-config.php` в корне (в `.gitignore`), в git — шаблон `mail-config.example.php`. Деплой конфиг НЕ заливает. **Кнопка, открывающая форму, — атрибут `data-open-form`** (необязательно `data-form-title` / `data-form-desc` / `data-form-text`), своих обработчиков открытия не писать; логика и ленивая загрузка reCAPTCHA — `src/js/components/form-modal.js` в `app.js`, `recaptcha/api.js` на страницы не подключать. Антиспам: honeypot + минимальное время заполнения (поля добавляет `main.js`; `$requireTimestamp = true`) + не больше 5 заявок/час с IP.
+Секреты (пароль SMTP-ящика noreply, ключ reCAPTCHA) в коде не хранятся: `mail.php` читает их из `mail-config.php` на хостинге уровнем выше `www` (`/home/c112136/lazurprint.ru/mail-config.php`). Локальная копия — `mail-config.php` в корне (в `.gitignore`), в git — шаблон `mail-config.example.php`. Деплой конфиг НЕ заливает. **Кнопка, открывающая форму, — атрибут `data-open-form`** (необязательно `data-form-title` / `data-form-desc` / `data-form-text`), своих обработчиков открытия не писать; логика и ленивая загрузка reCAPTCHA — `src/js/components/form-modal.js` в `app.js`, `recaptcha/api.js` на страницы не подключать. **`mail.php` при успехе не выводит ничего** — клиент (`main.js`) считает успехом только пустой ответ, любой текст (в т.ч. `echo`/предупреждение PHP) — ошибкой. В правилах just-validate свои `rules` поля заменяют встроенные целиком (для email нужно явно `email: true`). Антиспам: honeypot + минимальное время заполнения (поля добавляет `main.js`; `$requireTimestamp = true`) + не больше 5 заявок/час с IP.
 
 ## Админ-панель (admin/)
 
