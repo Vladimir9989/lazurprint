@@ -34,8 +34,10 @@
     <link rel="icon" href="images/img/favicon.ico">
     <link rel="canonical" href="https://lazurprint.ru">
     <script data-b24-form="auto/2/oqbldm" data-skip-moving="true">
+        // Всплывающая форма Битрикс24 — не чаще раза в сутки на браузер (время последнего показа — localStorage).
         (function (w, d, u) {
-            var lastSend = localStorage.getItem('lastSend');
+            var lastSend = null;
+            try { lastSend = localStorage.getItem('lastSend'); } catch (e) { /* хранилище недоступно (приватный режим) */ }
             var currentTime = new Date().getTime();
             // Проверяем, прошло ли 24 часа
             if (!lastSend || (currentTime - lastSend) > 86400000) {
@@ -44,7 +46,7 @@
                 var h = d.getElementsByTagName('script')[0];
                 h.parentNode.insertBefore(s, h);
                 // Сохраняем время отправки
-                localStorage.setItem('lastSend', currentTime);
+                try { localStorage.setItem('lastSend', currentTime); } catch (e) { /* см. выше */ }
             }
         })(window, document, 'https://cdn-ru.bitrix24.ru/b25729704/crm/form/loader_2.js');
     </script>

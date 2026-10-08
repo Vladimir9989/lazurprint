@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Сценарный тест формы заявки в jsdom (src/js/components/form-modal.js + submitHandler в src/js/main.js):
-// открытие кнопками, ленивая капча, сообщения об ошибках, ответы mail.php, закрытие, Esc, WhatsApp-ссылка в articles3.
+// открытие кнопками, ленивая капча, правила полей, сообщения об ошибках, ответы mail.php (в т.ч. лимит, сбой,
+// обрыв связи), двойное нажатие, закрытие, Esc, фокус и Tab, WhatsApp-ссылка в articles3.
 // Капча Google и отправка подменяются заглушками — настоящую отправку проверяет только человек.
 //
 //   npx gulp scripts && JSDOM_DIR=<папка с jsdom> node tools/js-form-test.js
@@ -46,21 +47,24 @@ w.XMLHttpRequest = function () { const x = this; x.open = (m, u) => x.u = u; x.s
 submit(); ok(sent.length === 1 && /не пройдена/.test(msg.textContent) && w.__reset, 'ответ ВЫ РОБОТ: ' + msg.textContent);
 ok(!d.querySelector('.form__btn').disabled, 'кнопка снова активна');
 answer = '';
-ok(w.__rules && w.__rules.email && w.__rules.email.email === true, 'email проверяется по формату');
+ok(w.__rules && w.__rules.email && w.__rules.email.email === true && !w.__rules.email.required, 'email необязателен, но проверяется по формату');
+ok(w.__rules.name.maxLength === 50, 'имя — до 50 символов');
+answer = 'Слишком много заявок';
+submit(); ok(/несколько заявок за последний час/.test(msg.textContent) && !d.querySelector('.form__btn').disabled, 'лимит заявок: ' + msg.textContent);
 answer = '<br /><b>Fatal error</b>: PHPMailer';
-submit(); ok(sent.length === 2 && /Не удалось/.test(msg.textContent) && !d.querySelector('.form__btn').disabled, 'непонятный ответ сервера — ошибка, не «спасибо»: ' + msg.textContent);
+submit(); ok(sent.length === 3 && /Не удалось/.test(msg.textContent) && !d.querySelector('.form__btn').disabled, 'непонятный ответ сервера — ошибка, не «спасибо»: ' + msg.textContent);
 // повторное нажатие, пока заявка уходит, — второй запрос не создаётся
 let pending = null;
 const RealXHR = w.XMLHttpRequest;
 w.XMLHttpRequest = function () { const x = this; x.open = () => {}; x.send = () => { pending = x; sent.push('p'); }; };
 submit(); submit();
-ok(sent.length === 3 && pending.timeout === 30000, 'двойное нажатие — один запрос, таймаут 30 с');
+ok(sent.length === 4 && pending.timeout === 30000, 'двойное нажатие — один запрос, таймаут 30 с');
 ok(msg.style.color !== 'red', '«Отправляем…» не красным');
 pending.readyState = 4; pending.status = 0; pending.responseText = ''; pending.onreadystatechange();
 ok(/Не удалось/.test(msg.textContent) && !d.querySelector('.form__btn').disabled && msg.style.color === 'red', 'обрыв связи/таймаут — ошибка, кнопка снова активна');
 w.XMLHttpRequest = RealXHR;
 answer = '';
-submit(); ok(sent.length === 4 && !d.querySelector('.form__btn').disabled, 'успешная отправка ушла, кнопка не заблокирована'); ok(!modal.classList.contains('modal--active'), 'модалка закрыта после успеха');
+submit(); ok(sent.length === 5 && !d.querySelector('.form__btn').disabled, 'успешная отправка ушла, кнопка не заблокирована'); ok(!modal.classList.contains('modal--active'), 'модалка закрыта после успеха');
 console.log('   errors:', errors.filter(e => !/navigation/i.test(e)));
 // banner / close / escape
 d.querySelector('.footer__contacts-btn').click();

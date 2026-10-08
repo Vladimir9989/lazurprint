@@ -249,6 +249,8 @@
             ? Array.from(document.querySelectorAll('.catalog__section'))
             : [document.querySelector(`.catalog__section[data-tab="${state.currentCategory}"]`)].filter(Boolean);
 
+        let anyVisible = false;
+
         sections.forEach(section => {
             const items = section.querySelectorAll('.catalog__item');
             let sectionHasVisible = false;
@@ -285,6 +287,7 @@
                 const visible = matchesSearch && matchesCity && matchesHit;
                 item.style.display = visible ? '' : 'none';
                 if (visible) sectionHasVisible = true;
+                if (visible) anyVisible = true;
             });
 
             if (state.hitOnly) {
@@ -330,6 +333,38 @@
                 });
             }
         });
+
+        updateEmptyMessage(!anyVisible && sections.length > 0);
+    }
+
+    /**
+     * «Ничего не найдено» — когда поиск/город/«Хит продаж» не оставили ни одного товара.
+     * Если причина — поиск, рядом кнопка «Сбросить поиск».
+     */
+    let emptyMessage = null;
+    function updateEmptyMessage(isEmpty) {
+        if (!emptyMessage) {
+            if (!isEmpty) return;
+            const menu = document.querySelector('.catalog__menu');
+            if (!menu) return;
+            emptyMessage = document.createElement('div');
+            emptyMessage.className = 'catalog__empty';
+            emptyMessage.setAttribute('role', 'status');
+            emptyMessage.innerHTML = '<p class="catalog__empty-title">Ничего не найдено</p>' +
+                '<p class="catalog__empty-text">Попробуйте изменить запрос, выбрать другой город или раздел каталога.</p>' +
+                '<button type="button" class="catalog__empty-reset">Сбросить поиск</button>';
+            emptyMessage.querySelector('.catalog__empty-reset').addEventListener('click', function () {
+                state.searchQuery = '';
+                if (elements.searchInput) {
+                    elements.searchInput.value = '';
+                    elements.searchInput.focus();
+                }
+                filterProducts();
+            });
+            menu.parentNode.insertBefore(emptyMessage, menu);
+        }
+        emptyMessage.hidden = !isEmpty;
+        emptyMessage.querySelector('.catalog__empty-reset').hidden = !state.searchQuery;
     }
 
     /**

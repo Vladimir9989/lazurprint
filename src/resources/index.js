@@ -97,7 +97,7 @@
         },
     });
 
-    // Счётчики цифр — запускаются каждый раз, когда блок .counter появляется на экране
+    // Счётчики цифр — считают один раз, когда блок .counter впервые появляется на экране, дальше стоят на итоговых числах
     const counter = document.querySelector('.counter');
     const COUNT_TIME = 1500;
     const COUNTERS = [
@@ -109,7 +109,7 @@
         ['out-5', 445, 10],
         ['out-6', 104, 1],
     ];
-    const running = {}; // id → интервал: при повторном показе блока старый счёт останавливаем, а не запускаем второй поверх
+    const running = {}; // id → интервал (защита от второго счёта поверх первого)
 
     function outNum(id, num, step) {
         const el = document.getElementById(id);
@@ -128,10 +128,11 @@
     }
 
     if (counter && 'IntersectionObserver' in window) {
-        new IntersectionObserver(function (entries) {
+        new IntersectionObserver(function (entries, obs) {
             entries.forEach(function (entry) {
                 if (entry.isIntersecting) {
                     COUNTERS.forEach(function (c) { outNum(c[0], c[1], c[2]); });
+                    obs.unobserve(entry.target);
                 }
             });
         }, { threshold: [0.5] }).observe(counter);

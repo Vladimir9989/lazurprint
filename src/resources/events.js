@@ -1,5 +1,5 @@
 // events.js — страница мероприятий (events.html): фотослайдеры разделов, подпись картин «Андеграунда»,
-// увеличение фото (модалка со слайдером), видео, аккордеон программы, «пароль» к архиву фото.
+// увеличение фото (модалка со слайдером), видео, аккордеон программы, архив фото по паролю.
 // Нужен swiper-bundle.min.js раньше этого файла.
 document.addEventListener('DOMContentLoaded', function() {
     // Фотослайдеры разделов. Два вида: «сетка» — 1/2/3 фото в ряд по ширине экрана,
@@ -286,37 +286,67 @@ document.addEventListener('DOMContentLoaded', function() {
             closeModal();
         }
     });
+});
 
-    // «Пароль» к архиву фотографий. ВНИМАНИЕ: это не защита — пароль и ссылка на Яндекс.Диск видны
-    // в коде страницы любому. Настоящая защита — пароль на самой папке Яндекс.Диска.
+// Архив фотографий по паролю (только для сотрудников). Ни пароля, ни ссылки в коде нет: ссылка на
+// Яндекс.Диск зашифрована паролем (AES-GCM, ключ из пароля через PBKDF2) и расшифровывается в браузере
+// только правильным паролем. Сменить пароль или ссылку: node tools/archive-link.js "Пароль" "ссылка"
+// и заменить объект ARCHIVE ниже. Отдельный обработчик — не зависит от фотомодалки выше.
+document.addEventListener('DOMContentLoaded', function() {
+    const ARCHIVE = {
+        iterations: 200000,
+        salt: '88bTlPJ44fb/ln3ax+9gxw==',
+        iv: 'VigCkgK6Hsblq9K8',
+        data: 'DkiHhfik7z3dLkmWTUGYOdHUb+8PkFw/TjyBCdI27JzAt2vhtqvL1q4WK1Hd0CNjBwlGrtoo5A==',
+    };
+
     const photoArchiveBtn = document.getElementById('photoArchiveBtn');
     const photoArchivePassword = document.getElementById('photoArchivePassword');
     const photoArchiveError = document.getElementById('photoArchiveError');
     const photoArchiveLink = document.getElementById('photoArchiveLink');
+    if (!photoArchiveBtn || !photoArchivePassword || !photoArchiveError || !photoArchiveLink) return;
+    const linkEl = photoArchiveLink.querySelector('a');
 
-    if (photoArchiveBtn) {
-        photoArchiveBtn.addEventListener('click', function() {
-            if (!photoArchivePassword || !photoArchiveError || !photoArchiveLink) return;
-            const password = photoArchivePassword.value.trim();
-            
-            if (password === 'Lazur29') {
-                photoArchiveError.classList.remove('events__password-error--visible');
-                photoArchiveLink.style.display = 'block';
-            } else {
-                photoArchiveError.classList.add('events__password-error--visible');
-                photoArchiveLink.style.display = 'none';
-            }
-        });
+    const fromB64 = function (str) {
+        return Uint8Array.from(atob(str), function (c) { return c.charCodeAt(0); });
+    };
+
+    function showError(text) {
+        photoArchiveError.textContent = text;
+        photoArchiveError.classList.add('events__password-error--visible');
+        photoArchiveLink.style.display = 'none';
     }
+
+    async function openArchive() {
+        const subtle = window.crypto && window.crypto.subtle;
+        if (!subtle) {
+            // шифрование в браузере работает только по https (и на localhost)
+            showError('Архив открывается только на сайте lazurprint.ru. Обновите браузер, если ошибка повторяется.');
+            return;
+        }
+        photoArchiveBtn.disabled = true;
+        try {
+            const base = await subtle.importKey('raw', new TextEncoder().encode(photoArchivePassword.value.trim()), 'PBKDF2', false, ['deriveKey']);
+            const key = await subtle.deriveKey(
+                { name: 'PBKDF2', salt: fromB64(ARCHIVE.salt), iterations: ARCHIVE.iterations, hash: 'SHA-256' },
+                base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']
+            );
+            const plain = await subtle.decrypt({ name: 'AES-GCM', iv: fromB64(ARCHIVE.iv) }, key, fromB64(ARCHIVE.data));
+            if (linkEl) linkEl.href = new TextDecoder().decode(plain);
+            photoArchiveError.classList.remove('events__password-error--visible');
+            photoArchiveLink.style.display = 'block';
+        } catch (e) {
+            // неверный пароль — расшифровка не проходит проверку подлинности
+            showError('Неверный пароль');
+        } finally {
+            photoArchiveBtn.disabled = false;
+        }
+    }
+
+    photoArchiveBtn.addEventListener('click', openArchive);
 
     // Также открывать при нажатии Enter в поле ввода
-    if (photoArchivePassword) {
-        photoArchivePassword.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                if (photoArchiveBtn) {
-                    photoArchiveBtn.click();
-                }
-            }
-        });
-    }
+    photoArchivePassword.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') openArchive();
+    });
 });
