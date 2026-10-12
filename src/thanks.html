@@ -1,26 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
     @@include('html/counters.html', {})
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Спасибо мы скоро с вами свяжемся</title>
+    <meta name="robots" content="noindex, nofollow">
+    <title>Спасибо, заявка принята — типография Лазурь</title>
     <link rel="stylesheet" href="main.css">
     <link rel="icon" href="images/img/favicon.ico">
+    <script defer src="inputmask.min.js"></script>
+    <script defer src="just-validate.min.js"></script>
+    <script defer src="app.js"></script>
 </head>
 
-<body class="page">
-    <section class="thanks">
-        <div class="container">
-            <div class="thanks__container">
-                <h1 class="thanks__title">Ваше письмо отправленно!</h1>
-                <p class="thanks__text">Наш менеджер в ближайшее время свяжется с вами</p>
-                <a href="index.html" class="thanks__btn">На главную</a>
-            </div>
+<body class="body">
+    @@include('html/header.html', {})
+    <main class="main">
+        <section class="thanks">
+            <div class="container">
+                <div class="thanks__card">
+                    <div class="thanks__icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12.5l4.5 4.5L19 7.5"></path>
+                        </svg>
+                    </div>
+                    <h1 class="thanks__title">Спасибо! Заявка принята</h1>
+                    <p class="thanks__text">Наш менеджер свяжется с вами в ближайшее время и ответит на все вопросы. За каждым клиентом закреплён персональный менеджер — он ведёт заказ до получения.</p>
 
-        </div>
-    </section>
+                    <ol class="thanks__steps">
+                        <li class="thanks__step">
+                            <span class="thanks__step-num">1</span>
+                            <span class="thanks__step-text">Изучим вашу заявку и подготовим расчёт</span>
+                        </li>
+                        <li class="thanks__step">
+                            <span class="thanks__step-num">2</span>
+                            <span class="thanks__step-text">Позвоним или напишем, уточним детали</span>
+                        </li>
+                        <li class="thanks__step">
+                            <span class="thanks__step-num">3</span>
+                            <span class="thanks__step-text">Согласуем макет и сроки, запустим тираж</span>
+                        </li>
+                    </ol>
+
+                    <div class="thanks__actions">
+                        <a href="index.html" class="thanks__btn thanks__btn--primary">На главную</a>
+                        <a href="portfolio.html" class="thanks__btn thanks__btn--ghost">Примеры наших работ</a>
+                    </div>
+
+                    <p class="thanks__phone">Срочный вопрос? Позвоните:
+                        <a href="tel:+78007079540" class="thanks__phone-link">8 (800) 707-95-40</a>
+                        <span class="thanks__phone-hours">пн–пт 09:00–18:00</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+    @@include('html/footer.html', {})
 </body>
 
 </html>

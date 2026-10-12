@@ -1,27 +1,187 @@
-/* thanks.html */
-.page {
-    height: 60vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* thanks.html — страница «Спасибо за заявку» */
+.thanks {
+    padding: 70px 0 90px;
+    background: linear-gradient(180deg, #f3f8ff 0%, #ffffff 100%);
 }
-.thanks__container {
+
+.thanks__card {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 56px 48px 44px;
     text-align: center;
-    border: 2px solid #000;
-    padding: 40px;
-    border-radius: 20px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(8, 31, 92, 0.12);
 }
-.thanks__title {
-    margin-bottom: 10px;
-    font-size: 28px;
-}
-.thanks__text {
-    font-size: 20px;
-    margin-bottom: 15px;
-}
-.thanks__btn {
-    background-color: #000;
-    padding: 5px 25px;
+
+.thanks__icon {
+    width: 88px;
+    height: 88px;
+    margin: 0 auto 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: #fff;
-    border-radius: 10px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3E77FB, #6de2eb);
+    box-shadow: 0 10px 30px rgba(62, 119, 251, 0.35);
+    animation: thanks-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+
+    svg {
+        width: 44px;
+        height: 44px;
+    }
+}
+
+.thanks__title {
+    margin-bottom: 16px;
+    font-size: 38px;
+    line-height: 1.15;
+    color: var(--color-galaxy);
+}
+
+.thanks__text {
+    max-width: 560px;
+    margin: 0 auto 36px;
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--color-night-rider);
+}
+
+.thanks__steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 0 0 36px;
+    padding: 0;
+    list-style: none;
+}
+
+.thanks__step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 14px;
+    background: #f3f8ff;
+    border-radius: 16px;
+}
+
+.thanks__step-num {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--color-primary);
+    background: #fff;
+    border: 2px solid var(--color-sky);
+    border-radius: 50%;
+}
+
+.thanks__step-text {
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--color-night-rider);
+}
+
+.thanks__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 32px;
+}
+
+.thanks__btn {
+    padding: 15px 34px;
+    font-weight: 600;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+    }
+}
+
+.thanks__btn--primary {
+    color: #fff;
+    background: linear-gradient(135deg, #3E77FB, #081f5c);
+    box-shadow: 0 8px 22px rgba(62, 119, 251, 0.35);
+
+    &:hover {
+        box-shadow: 0 12px 28px rgba(62, 119, 251, 0.45);
+    }
+}
+
+.thanks__btn--ghost {
+    color: var(--color-primary);
+    background: #fff;
+    border: 2px solid var(--color-sky);
+
+    &:hover {
+        background: #f3f8ff;
+    }
+}
+
+.thanks__phone {
+    font-size: 15px;
+    color: var(--color-dim-gray);
+}
+
+.thanks__phone-link {
+    margin-left: 6px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-galaxy);
+}
+
+.thanks__phone-hours {
+    display: block;
+    margin-top: 4px;
+    font-size: 13px;
+}
+
+@keyframes thanks-pop {
+    from {
+        opacity: 0;
+        transform: scale(0.4);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 768px) {
+    .thanks {
+        padding: 40px 0 60px;
+    }
+
+    .thanks__card {
+        padding: 40px 22px 32px;
+    }
+
+    .thanks__title {
+        font-size: 28px;
+    }
+
+    .thanks__text {
+        font-size: 16px;
+    }
+
+    .thanks__steps {
+        grid-template-columns: 1fr;
+    }
+
+    .thanks__step {
+        flex-direction: row;
+        text-align: left;
+    }
+
+    .thanks__btn {
+        width: 100%;
+        text-align: center;
+    }
 }
