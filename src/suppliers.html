@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    @@include('html/counters.html', {})
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Типография «Лазурь» принимает предложения от поставщиков: бумага и картон, материалы для упаковки и флексопечати, краски, пластины, переплётные материалы. Оставьте прайс-лист — мы свяжемся.">
+    <link rel="stylesheet" href="main.css">
+    <link rel="icon" href="images/img/favicon.ico">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Типография Лазурь">
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:url" content="https://lazurprint.ru/suppliers.html">
+    <meta property="og:title" content="Поставщикам: запрос предложений — типография Лазурь">
+    <meta property="og:description" content="Типография «Лазурь» принимает предложения от поставщиков: бумага и картон, материалы для упаковки и флексопечати, краски, пластины, переплётные материалы.">
+    <meta property="og:image" content="https://lazurprint.ru/images/img/social/og-main.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Типография Лазурь в Екатеринбурге">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://lazurprint.ru/suppliers.html">
+    <script defer src="inputmask.min.js"></script>
+    <script defer src="just-validate.min.js"></script>
+    <script defer src="app.js"></script>
+    <title>Поставщикам: запрос предложений — типография Лазурь</title>
+</head>
+
+<body class="body">
+    @@include('html/header.html', {})
+    <main class="main">
+        <section class="suppliers">
+            <div class="container">
+                <div class="books__nav-cnt">
+                    <a href="index.html" class="books__nav-link">Главная /</a>
+                    <a href="suppliers.html" class="books__nav-link">Поставщикам</a>
+                </div>
+
+                <div class="suppliers__hero">
+                    <span class="suppliers__badge">Запрос предложений к Новому году</span>
+                    <h1 class="suppliers__title">Ищем <span>новых поставщиков</span> для типографии</h1>
+                    <p class="suppliers__lead">
+                        «Лазурь» печатает книги, журналы, упаковку и этикетки, и мы всегда рады надёжным поставщикам
+                        материалов. Если вы продаёте то, что нужно типографии, пришлите прайс-лист и условия: мы
+                        рассмотрим каждое предложение.
+                    </p>
+                    <div class="suppliers__hero-actions">
+                        <a href="#offer" class="suppliers__btn" role="button" data-open-form
+                            data-form-title="Предложение для типографии"
+                            data-form-desc="Расскажите, что вы поставляете, и оставьте контакты. Закупщик типографии изучит предложение и свяжется с вами."
+                            data-form-text="Предложение поставщика.&#10;Компания: &#10;Что поставляем: &#10;Ссылка на прайс-лист: ">Отправить предложение</a>
+                        <span class="suppliers__deadline">Принимаем предложения до 30 ноября</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ВРЕМЕННЫЙ список позиций: заменить, когда закупщик (Яна) пришлёт настоящий -->
+        <section class="suppliers-items">
+            <div class="container">
+                <h2 class="suppliers__h2">Что мы <span>закупаем</span></h2>
+                <ul class="suppliers-items__list">
+                    <li class="suppliers-items__item">
+                        <h3 class="suppliers-items__name">Бумага и картон</h3>
+                        <p class="suppliers-items__text">Мелованная и офсетная бумага, картон для упаковки и обложек, переплётный картон.</p>
+                    </li>
+                    <li class="suppliers-items__item">
+                        <h3 class="suppliers-items__name">Материалы для флексопечати и упаковки</h3>
+                        <p class="suppliers-items__text">Самоклеящиеся материалы, плёнки, флексографские краски и формные пластины.</p>
+                    </li>
+                    <li class="suppliers-items__item">
+                        <h3 class="suppliers-items__name">Краски, лаки и пластины для офсета</h3>
+                        <p class="suppliers-items__text">Офсетные краски и лаки, печатные пластины, офсетные полотна, увлажняющие растворы.</p>
+                    </li>
+                    <li class="suppliers-items__item">
+                        <h3 class="suppliers-items__name">Переплётные и вспомогательные материалы</h3>
+                        <p class="suppliers-items__text">Клей для термопереплёта, ламинационная плёнка, упаковочные материалы, поддоны.</p>
+                    </li>
+                </ul>
+                <p class="suppliers-items__note">Нет вашей позиции в списке? Всё равно напишите: если материал нужен типографии, мы его рассмотрим.</p>
+            </div>
+        </section>
+
+        <section class="suppliers-need">
+            <div class="container">
+                <h2 class="suppliers__h2">Что для нас <span>важно</span></h2>
+                <ul class="suppliers-need__list">
+                    <li class="suppliers-need__item">
+                        <span class="suppliers-need__num">1</span>
+                        <div>
+                            <h3 class="suppliers-need__name">Конкурентная цена</h3>
+                            <p class="suppliers-need__text">Выгодные условия при постоянных закупках, оптовые цены.</p>
+                        </div>
+                    </li>
+                    <li class="suppliers-need__item">
+                        <span class="suppliers-need__num">2</span>
+                        <div>
+                            <h3 class="suppliers-need__name">Стабильное качество</h3>
+                            <p class="suppliers-need__text">Одинаковые характеристики от партии к партии, документы на материалы.</p>
+                        </div>
+                    </li>
+                    <li class="suppliers-need__item">
+                        <span class="suppliers-need__num">3</span>
+                        <div>
+                            <h3 class="suppliers-need__name">Доставка в срок</h3>
+                            <p class="suppliers-need__text">Поставка в Реж (Свердловская область) без срывов и с понятными сроками.</p>
+                        </div>
+                    </li>
+                    <li class="suppliers-need__item">
+                        <span class="suppliers-need__num">4</span>
+                        <div>
+                            <h3 class="suppliers-need__name">Понятные условия</h3>
+                            <p class="suppliers-need__text">Прозрачный прайс, условия оплаты и минимальные партии.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="suppliers-steps">
+            <div class="container">
+                <h2 class="suppliers__h2">Как это <span>работает</span></h2>
+                <ol class="suppliers-steps__list">
+                    <li class="suppliers-steps__item">
+                        <span class="suppliers-steps__num">1</span>
+                        <span class="suppliers-steps__text">Вы присылаете предложение: что поставляете, цены, условия</span>
+                    </li>
+                    <li class="suppliers-steps__item">
+                        <span class="suppliers-steps__num">2</span>
+                        <span class="suppliers-steps__text">Закупщик типографии изучает его и сравнивает с текущими поставщиками</span>
+                    </li>
+                    <li class="suppliers-steps__item">
+                        <span class="suppliers-steps__num">3</span>
+                        <span class="suppliers-steps__text">Связываемся с подходящими компаниями, договариваемся о пробной партии</span>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="suppliers-cta">
+            <div class="container">
+                <div class="suppliers-cta__card">
+                    <h2 class="suppliers-cta__title">Готовы предложить свои материалы?</h2>
+                    <p class="suppliers-cta__text">Оставьте контакты и ссылку на прайс-лист, или напишите нам на
+                        <a href="mailto:info@lazurprint.ru" class="suppliers-cta__link">info@lazurprint.ru</a>
+                        либо позвоните: <a href="tel:+73432272323" class="suppliers-cta__link">+7 (343) 227-23-23</a>.</p>
+                    <a href="#offer" class="suppliers__btn suppliers__btn--light" role="button" data-open-form
+                        data-form-title="Предложение для типографии"
+                        data-form-desc="Расскажите, что вы поставляете, и оставьте контакты. Закупщик типографии изучит предложение и свяжется с вами."
+                        data-form-text="Предложение поставщика.&#10;Компания: &#10;Что поставляем: &#10;Ссылка на прайс-лист: ">Отправить предложение</a>
+                </div>
+            </div>
+        </section>
+    </main>
+    @@include('html/footer.html', {})
+
+</body>
+
+</html>

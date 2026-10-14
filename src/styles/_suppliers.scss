@@ -1,0 +1,322 @@
+/* suppliers.html — страница «Поставщикам» (запрос предложений) и полоса-приглашение на главной (.suppliers-strip) */
+.suppliers {
+    padding: 100px 0 40px;
+    background: linear-gradient(180deg, #f3f8ff 0%, #ffffff 100%);
+
+    &__hero {
+        max-width: 860px;
+        padding: 20px 0 10px;
+    }
+
+    &__badge {
+        display: inline-block;
+        margin-bottom: 20px;
+        padding: 8px 18px;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--color-primary);
+        background: #e4edff;
+        border-radius: 999px;
+    }
+
+    &__title {
+        margin-bottom: 20px;
+        font-size: 46px;
+        line-height: 1.15;
+        color: var(--color-galaxy);
+
+        span {
+            background: linear-gradient(135deg, #3E77FB, #29bfd0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        @include md {
+            font-size: 32px;
+        }
+    }
+
+    &__lead {
+        margin-bottom: 30px;
+        font-size: 19px;
+        line-height: 1.55;
+        color: var(--color-night-rider);
+
+        @include md {
+            font-size: 17px;
+        }
+    }
+
+    &__hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 20px;
+    }
+
+    &__deadline {
+        font-weight: 700;
+        color: var(--color-galaxy);
+    }
+
+    &__btn {
+        display: inline-block;
+        padding: 16px 34px;
+        font-size: 17px;
+        font-weight: 700;
+        color: #fff;
+        background: linear-gradient(135deg, #3E77FB, #29bfd0);
+        border-radius: 14px;
+        box-shadow: 0 10px 28px rgba(62, 119, 251, 0.3);
+        transition: transform .2s ease, box-shadow .2s ease;
+
+        @media (any-hover: hover) {
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 14px 34px rgba(62, 119, 251, 0.4);
+            }
+        }
+
+        &--light {
+            color: var(--color-galaxy);
+            background: #fff;
+            box-shadow: 0 10px 28px rgba(8, 31, 92, 0.25);
+        }
+    }
+
+    &__h2 {
+        margin-bottom: 32px;
+        font-size: 34px;
+        color: var(--color-galaxy);
+
+        span {
+            color: var(--color-primary);
+        }
+
+        @include md {
+            font-size: 26px;
+        }
+    }
+}
+
+.suppliers-items,
+.suppliers-need,
+.suppliers-steps {
+    padding: 40px 0;
+}
+
+.suppliers-items {
+    &__list {
+        @include listReset;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+
+        @include xl {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @include md {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__item {
+        padding: 28px 24px;
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(8, 31, 92, 0.08);
+        border-top: 4px solid var(--color-primary);
+    }
+
+    &__name {
+        margin-bottom: 12px;
+        font-size: 20px;
+        line-height: 1.25;
+        color: var(--color-galaxy);
+    }
+
+    &__text {
+        margin: 0;
+        line-height: 1.5;
+        color: var(--color-dim-gray);
+    }
+
+    &__note {
+        margin: 24px 0 0;
+        font-size: 17px;
+        color: var(--color-night-rider);
+    }
+}
+
+.suppliers-need {
+    background: #f3f8ff;
+
+    &__list {
+        @include listReset;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px 40px;
+
+        @include lm {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__item {
+        display: flex;
+        gap: 18px;
+        align-items: flex-start;
+    }
+
+    &__num {
+        flex: 0 0 44px;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        font-weight: 700;
+        color: #fff;
+        background: linear-gradient(135deg, #3E77FB, #29bfd0);
+        border-radius: 50%;
+    }
+
+    &__name {
+        margin-bottom: 6px;
+        font-size: 20px;
+        color: var(--color-galaxy);
+    }
+
+    &__text {
+        margin: 0;
+        line-height: 1.5;
+        color: var(--color-dim-gray);
+    }
+}
+
+.suppliers-steps {
+    &__list {
+        @include listReset;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+
+        @include lm {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__item {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding: 24px;
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(8, 31, 92, 0.08);
+    }
+
+    &__num {
+        font-size: 38px;
+        font-weight: 700;
+        line-height: 1;
+        color: var(--color-primary);
+    }
+
+    &__text {
+        line-height: 1.5;
+        color: var(--color-night-rider);
+    }
+}
+
+.suppliers-cta {
+    padding: 40px 0 90px;
+
+    &__card {
+        padding: 48px 40px;
+        text-align: center;
+        color: #fff;
+        background: linear-gradient(135deg, #3E77FB, #29bfd0);
+        border-radius: 24px;
+
+        @include md {
+            padding: 32px 20px;
+        }
+    }
+
+    &__title {
+        margin-bottom: 14px;
+        font-size: 32px;
+        color: #fff;
+
+        @include md {
+            font-size: 24px;
+        }
+    }
+
+    &__text {
+        max-width: 640px;
+        margin: 0 auto 28px;
+        font-size: 18px;
+        line-height: 1.5;
+    }
+
+    &__link {
+        color: #fff;
+        text-decoration: underline;
+    }
+}
+
+/* Полоса-приглашение для поставщиков внизу главной */
+.suppliers-strip {
+    padding: 10px 0 60px;
+
+    &__card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 28px 36px;
+        background: linear-gradient(135deg, #081f5c, #1a4ab8);
+        border-radius: 20px;
+        color: #fff;
+
+        @include lm {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 24px 20px;
+        }
+    }
+
+    &__title {
+        margin-bottom: 6px;
+        font-size: 24px;
+        color: #fff;
+    }
+
+    &__text {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.45;
+        opacity: .9;
+    }
+
+    &__btn {
+        flex: 0 0 auto;
+        padding: 14px 28px;
+        font-weight: 700;
+        color: var(--color-galaxy);
+        background: #fff;
+        border-radius: 12px;
+        transition: transform .2s ease;
+
+        @media (any-hover: hover) {
+            &:hover {
+                transform: translateY(-2px);
+            }
+        }
+    }
+}
