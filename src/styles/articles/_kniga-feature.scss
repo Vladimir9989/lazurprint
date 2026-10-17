@@ -1,0 +1,727 @@
+/* ============================================================
+   Новость «Книга под ключ: дизайн, корректура, вёрстка и печать в одной типографии» (news63.html)
+   Индивидуальный стиль материала. Префикс .kniga- чтобы не пересекаться
+   с остальными оформлениями статей/новостей.
+   Палитра — бордо (#a3213f) на тёплой «бумажной» подложке (#fbf4e6) с песочным вторым
+   акцентом: цвета выбраны под ретро-иллюстрации новости; от синего/циана,
+   терракоты и зелёных соседей отличается глубоким винным оттенком.
+   ============================================================ */
+
+.kniga-article {
+    --kniga-ink: #2a1620;
+    --kniga-accent: #a3213f;
+    --kniga-accent2: #e6cf9f;
+    --kniga-bg: #fbf4e6;
+    --kniga-line: rgba(42, 22, 32, 0.14);
+    --kniga-radius: 22px;
+    --kniga-shadow-soft: 0 8px 22px rgba(42, 22, 32, 0.12);
+    --kniga-shadow-card: 0 10px 28px rgba(42, 22, 32, 0.22);
+    color: var(--color-night-rider);
+
+    .news__title {
+        font-size: clamp(28px, 3.6vw, 44px);
+        line-height: 1.16;
+        color: var(--kniga-ink);
+    }
+}
+
+/* ---------- Кнопки ---------- */
+.kniga-btn {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 15px 32px;
+    border-radius: 50px;
+    background: var(--kniga-accent);
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(163, 33, 63, 0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 26px rgba(163, 33, 63, 0.45);
+    }
+
+    &--light {
+        background: #fff;
+        color: var(--kniga-accent);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+}
+
+/* ---------- HERO ---------- */
+.kniga-hero {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 40px;
+    align-items: center;
+    margin: 26px 0 44px;
+    padding: 40px;
+    border-radius: 30px;
+    border: 1px solid var(--kniga-line);
+    background: var(--kniga-bg);
+
+    @include lg {
+        grid-template-columns: 1fr;
+    }
+
+    @include md {
+        padding: 26px 20px;
+        border-radius: 20px;
+    }
+
+    &__blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(55px);
+        pointer-events: none;
+        opacity: 0.35;
+
+        &--1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            right: -50px;
+            background: var(--kniga-accent);
+        }
+
+        &--2 {
+            width: 260px;
+            height: 260px;
+            bottom: -110px;
+            left: -60px;
+            background: var(--kniga-accent2);
+        }
+    }
+
+    &__text,
+    &__media {
+        position: relative;
+        z-index: 1;
+    }
+
+    &__eyebrow {
+        display: inline-block;
+        padding: 7px 16px;
+        margin-bottom: 18px;
+        border-radius: 50px;
+        background: var(--color-white);
+        box-shadow: var(--kniga-shadow-soft);
+        color: var(--kniga-accent);
+        font-weight: 700;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    &__lead {
+        margin-bottom: 14px;
+        font-size: 18px;
+        line-height: 1.6;
+    }
+
+    /* веер из трёх плакатов */
+    &__media {
+        position: relative;
+        height: 420px;
+
+        @include lg {
+            height: 380px;
+            max-width: 460px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        @include md {
+            height: 330px;
+        }
+    }
+}
+
+.kniga-fan {
+    position: absolute;
+    top: 0;
+    width: 52%;
+    margin: 0;
+    padding: 6px;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: var(--kniga-shadow-card);
+    transition: transform 0.3s ease;
+
+    img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 3px;
+    }
+
+    &--1 {
+        left: 0;
+        top: 30px;
+        transform: rotate(-7deg);
+    }
+
+    &--2 {
+        left: 24%;
+        top: 0;
+        z-index: 2;
+        transform: rotate(0deg);
+    }
+
+    &--3 {
+        right: 0;
+        top: 34px;
+        transform: rotate(7deg);
+    }
+
+    &:hover {
+        z-index: 3;
+        transform: rotate(0deg) scale(1.04);
+    }
+
+    @include md {
+        width: 46%;
+
+        &--1 {
+            left: 3%;
+        }
+
+        &--2 {
+            left: 27%;
+        }
+
+        &--3 {
+            right: 3%;
+        }
+    }
+}
+
+/* ---------- Разделы ---------- */
+.kniga-section {
+    margin-bottom: 52px;
+
+    &__title {
+        margin-bottom: 16px;
+        font-size: clamp(22px, 2.6vw, 30px);
+        color: var(--kniga-ink);
+    }
+
+    &__text {
+        max-width: 860px;
+        margin-bottom: 14px;
+        font-size: 17px;
+        line-height: 1.7;
+    }
+}
+
+/* ---------- Шаги (что входит) ---------- */
+.kniga-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin: 26px 0 0;
+    padding: 0;
+    list-style: none;
+
+    @include lg {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include md {
+        grid-template-columns: 1fr;
+    }
+}
+
+.kniga-step {
+    position: relative;
+    padding: 24px 22px 22px;
+    border-radius: var(--kniga-radius);
+    border: 1px solid var(--kniga-line);
+    background: var(--kniga-bg);
+    overflow: hidden;
+
+    &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 5px;
+        background: linear-gradient(180deg, var(--kniga-accent), var(--kniga-accent2));
+    }
+
+    &__num {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 34px;
+        font-weight: 800;
+        line-height: 1;
+        color: var(--kniga-accent);
+        opacity: 0.85;
+    }
+
+    &__title {
+        margin-bottom: 8px;
+        font-size: 19px;
+        color: var(--kniga-ink);
+    }
+
+    &__text {
+        font-size: 15px;
+        line-height: 1.6;
+    }
+}
+
+/* ---------- Слайдер плакатов ---------- */
+.kniga-slider {
+    margin-top: 26px;
+    padding-bottom: 8px;
+
+    &__bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        margin-top: 22px;
+    }
+
+    &__pagination {
+        position: static;
+        width: auto !important;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        .swiper-pagination-bullet {
+            width: 9px;
+            height: 9px;
+            margin: 0 !important;
+            background: var(--kniga-accent);
+            opacity: 0.3;
+        }
+
+        .swiper-pagination-bullet-active {
+            opacity: 1;
+        }
+    }
+
+    &__btn {
+        position: relative;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 2px solid var(--kniga-accent);
+        background: #fff;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: background 0.2s ease;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            border-top: 2px solid var(--kniga-accent);
+            border-right: 2px solid var(--kniga-accent);
+            transition: border-color 0.2s ease;
+        }
+
+        &--prev::after {
+            transform: translate(-30%, -50%) rotate(-135deg);
+        }
+
+        &--next::after {
+            transform: translate(-70%, -50%) rotate(45deg);
+        }
+
+        &:hover {
+            background: var(--kniga-accent);
+
+            &::after {
+                border-color: #fff;
+            }
+        }
+
+        &.swiper-button-disabled {
+            opacity: 0.35;
+            cursor: default;
+        }
+    }
+}
+
+.kniga-poster {
+    margin: 0;
+    padding: 8px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: var(--kniga-shadow-card);
+
+    img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 4px;
+    }
+}
+
+/* ---------- Картинка + текст ---------- */
+.kniga-split {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 40px;
+    align-items: center;
+
+    @include lg {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    &__media {
+        margin: 0;
+        padding: 10px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: var(--kniga-shadow-card);
+        transform: rotate(-2deg);
+
+        img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+
+        @include lg {
+            max-width: 420px;
+            margin: 0 auto;
+        }
+    }
+}
+
+/* ---------- Открытки: «россыпь» ---------- */
+.kniga-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 26px 22px;
+    margin: 30px 0 0;
+    padding: 0 6px;
+    list-style: none;
+
+    @include lg {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include md {
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+}
+
+.kniga-card {
+    padding: 8px;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: var(--kniga-shadow-card);
+    transition: transform 0.3s ease;
+
+    img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 3px;
+    }
+
+    &:nth-child(6n + 1) {
+        transform: rotate(-2deg);
+    }
+
+    &:nth-child(6n + 2) {
+        transform: rotate(1.5deg) translateY(14px);
+    }
+
+    &:nth-child(6n + 3) {
+        transform: rotate(-1deg);
+    }
+
+    &:nth-child(6n + 4) {
+        transform: rotate(2deg);
+    }
+
+    &:nth-child(6n + 5) {
+        transform: rotate(-1.5deg) translateY(10px);
+    }
+
+    &:nth-child(6n) {
+        transform: rotate(1deg);
+    }
+
+    &:hover {
+        transform: rotate(0deg) scale(1.03);
+        z-index: 2;
+    }
+
+    @include md {
+        &:nth-child(n) {
+            transform: none;
+        }
+    }
+}
+
+/* ---------- Наклейки ---------- */
+.kniga-stickers {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin: 28px 0 0;
+    padding: 0;
+    list-style: none;
+
+    @include lg {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.kniga-sticker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    padding: 6px;
+    border-radius: var(--kniga-radius);
+    overflow: hidden;
+    box-shadow: var(--kniga-shadow-soft);
+    transition: transform 0.25s ease;
+
+    &--dark {
+        background: #000;
+    }
+
+    &--light {
+        background: #fff;
+        border: 1px solid var(--kniga-line);
+    }
+
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    &:hover {
+        transform: translateY(-4px) rotate(-1deg);
+    }
+}
+
+/* ---------- Как это происходит ---------- */
+.kniga-flow {
+    counter-reset: kniga-flow;
+    display: grid;
+    gap: 14px;
+    margin: 24px 0 0;
+    padding: 0;
+    max-width: 860px;
+    list-style: none;
+
+    &__item {
+        position: relative;
+        padding: 16px 20px 16px 74px;
+        border-radius: 16px;
+        background: var(--kniga-bg);
+        border: 1px solid var(--kniga-line);
+        font-size: 16px;
+        line-height: 1.6;
+
+        &::before {
+            counter-increment: kniga-flow;
+            content: counter(kniga-flow);
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--kniga-accent);
+            color: #fff;
+            font-weight: 800;
+            font-size: 18px;
+            line-height: 40px;
+            text-align: center;
+        }
+
+        b {
+            color: var(--kniga-ink);
+        }
+    }
+}
+
+/* ---------- Финальный блок ---------- */
+.kniga-final {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 20px;
+    padding: 38px 40px;
+    border-radius: 28px;
+    background: linear-gradient(135deg, #7d1730, var(--kniga-accent) 60%, #c2405a);
+    color: #fff;
+
+    @include lg {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    @include md {
+        padding: 28px 22px;
+    }
+
+    &__title {
+        margin-bottom: 12px;
+        font-size: clamp(22px, 2.6vw, 30px);
+        color: #fff;
+    }
+
+    &__lead {
+        max-width: 640px;
+        font-size: 16px;
+        line-height: 1.65;
+    }
+
+    &__link {
+        color: #fff;
+        text-decoration: underline;
+    }
+
+    .kniga-btn {
+        flex-shrink: 0;
+        margin-top: 0;
+    }
+}
+
+/* ---------- Анонс на главной (index.html, .kniga-teaser) ---------- */
+.kniga-teaser {
+    padding: 20px 0 10px;
+
+    &__card {
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 30px;
+        align-items: center;
+        padding: 36px 44px;
+        border-radius: 28px;
+        border: 1px solid rgba(42, 22, 32, 0.14);
+        background: #fbf4e6;
+
+        @include lg {
+            grid-template-columns: 1fr;
+            padding: 30px 26px;
+        }
+
+        @include md {
+            padding: 24px 18px;
+            border-radius: 20px;
+        }
+    }
+
+    &__eyebrow {
+        display: inline-block;
+        margin-bottom: 14px;
+        padding: 6px 14px;
+        border-radius: 50px;
+        background: #fff;
+        box-shadow: 0 6px 16px rgba(42, 22, 32, 0.1);
+        color: #a3213f;
+        font-weight: 700;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    &__title {
+        margin-bottom: 12px;
+        font-size: clamp(26px, 3vw, 38px);
+        line-height: 1.15;
+        color: #2a1620;
+    }
+
+    &__desc {
+        max-width: 520px;
+        margin-bottom: 22px;
+        font-size: 17px;
+        line-height: 1.6;
+        color: #333;
+    }
+
+    &__btn {
+        display: inline-block;
+        padding: 14px 32px;
+        border-radius: 50px;
+        background: #a3213f;
+        color: #fff;
+        font-weight: 700;
+        font-size: 16px;
+        text-decoration: none;
+        box-shadow: 0 8px 20px rgba(163, 33, 63, 0.35);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 26px rgba(163, 33, 63, 0.45);
+        }
+    }
+
+    &__media {
+        position: relative;
+        height: 300px;
+
+        @include lg {
+            max-width: 400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        @include md {
+            height: 250px;
+        }
+    }
+
+    &__img {
+        position: absolute;
+        top: 0;
+        width: 32%;
+        height: auto;
+        padding: 5px;
+        background: #fff;
+        border-radius: 5px;
+        box-shadow: 0 10px 24px rgba(42, 22, 32, 0.22);
+
+        &--1 {
+            left: 4%;
+            top: 22px;
+            transform: rotate(-7deg);
+        }
+
+        &--2 {
+            left: 32%;
+            z-index: 2;
+        }
+
+        &--3 {
+            right: 4%;
+            top: 24px;
+            transform: rotate(7deg);
+        }
+    }
+}
