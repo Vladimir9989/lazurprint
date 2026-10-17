@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../src/bootstrap.php';
 
 $user = current_user();
-if (!$user || $user['status'] !== 'active') {
+if (!$user || $user['status'] !== 'active' || $user['role'] === 'manager') {
     http_response_code(403);
     exit;
 }

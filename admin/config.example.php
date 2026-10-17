@@ -19,7 +19,7 @@ return array(
     'uploads_dir' => __DIR__ . '/uploads',
 
     // Куда уходят письма админу (новая заявка на регистрацию, карточка готова к публикации)
-    'admin_email' => 'agapovladimir89@gmail.com',
+    'admin_email' => 'agapov_89@bk.ru',
 
     // Путь к catalog-suvenir.html для разбора реального каталога сайта (этап 2).
     // На хостинге: /home/c112136/lazurprint.ru/www/catalog-suvenir.html

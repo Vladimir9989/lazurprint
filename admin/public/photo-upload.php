@@ -4,7 +4,7 @@ require_once __DIR__ . '/../src/bootstrap.php';
 header('Content-Type: application/json; charset=utf-8');
 
 $user = current_user();
-if (!$user || $user['status'] !== 'active' || $user['role'] === 'viewer') {
+if (!$user || $user['status'] !== 'active' || $user['role'] === 'viewer' || $user['role'] === 'manager') {
     http_response_code(403);
     echo json_encode(array('error' => 'Недостаточно прав'));
     exit;

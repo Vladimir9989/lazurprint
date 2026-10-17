@@ -12,3 +12,7 @@
 !/admin/uploads/.htaccess
 /mail-config.php
 /mail-password-new.local.txt
+
+# Обмен заданиями Кодер <-> Тестер (содержимое не в git, README остаётся)
+/qa/tasks/
+/qa/reports/

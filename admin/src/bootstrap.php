@@ -11,10 +11,16 @@ require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/products.php';
 require_once __DIR__ . '/photos.php';
 require_once __DIR__ . '/site_catalog.php';
+require_once __DIR__ . '/leads_schema.php';
+require_once __DIR__ . '/leads.php';
+require_once __DIR__ . '/samples.php';
 require_once __DIR__ . '/../templates/layout.php';
 
 $is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
     || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+
+// Таблицы раздела «Клиенты» и роль «менеджер» создаются сами при первом заходе после обновления.
+leads_ensure_schema();
 
 session_set_cookie_params(array(
     'lifetime' => 0,
@@ -28,6 +34,9 @@ session_name('lazur_admin_sid');
 session_start();
 
 auth_bootstrap($is_https);
+
+// Страницы, доступные роли «менеджер» (остальные require_login() отправляют его на leads.php).
+define('MANAGER_PAGES', array('leads.php', 'lead.php', 'lead-action.php', 'samples.php', 'sample.php', 'sample-zip.php', 'profile.php'));
 
 function h($value) {
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
@@ -68,6 +77,10 @@ function require_login() {
     }
     if ($user['status'] !== 'active') {
         redirect('pending.php');
+    }
+    // Менеджер видит только свой раздел; учёт продукции для него закрыт.
+    if ($user['role'] === 'manager' && !in_array(basename($_SERVER['SCRIPT_NAME']), MANAGER_PAGES, true)) {
+        redirect('leads.php');
     }
     return $user;
 }

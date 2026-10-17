@@ -3,7 +3,8 @@
 function config($key) {
     static $config = null;
     if ($config === null) {
-        $config = require __DIR__ . '/../config.local.php';
+        $override = getenv('LAZUR_ADMIN_CONFIG');
+        $config = require ($override ? $override : __DIR__ . '/../config.local.php');
     }
     if (!array_key_exists($key, $config)) {
         throw new Exception('Нет ключа конфига: ' . $key);

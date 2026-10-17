@@ -47,7 +47,11 @@ function notify_once($to, $event_type, $subject, $body, $product_id = null) {
     if ($stmt->fetch()) {
         return;
     }
-    send_mail($to, $subject, $body);
+    // Неудачная отправка в журнал не пишется — иначе письмо считалось бы ушедшим и
+    // больше не повторялось (так терялись уведомления при неверном пароле SMTP).
+    if (!send_mail($to, $subject, $body)) {
+        return;
+    }
     db()->prepare('INSERT INTO mail_log (to_email, event_type, related_product_id) VALUES (?, ?, ?)')
         ->execute(array($to, $event_type, $product_id));
 }

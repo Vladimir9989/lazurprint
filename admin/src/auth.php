@@ -6,6 +6,7 @@ define('ROLE_LABELS', array(
     'photo' => 'Фотограф',
     'accounting' => 'Бухгалтерия',
     'viewer' => 'Руководитель',
+    'manager' => 'Менеджер по продажам',
 ));
 
 define('REMEMBER_COOKIE', 'lazur_remember');
@@ -178,10 +179,12 @@ function logout_user() {
 }
 
 // Возвращает true при успехе, либо строку с текстом ошибки.
-function register_user($first_name, $last_name, $email, $password, $role, $access_code) {
+function register_user($first_name, $last_name, $email, $password, $role, $access_code, $position = '', $phone = '') {
     $first_name = trim($first_name);
     $last_name = trim($last_name);
     $email = trim(mb_strtolower($email));
+    $position = trim($position);
+    $phone = trim($phone);
 
     if ($first_name === '' || $last_name === '' || $email === '' || $password === '') {
         return 'Заполните все поля.';
@@ -195,6 +198,9 @@ function register_user($first_name, $last_name, $email, $password, $role, $acces
     if (!isset(ROLE_LABELS[$role])) {
         return 'Выберите роль.';
     }
+    if ($role === 'manager' && ($position === '' || $phone === '')) {
+        return 'Менеджеру нужно указать должность и телефон: они подставляются в подпись писем.';
+    }
     if (!hash_equals(config('registration_access_code'), $access_code)) {
         return 'Неверный код доступа.';
     }
@@ -205,9 +211,9 @@ function register_user($first_name, $last_name, $email, $password, $role, $acces
         return 'Пользователь с такой почтой уже зарегистрирован.';
     }
 
-    db()->prepare('INSERT INTO users (first_name, last_name, email, password_hash, role, status)
-        VALUES (?, ?, ?, ?, ?, "pending")')
-        ->execute(array($first_name, $last_name, $email, password_hash($password, PASSWORD_DEFAULT), $role));
+    db()->prepare('INSERT INTO users (first_name, last_name, email, password_hash, role, status, position, phone)
+        VALUES (?, ?, ?, ?, ?, "pending", ?, ?)')
+        ->execute(array($first_name, $last_name, $email, password_hash($password, PASSWORD_DEFAULT), $role, $position, $phone));
 
     notify_new_registration(array(
         'first_name' => $first_name, 'last_name' => $last_name, 'email' => $email, 'role' => $role,
@@ -226,6 +232,8 @@ function confirm_user($user_id) {
     db()->prepare("UPDATE users SET status = 'active', confirmed_at = NOW() WHERE id = ?")
         ->execute(array($user_id));
     notify_registration_confirmed($user_row);
+    // Письма, записанные на этого менеджера по ФИО (например, первая десятка), привязываются к нему.
+    leads_resolve_names();
 }
 
 function list_pending_users() {

@@ -45,13 +45,14 @@ flash_messages();
 <div class="panel">
     <h2>Заявки на регистрацию (<?php echo count($pending); ?>)</h2>
     <table class="table">
-        <thead><tr><th>Имя</th><th>Почта</th><th>Роль</th><th>Подана</th><th></th></tr></thead>
+        <thead><tr><th>Имя</th><th>Почта</th><th>Роль</th><th>Должность / телефон</th><th>Подана</th><th></th></tr></thead>
         <tbody>
         <?php foreach ($pending as $p): ?>
         <tr>
             <td><?php echo h($p['first_name'] . ' ' . $p['last_name']); ?></td>
             <td><?php echo h($p['email']); ?></td>
             <td><?php echo h(role_label($p['role'])); ?></td>
+            <td><?php echo h(trim($p['position'] . ' ' . $p['phone'])); ?></td>
             <td><?php echo h(date('d.m.Y H:i', strtotime($p['created_at']))); ?></td>
             <td>
                 <form method="post">
@@ -71,7 +72,7 @@ flash_messages();
 <div class="panel">
     <h2>Активные и заблокированные</h2>
     <table class="table">
-        <thead><tr><th>Имя</th><th>Почта</th><th>Роль</th><th>Статус</th><th>Последний вход</th><th>Действия</th></tr></thead>
+        <thead><tr><th>Имя</th><th>Почта</th><th>Роль</th><th>Должность / телефон</th><th>Статус</th><th>Последний вход</th><th>Действия</th></tr></thead>
         <tbody>
         <?php foreach ($active as $a): $is_self = (int) $a['id'] === (int) $user['id']; ?>
         <tr>
@@ -94,6 +95,7 @@ flash_messages();
                 </form>
                 <?php endif; ?>
             </td>
+            <td><?php echo h(trim($a['position'] . ' ' . $a['phone'])); ?></td>
             <td><?php echo $a['status'] === 'active' ? 'Активен' : 'Заблокирован'; ?></td>
             <td><?php echo $a['last_login_at'] ? h(date('d.m.Y H:i', strtotime($a['last_login_at']))) : '—'; ?></td>
             <td>
