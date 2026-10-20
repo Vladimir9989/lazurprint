@@ -1,0 +1,348 @@
+/* ============================================================
+   Новость «Наша реклама в новом выпуске «Планеты молодых»» (news64.html)
+   Индивидуальный стиль материала. Префикс .pmad- чтобы не пересекаться
+   с остальными оформлениями статей/новостей.
+   Палитра — тёмно-синие чернила (#14213d) + оранжевый акцент (#f26a1b) и лимонный (#ffd23f)
+   на тёплой кремовой подложке (#fff4e8). Оранжево-жёлтая «газетная» гамма, отличается от
+   синих/циановых, бордовой (.kniga-) и терракотовой палитр соседних материалов.
+   ============================================================ */
+
+.pmad-article {
+    --pmad-ink: #14213d;
+    --pmad-accent: #f26a1b;
+    --pmad-accent2: #ffd23f;
+    --pmad-bg: #fff4e8;
+    --pmad-line: rgba(20, 33, 61, 0.14);
+    --pmad-radius: 22px;
+    --pmad-shadow-soft: 0 8px 22px rgba(20, 33, 61, 0.14);
+    color: var(--color-night-rider);
+
+    .news__title {
+        font-size: clamp(28px, 3.6vw, 44px);
+        line-height: 1.16;
+        color: var(--pmad-ink);
+    }
+}
+
+/* ---------- Кнопки ---------- */
+.pmad-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.pmad-btn {
+    display: inline-block;
+    padding: 14px 30px;
+    border-radius: 50px;
+    border: 2px solid var(--pmad-accent);
+    background: var(--pmad-accent);
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(242, 106, 27, 0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 26px rgba(242, 106, 27, 0.45);
+    }
+
+    &--ghost {
+        background: transparent;
+        color: var(--pmad-ink);
+        border-color: var(--pmad-ink);
+        box-shadow: none;
+
+        &:hover {
+            box-shadow: var(--pmad-shadow-soft);
+        }
+    }
+
+    &--light {
+        background: var(--pmad-accent2);
+        border-color: var(--pmad-accent2);
+        color: var(--pmad-ink);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+}
+
+/* ---------- HERO ---------- */
+.pmad-hero {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 40px;
+    align-items: center;
+    margin: 26px 0 34px;
+    padding: 40px;
+    border-radius: 30px;
+    border: 1px solid var(--pmad-line);
+    background: var(--pmad-bg);
+
+    @include lg {
+        grid-template-columns: 1fr;
+    }
+
+    @include md {
+        padding: 26px 20px;
+        border-radius: 20px;
+    }
+
+    &__blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(55px);
+        pointer-events: none;
+        opacity: 0.4;
+
+        &--1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            right: -50px;
+            background: var(--pmad-accent2);
+        }
+
+        &--2 {
+            width: 240px;
+            height: 240px;
+            bottom: -110px;
+            left: -60px;
+            background: var(--pmad-accent);
+        }
+    }
+
+    &__text,
+    &__media {
+        position: relative;
+        z-index: 1;
+    }
+
+    &__eyebrow {
+        display: inline-block;
+        padding: 7px 16px;
+        margin-bottom: 18px;
+        border-radius: 50px;
+        background: var(--color-white);
+        box-shadow: var(--pmad-shadow-soft);
+        color: var(--pmad-accent);
+        font-weight: 700;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    &__lead {
+        font-size: 18px;
+        line-height: 1.6;
+
+        & + & {
+            margin-top: 12px;
+        }
+    }
+
+    &__media {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0;
+        padding: 10px 0;
+
+        @include md {
+            padding: 0;
+        }
+    }
+}
+
+.pmad-sheet {
+    flex: 0 1 46%;
+    margin: 0;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 14px 34px rgba(20, 33, 61, 0.28);
+
+    img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 6px;
+    }
+
+    &--cover {
+        transform: rotate(-4deg) translateX(8%);
+        z-index: 1;
+    }
+
+    &--ad {
+        transform: rotate(3deg) translateX(-8%);
+        z-index: 2;
+    }
+}
+
+/* ---------- Разделы ---------- */
+.pmad-section {
+    margin-bottom: 40px;
+
+    &__title {
+        margin-bottom: 16px;
+        font-size: clamp(22px, 2.6vw, 30px);
+        color: var(--pmad-ink);
+    }
+
+    &__text {
+        font-size: 17px;
+        line-height: 1.7;
+    }
+}
+
+/* ---------- Факты о выпуске ---------- */
+.pmad-facts {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 22px;
+    padding: 0;
+    list-style: none;
+
+    @include lg {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    &__item {
+        padding: 22px 20px;
+        border-radius: var(--pmad-radius);
+        border: 1px solid var(--pmad-line);
+        border-top: 5px solid var(--pmad-accent);
+        background: #fff;
+    }
+
+    &__num {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 28px;
+        font-weight: 800;
+        line-height: 1.1;
+        color: var(--pmad-ink);
+    }
+
+    &__label {
+        font-size: 15px;
+        line-height: 1.45;
+    }
+}
+
+/* ---------- Реклама ---------- */
+.pmad-ad {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 40px;
+    align-items: center;
+    padding: 36px;
+    border-radius: 30px;
+    background: var(--pmad-ink);
+    color: #fff;
+
+    @include lg {
+        grid-template-columns: 1fr;
+    }
+
+    @include md {
+        padding: 22px 16px;
+        border-radius: 20px;
+    }
+
+    &__media {
+        margin: 0;
+        justify-self: center;
+        max-width: 380px;
+
+        img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        figcaption {
+            margin-top: 10px;
+            font-size: 13px;
+            opacity: 0.7;
+            text-align: center;
+        }
+    }
+
+    &__title {
+        margin-bottom: 14px;
+        font-size: clamp(22px, 2.6vw, 30px);
+        color: var(--pmad-accent2);
+    }
+
+    &__text {
+        font-size: 17px;
+        line-height: 1.7;
+
+        & + & {
+            margin-top: 12px;
+        }
+    }
+
+    &__chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 18px 0 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    &__chip {
+        padding: 7px 16px;
+        border-radius: 50px;
+        background: rgba(255, 255, 255, 0.12);
+        font-size: 14px;
+        font-weight: 600;
+    }
+}
+
+/* ---------- Финал ---------- */
+.pmad-final {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    margin: 40px 0 10px;
+    padding: 36px 40px;
+    border-radius: 30px;
+    background: linear-gradient(135deg, var(--pmad-accent), #f0912b);
+    color: #fff;
+
+    @include lg {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    @include md {
+        padding: 26px 20px;
+        border-radius: 20px;
+    }
+
+    &__title {
+        margin-bottom: 10px;
+        font-size: clamp(22px, 2.6vw, 30px);
+    }
+
+    &__lead {
+        font-size: 17px;
+        line-height: 1.6;
+    }
+
+    .pmad-btn {
+        flex-shrink: 0;
+    }
+}
