@@ -78,18 +78,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endforeach; ?>
                 </select>
             </div>
-            <div id="manager-fields" style="display:none;">
-                <div class="field">
-                    <label for="position">Должность (для подписи в письмах)</label>
-                    <input type="text" id="position" name="position" placeholder="менеджер по продажам, типография «Лазурь»"
-                        value="<?php echo h(isset($_POST['position']) ? $_POST['position'] : ''); ?>">
-                </div>
-                <div class="field">
-                    <label for="phone">Телефон (для подписи в письмах)</label>
-                    <input type="text" id="phone" name="phone" placeholder="+7 (343) 227-23-23"
-                        value="<?php echo h(isset($_POST['phone']) ? $_POST['phone'] : ''); ?>">
-                </div>
-            </div>
             <div class="field">
                 <label for="access_code">Код доступа</label>
                 <input type="text" id="access_code" name="access_code" required>
@@ -102,14 +90,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
 </div>
 </div>
-<script>
-(function () {
-    var role = document.getElementById('role');
-    var box = document.getElementById('manager-fields');
-    function sync() { box.style.display = role.value === 'manager' ? '' : 'none'; }
-    role.addEventListener('change', sync);
-    sync();
-})();
-</script>
 </body>
 </html>

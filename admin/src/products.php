@@ -252,7 +252,7 @@ function stale_products($days) {
 function list_work_products($user, $filters) {
     // photo_count/note_unread — вычисляемые алиасы, MySQL не даёт ссылаться на них в WHERE,
     // только в HAVING (это же справедливо и для условий по photo_count из фильтра статуса).
-    $where = array('is_archived = 0');
+    $where = array(!empty($filters['status']) && $filters['status'] === 'archived' ? 'is_archived = 1' : 'is_archived = 0');
     $having = array();
     $params = array();
 

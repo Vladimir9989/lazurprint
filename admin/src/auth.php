@@ -198,10 +198,16 @@ function register_user($first_name, $last_name, $email, $password, $role, $acces
     if (!isset(ROLE_LABELS[$role])) {
         return 'Выберите роль.';
     }
-    if ($role === 'manager' && ($position === '' || $phone === '')) {
-        return 'Менеджеру нужно указать должность и телефон: они подставляются в подпись писем.';
-    }
-    if (!hash_equals(config('registration_access_code'), $access_code)) {
+    // Руководитель регистрируется только по своему отдельному коду (общий код сотрудников ему не подходит).
+    if ($role === 'viewer') {
+        $viewer_code = (string) config_get('registration_access_code_viewer', '');
+        if ($viewer_code === '') {
+            return 'Регистрация на эту роль сейчас закрыта. Обратитесь к администратору.';
+        }
+        if (!hash_equals($viewer_code, $access_code)) {
+            return 'Неверный код доступа.';
+        }
+    } elseif (!hash_equals(config('registration_access_code'), $access_code)) {
         return 'Неверный код доступа.';
     }
 

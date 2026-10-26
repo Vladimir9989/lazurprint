@@ -1,17 +1,19 @@
 <?php
 require_once __DIR__ . '/../src/bootstrap.php';
 
-$user = require_role(array('admin', 'manager'));
+$user = require_role(array('admin', 'manager', 'viewer'));
 leads_housekeeping();
 
 $is_admin = is_admin_user($user);
+$is_viewer = $user['role'] === 'viewer'; // руководитель: тот же список, что у админа, без кнопок действий
 
 render_header('Клиенты для писем', $user, 'leads');
 flash_messages();
 
-if (!$is_admin) {
+if (!$is_admin && !$is_viewer) {
     $tab = isset($_GET['tab']) && isset(LEAD_TABS[$_GET['tab']]) ? $_GET['tab'] : 'new';
     $counts = leads_tab_counts($user);
+    $due_later = leads_due_later_count($user);
     $leads = leads_for_manager($user, $tab);
     ?>
 <div class="toolbar">
@@ -22,7 +24,7 @@ if (!$is_admin) {
 <nav class="tabs">
     <?php foreach (LEAD_TABS as $code => $def): ?>
     <a href="leads.php?tab=<?php echo h($code); ?>" class="tabs__item <?php echo $tab === $code ? 'is-active' : ''; ?>">
-        <?php echo h($def[0]); ?> <span class="tabs__count"><?php echo (int) $counts[$code]; ?></span>
+        <?php echo h($def[0]); ?> <span class="tabs__count"><?php echo (int) $counts[$code]; ?></span><?php if ($code === 'later' && $due_later > 0): ?> <span class="tabs__count tabs__count--alert" title="Пора написать повторно"><?php echo (int) $due_later; ?></span><?php endif; ?>
     </a>
     <?php endforeach; ?>
 </nav>
@@ -32,6 +34,7 @@ if (!$is_admin) {
         <?php if ($tab === 'new'): ?>Свободных клиентов пока нет. Когда появятся новые, придёт письмо на почту.
         <?php elseif ($tab === 'taken'): ?>Нет клиентов «в работе». Возьмите кого-нибудь на вкладке «Новые».
         <?php elseif ($tab === 'sent'): ?>Пока нет отправленных писем без ответа.
+        <?php elseif ($tab === 'later'): ?>Нет отложенных клиентов. Если клиент ответил «свяжемся позже», откройте его карточку и нажмите «Напомнить позже».
         <?php else: ?>Здесь пока пусто.<?php endif; ?>
 </div>
     <?php else: ?>
@@ -40,6 +43,8 @@ if (!$is_admin) {
     <thead><tr>
         <th>Компания</th><th>Сегмент</th><th>Повод</th>
         <?php if ($tab === 'sent'): ?><th>Отправлено</th><?php endif; ?>
+        <?php if ($tab === 'taken'): ?><th>Срок</th><?php endif; ?>
+        <?php if ($tab === 'later'): ?><th>Напомнить</th><?php endif; ?>
         <th>Статус</th><th></th>
     </tr></thead>
     <tbody>
@@ -57,7 +62,15 @@ if (!$is_admin) {
             <?php echo $l['sent_at'] ? h(date('d.m.Y', strtotime($l['sent_at']))) : '—'; ?>
             <?php if ($days !== null): ?><div class="dim"><?php echo (int) $days; ?> дн. назад</div><?php endif; ?>
             <?php if ($l['status'] === 'sent' && $days !== null && $days >= 7): ?><span class="badge badge--remind">пора напомнить</span><?php endif; ?>
+            <?php if ($l['status'] === 'silent'): ?><span class="badge badge--remind">напишите повторно</span><?php endif; ?>
         </td>
+        <?php endif; ?>
+        <?php if ($tab === 'taken'): $di = lead_due_info($l); ?>
+        <td><?php if ($di): ?><span class="badge badge--due-<?php echo h($di[1]); ?>"><?php echo h($di[0]); ?></span><?php endif; ?></td>
+        <?php endif; ?>
+        <?php if ($tab === 'later'): $is_due = $l['remind_at'] && $l['remind_at'] <= date('Y-m-d'); ?>
+        <td><?php echo $l['remind_at'] ? h(date('d.m.Y', strtotime($l['remind_at']))) : '—'; ?>
+            <?php if ($is_due): ?><div><span class="badge badge--remind">пора написать</span></div><?php endif; ?></td>
         <?php endif; ?>
         <td>
             <?php echo lead_badge($l['status']); ?>
@@ -96,13 +109,18 @@ $leads = leads_for_admin($filters);
 $totals = leads_status_totals();
 $managers = managers_list();
 $segments = leads_segments();
-$unnotified = leads_total_unnotified();
+$unnotified = $is_viewer ? 0 : leads_total_unnotified();
 ?>
 <div class="toolbar">
     <h1 class="h1" style="margin:0; flex:1 1 auto;">Клиенты для писем</h1>
+    <?php if ($is_viewer): ?>
+    <a href="report-managers.php" class="btn btn--sm">Отчёт по менеджерам</a>
+    <a href="leads-report.php" class="btn btn--secondary btn--sm">Отчёт по статусам</a>
+    <?php else: ?>
     <a href="lead-edit.php" class="btn">+ Добавить клиента</a>
     <a href="leads-import.php" class="btn btn--secondary btn--sm">Загрузить пачкой</a>
-    <a href="leads-report.php" class="btn btn--secondary btn--sm">Отчёт</a>
+    <a href="report-managers.php" class="btn btn--secondary btn--sm">Отчёт по менеджерам</a>
+    <a href="leads-report.php" class="btn btn--secondary btn--sm">Отчёт по статусам</a>
     <a href="leads-stoplist.php" class="btn btn--secondary btn--sm">Стоп-лист</a>
     <form method="post" action="lead-action.php" style="display:inline;"
         <?php if ($unnotified > 0): ?>data-confirm="Отправить менеджерам письмо о новых клиентах (<?php echo (int) $unnotified; ?>)?"<?php endif; ?>>
@@ -111,6 +129,7 @@ $unnotified = leads_total_unnotified();
         <button type="submit" class="btn btn--sm" <?php echo $unnotified === 0 ? 'disabled style="opacity:.5;cursor:default;"' : ''; ?>
             title="Всем менеджерам уйдёт письмо «добавлены новые клиенты»">Уведомить менеджеров (<?php echo (int) $unnotified; ?>)</button>
     </form>
+    <?php endif; ?>
 </div>
 
 <div class="chips">
@@ -145,7 +164,7 @@ $unnotified = leads_total_unnotified();
 </form>
 
 <?php if (!$leads): ?>
-<div class="empty-state">Ничего нет. Добавьте клиента или <a href="leads-import.php">загрузите файл</a>.</div>
+<div class="empty-state">Ничего нет.<?php if (!$is_viewer): ?> Добавьте клиента или <a href="leads-import.php">загрузите файл</a>.<?php endif; ?></div>
 <?php else: ?>
 <div class="panel" style="padding:0; overflow-x:auto;">
 <table class="table">

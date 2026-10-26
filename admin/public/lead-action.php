@@ -28,7 +28,7 @@ if (in_array($action, $admin_only, true) && !is_admin_user($user)) {
 if ($lead_id && !is_admin_user($user)) {
     $lead = lead_get($lead_id);
     if (!$lead || !lead_matches_user_visibility($lead, $user)) {
-        flash('error', 'Запись недоступна.');
+        flash('error', 'Этого клиента уже взяли или он вам недоступен.');
         redirect('leads.php');
     }
 }
@@ -44,7 +44,7 @@ function lead_result_flash($result, $ok_text) {
 switch ($action) {
     case 'take':
         $r = lead_take($lead_id, $user);
-        lead_result_flash($r, 'Клиент у вас в работе. Подпись подставлена, можно копировать письмо.');
+        lead_result_flash($r, 'Клиент у вас в работе. Отправьте письмо до ' . date('d.m', strtotime(lead_due_datetime())) . ': иначе клиент вернётся в общий список.');
         if ($r !== true) {
             $back = 'leads.php';
         }
@@ -59,8 +59,17 @@ switch ($action) {
     case 'sent':
         lead_result_flash(lead_mark_sent($lead_id, $user), 'Отмечено: отправлено. Если ответа не будет 10 дней, статус сменится на «Без ответа».');
         break;
+    case 'postpone':
+        lead_result_flash(lead_postpone($lead_id, $user, isset($_POST['months']) ? (int) $_POST['months'] : 0, isset($_POST['date']) ? (string) $_POST['date'] : ''),
+            'Готово. В назначенный день клиент появится на вкладке «Напомнить», придёт письмо.');
+        break;
+    case 'resent':
+        lead_result_flash(lead_mark_resent($lead_id, $user), 'Отмечено: написали повторно. Если ответа не будет ' . LEAD_SILENT_DAYS . ' дней, статус снова станет «Без ответа».');
+        break;
     case 'status':
-        lead_result_flash(lead_set_status($lead_id, $user, (string) $_POST['status']), 'Статус обновлён.');
+        lead_result_flash(lead_set_status($lead_id, $user, (string) $_POST['status'],
+            isset($_POST['refuse_reason']) ? (string) $_POST['refuse_reason'] : '',
+            isset($_POST['refuse_note']) ? (string) $_POST['refuse_note'] : ''), 'Статус обновлён.');
         break;
     case 'block':
         $r = lead_block($lead_id, $user);
@@ -68,6 +77,12 @@ switch ($action) {
         if ($r === true) {
             $back = 'leads.php';
         }
+        break;
+    case 'letter_save':
+        lead_result_flash(lead_save_letter($lead_id, $user, isset($_POST['subject']) ? (string) $_POST['subject'] : '', (string) $_POST['body']), 'Письмо сохранено: «Скопировать» и «Открыть письмо» теперь берут новый текст.');
+        break;
+    case 'letter_reset':
+        lead_result_flash(lead_reset_letter($lead_id, $user), 'Возвращён исходный текст письма.');
         break;
     case 'note':
         lead_save_note($lead_id, $user, (string) $_POST['note']);

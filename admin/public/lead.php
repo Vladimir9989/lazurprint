@@ -1,9 +1,11 @@
 <?php
 require_once __DIR__ . '/../src/bootstrap.php';
 
-$user = require_role(array('admin', 'manager'));
+$user = require_role(array('admin', 'manager', 'viewer'));
 leads_housekeeping();
 $is_admin = is_admin_user($user);
+$is_viewer = $user['role'] === 'viewer'; // руководитель: только просмотр
+$see_all = $is_admin || $is_viewer;
 
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 $lead = $id ? lead_get($id) : null;
@@ -24,14 +26,16 @@ $is_owner = (int) $lead['owner_id'] === (int) $user['id'];
 $is_new = $status === 'new';
 $taken = $status === 'taken';
 $after_send = in_array($status, LEAD_FOLLOWUP_STATUSES, true);
+$postponed = $status === 'postponed';
+$due_info = lead_due_info($lead);
 $can_act = $is_owner || $is_admin;
 
 // Что показывать как письмо.
 if ($is_new) {
     $raw = lead_compose_body($lead['greeting'], $lead['body']);
-    $subject_view = $is_admin ? $lead['subject'] : lead_render_template($lead['subject'], $me);
-    $body_view = $is_admin ? $raw : lead_render_template($raw, $me);
-    $instr_view = $is_admin ? $lead['instructions'] : lead_render_template($lead['instructions'], $me);
+    $subject_view = $see_all ? $lead['subject'] : lead_render_template($lead['subject'], $me);
+    $body_view = $see_all ? $raw : lead_render_template($raw, $me);
+    $instr_view = $see_all ? $lead['instructions'] : lead_render_template($lead['instructions'], $me);
 } else {
     $subject_view = $lead['subject_final'] !== null ? $lead['subject_final'] : $lead['subject'];
     $body_view = $lead['body_final'] !== null ? $lead['body_final'] : lead_compose_body($lead['greeting'], $lead['body']);
@@ -82,11 +86,13 @@ flash_messages();
     <a href="leads.php" class="btn btn--secondary btn--sm">← К списку</a>
     <h1 class="h1" style="margin:0; flex:1 1 auto;"><?php echo h($lead['company']); ?></h1>
     <?php echo lead_badge($status); ?>
+    <?php if ($due_info): ?><span class="badge badge--due-<?php echo h($due_info[1]); ?>"><?php echo h($due_info[0]); ?></span><?php endif; ?>
+    <?php if ($postponed && $lead['remind_at']): ?><span class="badge badge--remind">напомнить <?php echo h(date('d.m.Y', strtotime($lead['remind_at']))); ?></span><?php endif; ?>
     <?php if ($lead['is_archived']): ?><span class="badge badge--archived">архив<?php echo $lead['archive_reason'] !== '' ? ': ' . h($lead['archive_reason']) : ''; ?></span><?php endif; ?>
     <?php if ($is_admin): ?><a href="lead-edit.php?id=<?php echo (int) $lead['id']; ?>" class="btn btn--sm">Править</a><?php endif; ?>
 </div>
 
-<div class="product-layout" style="grid-template-columns: 320px 1fr;">
+<div class="product-layout lead-layout">
 <div>
     <div class="panel">
         <h2>О клиенте</h2>
@@ -104,13 +110,24 @@ flash_messages();
             <?php if ($lead['sent_at']): ?>
             <dt>Отправлено</dt><dd><?php echo h(date('d.m.Y', strtotime($lead['sent_at']))); ?> (<?php echo (int) lead_days_since($lead['sent_at']); ?> дн. назад)</dd>
             <?php endif; ?>
-            <?php if ($is_admin): ?>
+            <?php if ($see_all): ?>
             <dt>Ведёт</dt>
             <dd><?php echo $lead['owner_name'] ? h($lead['owner_name']) : ($lead['pinned_name'] ? h($lead['pinned_name']) . ' (закреплён)' : ($lead['manager_name'] !== '' ? h($lead['manager_name']) . ' (не зарегистрирован)' : '—')); ?></dd>
             <dt>Источник / партия</dt><dd><?php echo h(trim($lead['source'] . ' ' . $lead['batch'])) ?: '—'; ?></dd>
             <?php endif; ?>
         </dl>
     </div>
+
+    <?php $recycled = lead_recycle_history($lead['id']); if ($recycled): ?>
+    <div class="panel">
+        <h2>Раньше с этим клиентом работали</h2>
+        <ul class="events">
+            <?php foreach ($recycled as $rc): ?>
+            <li><time><?php echo h(date('d.m.Y', strtotime($rc['created_at']))); ?></time><?php echo h($rc['message']); ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+    <?php endif; ?>
 
     <?php if ($can_act && !$is_new): ?>
     <div class="panel">
@@ -123,7 +140,7 @@ flash_messages();
             <button type="submit" class="btn btn--sm btn--secondary">Сохранить заметку</button>
         </form>
     </div>
-    <?php elseif ($is_admin && trim((string) $lead['note']) !== ''): ?>
+    <?php elseif ($see_all && trim((string) $lead['note']) !== ''): ?>
     <div class="panel"><h2>Заметка</h2><p style="margin:0;"><?php echo nl2br(h($lead['note'])); ?></p></div>
     <?php endif; ?>
 
@@ -185,7 +202,7 @@ flash_messages();
 <div>
     <?php if ($is_new): ?>
     <div class="panel">
-        <h2>Письмо (так оно будет выглядеть с вашей подписью)</h2>
+        <h2>Письмо</h2>
         <?php if ($lead['channel'] === 'form'): ?>
         <p class="dim" style="margin-top:0;">Этому клиенту нет смысла писать на e-mail: заявка уходит через форму на сайте или по телефону. Инструкция появится после того, как вы возьмёте клиента.</p>
         <?php else: ?>
@@ -193,11 +210,13 @@ flash_messages();
         <p class="dim" style="margin:0 0 8px;"><strong>Тема:</strong> <?php echo h($subject_view); ?></p>
         <?php endif; ?>
         <pre class="letter"><?php echo h($body_view); ?></pre>
+        <?php if (!$is_viewer): ?>
         <div style="margin-top:14px;">
             <?php post_button('take', $lead['id'], 'Беру в работу', 'btn'); ?>
         </div>
-        <?php if (!$is_admin): ?>
-        <p class="dim" style="font-size:12px;">После «Беру в работу» клиент исчезает у остальных менеджеров, а в письмо подставляются ваши имя, должность и телефон из <a href="profile.php">профиля</a>.</p>
+        <?php endif; ?>
+        <?php if (!$see_all): ?>
+        <p class="dim" style="font-size:12px;">После «Беру в работу» клиент исчезает у остальных менеджеров, а текст письма остаётся у вас: скопируйте его в свою почту (подпись добавится из почты). На отправку письма даётся <?php echo (int) LEAD_TAKE_WORKDAYS; ?> рабочих дня, одновременно можно держать не больше <?php echo (int) LEAD_MAX_TAKEN; ?> клиентов в работе.</p>
         <?php endif; ?>
     </div>
 
@@ -216,25 +235,92 @@ flash_messages();
             <?php copy_row('cc', 'Копия', $lead['email_cc']); ?>
             <?php copy_row('subject', 'Тема', $subject_view); ?>
             <?php copy_row('text', 'Текст письма', $body_view, true); ?>
-            <?php if ($lead['email_to'] !== ''): ?>
+            <?php if ($lead['email_to'] !== '' && lead_mail_client($me) === 'copy'): ?>
+            <p class="dim" style="margin:16px 0 0; font-size:12px;">Нажмите «Скопировать» у адреса, темы и текста и вставьте в новое письмо в своей почте. Фото прикрепите сами (скачайте ниже).</p>
+            <?php elseif ($lead['email_to'] !== ''): ?>
             <p style="margin:16px 0 0;">
-                <a class="btn btn--sm" href="<?php echo h(lead_compose_url($me['mail_client'], $lead['email_to'], $lead['email_cc'], $subject_view, $body_view)); ?>"
-                    <?php echo $me['mail_client'] !== 'mailto' ? 'target="_blank" rel="noopener"' : ''; ?>>Открыть письмо</a>
+                <a class="btn btn--sm" href="<?php echo h(lead_compose_url(lead_mail_client($me), $lead['email_to'], $lead['email_cc'], $subject_view, $body_view)); ?>"
+                    target="_blank" rel="noopener">Открыть письмо</a>
                 <span class="dim" style="font-size:12px;">Откроется черновик с адресом, темой и текстом. Фото прикрепите сами (скачайте ниже).
-                    Способ можно сменить в <a href="profile.php">профиле</a>.</span>
+                    Если не открывается, смените способ в <a href="profile.php">профиле</a> или пользуйтесь кнопками «Скопировать».</span>
             </p>
             <?php endif; ?>
+        <?php endif; ?>
+
+        <?php if ($can_act && !$is_new): ?>
+        <details class="letter-edit">
+            <summary>Изменить письмо</summary>
+            <p class="dim" style="font-size:12px;">Правки сохраняются только в вашей копии письма: кнопки «Скопировать» и «Открыть письмо» будут брать новый текст.</p>
+            <form method="post" action="lead-action.php">
+                <?php echo csrf_field(); ?>
+                <input type="hidden" name="action" value="letter_save">
+                <input type="hidden" name="lead_id" value="<?php echo (int) $lead['id']; ?>">
+                <?php if ($lead['channel'] !== 'form'): ?>
+                <div class="field"><label for="le-subject">Тема</label><input type="text" id="le-subject" name="subject" value="<?php echo h($subject_view); ?>"></div>
+                <?php endif; ?>
+                <div class="field"><label for="le-body">Текст</label><textarea id="le-body" name="body" rows="14"><?php echo h($body_view); ?></textarea></div>
+                <button type="submit" class="btn btn--sm">Сохранить письмо</button>
+            </form>
+            <form method="post" action="lead-action.php" style="margin-top:8px;" onsubmit="return confirm('Вернуть исходный текст письма? Ваши правки пропадут.');">
+                <?php echo csrf_field(); ?>
+                <input type="hidden" name="action" value="letter_reset">
+                <input type="hidden" name="lead_id" value="<?php echo (int) $lead['id']; ?>">
+                <button type="submit" class="linklike">Вернуть исходный текст</button>
+            </form>
+        </details>
         <?php endif; ?>
 
         <?php if ($can_act): ?>
         <div class="actions">
             <?php if ($taken): ?>
+                <?php if ($due_info): ?><div class="actions__label">Срок: <strong><?php echo h($due_info[0]); ?></strong>. Не успеете — клиент вернётся в общий список.</div><?php endif; ?>
                 <?php post_button('sent', $lead['id'], $lead['channel'] === 'form' ? 'Я отправил(а) заявку' : 'Я отправил(а) письмо', 'btn'); ?>
                 <?php post_button('release', $lead['id'], 'Отпустить', 'btn btn--secondary', array(), 'Вернуть клиента в общий список?'); ?>
             <?php elseif ($after_send): ?>
                 <div class="actions__label">Что ответил клиент:</div>
                 <?php foreach (array('replied' => 'Ответили', 'refused' => 'Отказ', 'silent' => 'Без ответа', 'sample_sent' => 'Образец отправлен', 'order' => 'Заказ') as $code => $label):
-                    post_button('status', $lead['id'], $label, 'btn btn--sm' . ($status === $code ? '' : ' btn--secondary'), array('status' => $code)); endforeach; ?>
+                    if ($code === 'refused'): ?>
+                <details class="postpone">
+                    <summary class="btn btn--sm<?php echo $status === 'refused' ? '' : ' btn--secondary'; ?>">Отказ</summary>
+                    <form method="post" action="lead-action.php" class="postpone__form">
+                        <?php echo csrf_field(); ?>
+                        <input type="hidden" name="action" value="status">
+                        <input type="hidden" name="status" value="refused">
+                        <input type="hidden" name="lead_id" value="<?php echo (int) $lead['id']; ?>">
+                        <div class="dim" style="font-size:12px; margin-bottom:6px;">Почему клиент отказался? Причина обязательна: руководитель видит её в отчёте.</div>
+                        <select name="refuse_reason" required>
+                            <option value="">— выберите причину —</option>
+                            <?php foreach (LEAD_REFUSE_REASONS as $rc => $rl): ?><option value="<?php echo h($rc); ?>"><?php echo h($rl); ?></option><?php endforeach; ?>
+                        </select>
+                        <input type="text" name="refuse_note" maxlength="250" placeholder="Комментарий (для «Другое» обязателен)" style="min-width:240px;">
+                        <button type="submit" class="btn btn--sm">Отметить отказ</button>
+                    </form>
+                </details>
+                    <?php else:
+                        post_button('status', $lead['id'], $label, 'btn btn--sm' . ($status === $code ? '' : ' btn--secondary'), array('status' => $code));
+                    endif;
+                endforeach; ?>
+                <?php if ($status === 'silent'): post_button('resent', $lead['id'], 'Написал(а) повторно', 'btn btn--sm'); endif; ?>
+            <?php elseif ($postponed): ?>
+                <div class="actions__label">Клиент отложен<?php echo $lead['remind_at'] ? ' до ' . h(date('d.m.Y', strtotime($lead['remind_at']))) : ''; ?>.</div>
+                <?php post_button('resent', $lead['id'], 'Написал(а) повторно', 'btn'); ?>
+            <?php endif; ?>
+            <?php if (($after_send && $status !== 'order') || $postponed): ?>
+            <details class="postpone">
+                <summary class="btn btn--sm btn--secondary"><?php echo $postponed ? 'Отложить ещё' : 'Напомнить позже'; ?></summary>
+                <form method="post" action="lead-action.php" class="postpone__form">
+                    <?php echo csrf_field(); ?>
+                    <input type="hidden" name="action" value="postpone">
+                    <input type="hidden" name="lead_id" value="<?php echo (int) $lead['id']; ?>">
+                    <div class="dim" style="font-size:12px; margin-bottom:6px;">Клиент ответил «свяжемся позже»? В выбранный день он появится у вас на вкладке «Напомнить», и придёт письмо.</div>
+                    <select name="months">
+                        <?php foreach (LEAD_POSTPONE_MONTHS as $m => $mlabel): ?><option value="<?php echo (int) $m; ?>"><?php echo h($mlabel); ?></option><?php endforeach; ?>
+                    </select>
+                    <span class="dim">или своя дата:</span>
+                    <input type="date" name="date" min="<?php echo h(date('Y-m-d', strtotime('+1 day'))); ?>">
+                    <button type="submit" class="btn btn--sm">Отложить</button>
+                </form>
+            </details>
             <?php endif; ?>
             <?php if (!$lead['is_archived'] && !$is_new): ?>
                 <?php post_button('block', $lead['id'], 'Просили не писать', 'btn btn--sm btn--danger', array(), 'Компания и все её адреса навсегда попадут в стоп-лист, запись уйдёт в архив. Продолжить?'); ?>
@@ -243,7 +329,7 @@ flash_messages();
         <?php endif; ?>
     </div>
 
-    <?php if ($can_act && ($taken || $status === 'sent' || $status === 'silent' || $status === 'replied') && $sample_cats): ?>
+    <?php if ($can_act && ($taken || $postponed || $status === 'sent' || $status === 'silent' || $status === 'replied') && $sample_cats): ?>
     <div class="panel">
         <h2>Фото-образцы для письма</h2>
         <form method="post" action="sample-zip.php" id="sample-picker">
@@ -266,15 +352,18 @@ flash_messages();
                 </div>
             </div>
             <?php endforeach; ?>
-            <button type="submit" class="btn btn--sm" data-zip-button>Скачать выбранные (ZIP)</button>
-            <span class="dim" style="font-size:12px;">Распакуйте архив и прикрепите нужные файлы к письму.</span>
+            <div class="sample-fab">
+                <button type="button" class="btn" data-download-button>Скачать выбранные</button>
+                <button type="button" class="linklike" data-clear-selection>снять выбор</button>
+            </div>
+            <p class="dim" style="font-size:12px;">Отметьте фото галочкой: кнопка «Скачать выбранные» появится справа внизу. Файлы скачиваются по одному, прикрепите их к письму. Фото для этого клиента уже отмечены, лишние можно снять.</p>
         </form>
     </div>
     <?php endif; ?>
 
     <?php endif; ?>
 
-    <?php $events = lead_events($lead['id']); if ($events && ($is_admin || $is_owner)): ?>
+    <?php $events = lead_events($lead['id']); if ($events && ($see_all || $is_owner)): ?>
     <div class="panel">
         <h2>История</h2>
         <ul class="events">

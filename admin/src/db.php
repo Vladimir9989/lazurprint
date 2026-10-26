@@ -12,6 +12,15 @@ function config($key) {
     return $config[$key];
 }
 
+// Необязательный ключ: если его нет в config.local.php — значение по умолчанию (без исключения).
+function config_get($key, $default = '') {
+    try {
+        return config($key);
+    } catch (Exception $e) {
+        return $default;
+    }
+}
+
 function db() {
     static $pdo = null;
     if ($pdo === null) {

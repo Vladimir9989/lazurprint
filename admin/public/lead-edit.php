@@ -95,7 +95,7 @@ flash_messages();
             <input type="text" id="subject" name="subject" value="<?php echo h(val($values, 'subject')); ?>"></div>
     </div>
 
-    <div class="field"><label for="body">Текст письма (метки: {имя} {фамилия} {фио} {должность} {телефон})</label>
+    <div class="field"><label for="body">Текст письма (без подписи: у менеджеров она в почте; метки {имя} {фамилия} {фио} подставятся)</label>
         <textarea id="body" name="body" rows="14"><?php echo h(val($values, 'body')); ?></textarea></div>
     <div class="field"><label for="instructions">Инструкция для менеджера (только для канала «форма / звонок»: что открыть и куда вставить текст)</label>
         <textarea id="instructions" name="instructions" rows="5"><?php echo h(val($values, 'instructions')); ?></textarea></div>
@@ -123,7 +123,7 @@ flash_messages();
     </div>
 
     <?php if ($lead && $lead['status'] !== 'new'): ?>
-    <div class="flash flash--info">Клиента уже взяли: менеджер видит и копирует «живую» версию письма (с его подписью). Исправить её можно здесь.</div>
+    <div class="flash flash--info">Клиента уже взяли: менеджер видит и копирует свою версию письма. Исправить её можно здесь.</div>
     <div class="field"><label for="subject_final">Тема, как у менеджера</label>
         <input type="text" id="subject_final" name="subject_final" value="<?php echo h((string) $lead['subject_final']); ?>"></div>
     <div class="field"><label for="body_final">Текст, как у менеджера</label>

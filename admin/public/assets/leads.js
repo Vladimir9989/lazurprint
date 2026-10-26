@@ -53,19 +53,42 @@
         });
     });
 
-    // Выбор фото-образцов: «выбрать все» в категории и счётчик на кнопке ZIP.
+    // Выбор фото-образцов: «выбрать все» в категории и скачивание выбранных файлов по одному (без архива).
     var picker = document.getElementById('sample-picker');
     if (picker) {
-        var zipButtons = picker.querySelectorAll('[data-zip-button]');
+        var zipButtons = picker.querySelectorAll('[data-download-button]');
+        var fab = picker.querySelector('.sample-fab');
         var update = function () {
             var n = picker.querySelectorAll('input[name="ids[]"]:checked').length;
+            if (fab) { fab.classList.toggle('is-visible', n > 0); }
             Array.prototype.forEach.call(zipButtons, function (b) {
-                b.textContent = 'Скачать выбранные (ZIP)' + (n ? ': ' + n : '');
+                b.textContent = 'Скачать выбранные' + (n ? ': ' + n : '');
                 b.disabled = n === 0;
                 b.style.opacity = n === 0 ? '0.5' : '';
             });
         };
         picker.addEventListener('change', update);
+        picker.addEventListener('click', function (e) {
+            if (!(e.target.closest && e.target.closest('[data-clear-selection]'))) { return; }
+            Array.prototype.forEach.call(picker.querySelectorAll('input[name="ids[]"]'), function (c) { c.checked = false; });
+            update();
+        });
+        // Файлы качаются по одному подряд; пауза нужна, иначе браузер пропускает часть загрузок.
+        picker.addEventListener('click', function (e) {
+            var b = e.target.closest ? e.target.closest('[data-download-button]') : null;
+            if (!b) { return; }
+            var ids = Array.prototype.map.call(picker.querySelectorAll('input[name="ids[]"]:checked'), function (c) { return c.value; });
+            ids.forEach(function (id, i) {
+                setTimeout(function () {
+                    var a = document.createElement('a');
+                    a.href = 'sample.php?id=' + encodeURIComponent(id) + '&download=1';
+                    a.style.display = 'none';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                }, i * 700);
+            });
+        });
         picker.addEventListener('click', function (e) {
             var t = e.target.closest ? e.target.closest('[data-toggle-all]') : null;
             if (!t) { return; }

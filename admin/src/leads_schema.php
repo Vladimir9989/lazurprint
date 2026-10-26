@@ -4,9 +4,10 @@
 // дешёвым запросом: последняя миграция — колонка users.mail_client, если она есть,
 // значит всё остальное уже применено. На хостинге то же делает tools/migrate-leads.php.
 
+// Последняя миграция — колонка leads.nudged_at (сроки, «напомнить позже»).
 function leads_schema_ready() {
     $stmt = db()->query("SELECT COUNT(*) c FROM information_schema.columns
-        WHERE table_schema = DATABASE() AND table_name = 'users' AND column_name = 'mail_client'");
+        WHERE table_schema = DATABASE() AND table_name = 'leads' AND column_name = 'nudged_at'");
     return (int) $stmt->fetch()['c'] > 0;
 }
 
@@ -56,9 +57,27 @@ function leads_run_migration() {
     if (!leads_column_exists('users', 'phone')) {
         db()->exec("ALTER TABLE users ADD COLUMN phone VARCHAR(50) NOT NULL DEFAULT ''");
     }
-    // Последним: по нему leads_schema_ready() понимает, что миграция закончена.
     if (!leads_column_exists('users', 'mail_client')) {
-        db()->exec("ALTER TABLE users ADD COLUMN mail_client VARCHAR(20) NOT NULL DEFAULT 'mailto'");
+        db()->exec("ALTER TABLE users ADD COLUMN mail_client VARCHAR(20) NOT NULL DEFAULT 'mailru'");
+    }
+
+    // Срок на отправку, «напомнить позже», повторное напоминание молчащим (2026-10-20).
+    $row = db()->query("SELECT COLUMN_TYPE t FROM information_schema.columns
+        WHERE table_schema = DATABASE() AND table_name = 'leads' AND column_name = 'status'")->fetch();
+    if ($row && strpos($row['t'], "'postponed'") === false) {
+        db()->exec("ALTER TABLE leads MODIFY status ENUM('new','taken','sent','replied','refused','silent','sample_sent','order','blocked','postponed') NOT NULL DEFAULT 'new'");
+    }
+    $new_columns = array(
+        'due_at' => 'DATETIME NULL',
+        'due_warned_at' => 'DATETIME NULL',
+        'remind_at' => 'DATE NULL',
+        'remind_mailed_at' => 'DATETIME NULL',
+        'nudged_at' => 'DATETIME NULL', // последним: по нему leads_schema_ready() понимает, что миграция закончена
+    );
+    foreach ($new_columns as $col => $def) {
+        if (!leads_column_exists('leads', $col)) {
+            db()->exec("ALTER TABLE leads ADD COLUMN $col $def");
+        }
     }
 
     leads_seed_sample_categories();

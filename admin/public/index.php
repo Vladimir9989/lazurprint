@@ -53,6 +53,7 @@ flash_messages();
         <option value="ready" <?php echo $filters['status'] === 'ready' ? 'selected' : ''; ?>>Готов к публикации</option>
         <option value="published" <?php echo $filters['status'] === 'published' ? 'selected' : ''; ?>>Опубликован</option>
         <option value="needs_update" <?php echo $filters['status'] === 'needs_update' ? 'selected' : ''; ?>>Изменено — обновить на сайте</option>
+        <option value="archived" <?php echo $filters['status'] === 'archived' ? 'selected' : ''; ?>>Снято с производства (архив)</option>
     </select>
     <button type="submit" class="btn btn--secondary btn--sm">Найти</button>
 </form>

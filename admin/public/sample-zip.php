@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../src/bootstrap.php';
 
-$user = require_role(array('admin', 'manager'));
+$user = require_role(array('admin', 'manager', 'viewer'));
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     redirect('samples.php');

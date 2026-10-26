@@ -1,12 +1,12 @@
 <?php
-// Каталог образцов для писем (docs/growth/leads-admin.md, часть 3). Загружается одно
-// фото: сервер делает оригинал для письма (длинная сторона до 1600 px, до ~800 КБ) и
-// превью ~300 px. Файлы лежат вне web-корня (uploads_dir/samples), отдаются через
-// sample.php только вошедшим пользователям.
+// Каталог образцов для писем (docs/growth/leads-admin.md, часть 3). Загружается одно фото:
+// сервер сохраняет ОРИГИНАЛ без изменений (его скачивают и кладут в письмо) и делает лёгкое
+// превью (до ~100 КБ) для списка. Файлы лежат вне web-корня (uploads_dir/samples), отдаются
+// через sample.php только вошедшим пользователям.
 
-define('SAMPLE_MAX_SIDE', 1600);
-define('SAMPLE_THUMB_SIDE', 300);
-define('SAMPLE_MAX_BYTES', 800 * 1024);
+define('SAMPLE_PREVIEW_SIDE', 640);
+define('SAMPLE_PREVIEW_BYTES', 100 * 1024);
+define('SAMPLE_MAX_UPLOAD', 30 * 1024 * 1024);
 
 function sample_dir() {
     $dir = rtrim(config('uploads_dir'), '/\\') . '/samples';
@@ -19,6 +19,21 @@ function sample_dir() {
 function sample_categories() {
     return db()->query('SELECT c.*, (SELECT COUNT(*) FROM samples s WHERE s.category_id = c.id) AS cnt
         FROM sample_categories c ORDER BY c.sort_order, c.id')->fetchAll();
+}
+
+// Находит категорию по названию (без учёта регистра) или создаёт новую. Возвращает её id.
+function sample_category_ensure($name) {
+    $name = mb_substr(trim($name), 0, 100);
+    $stmt = db()->prepare('SELECT id FROM sample_categories WHERE LOWER(name) = ? LIMIT 1');
+    $stmt->execute(array(mb_strtolower($name)));
+    $row = $stmt->fetch();
+    if ($row) {
+        return (int) $row['id'];
+    }
+    $max = (int) db()->query('SELECT COALESCE(MAX(sort_order), 0) m FROM sample_categories')->fetch()['m'];
+    db()->prepare('INSERT INTO sample_categories (name, segments, sort_order) VALUES (?, ?, ?)')
+        ->execute(array($name, '', $max + 10));
+    return (int) db()->lastInsertId();
 }
 
 function sample_list($category_id = 0) {
@@ -92,6 +107,18 @@ function sample_resize($src, $max_side) {
     return $dst;
 }
 
+// Имя файла превью для оригинала («abc.png» → «thumb_abc.jpg»).
+function sample_preview_name($filename) {
+    return 'thumb_' . pathinfo($filename, PATHINFO_FILENAME) . '.jpg';
+}
+
+// Расширение и MIME сохранённого оригинала по имени файла.
+function sample_file_type($filename) {
+    $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+    $types = array('jpg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp');
+    return array($ext, isset($types[$ext]) ? $types[$ext] : 'application/octet-stream');
+}
+
 // $tmp_path — загруженный временный файл. Возвращает true либо текст ошибки.
 function sample_save_upload($tmp_path, $original_name, $category_id, $title, $user_id) {
     @ini_set('memory_limit', '512M');
@@ -100,9 +127,13 @@ function sample_save_upload($tmp_path, $original_name, $category_id, $title, $us
     if (!$stmt->fetch()) {
         return 'Выберите категорию.';
     }
+    if (filesize($tmp_path) > SAMPLE_MAX_UPLOAD) {
+        return $original_name . ': файл больше 30 МБ.';
+    }
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $mime = $finfo->file($tmp_path);
-    if (!in_array($mime, array('image/jpeg', 'image/png', 'image/webp'), true)) {
+    $exts = array('image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp');
+    if (!isset($exts[$mime])) {
         return $original_name . ': допустимы JPG, PNG, WebP.';
     }
     $src = sample_load_image($tmp_path, $mime);
@@ -110,27 +141,29 @@ function sample_save_upload($tmp_path, $original_name, $category_id, $title, $us
         return $original_name . ': не удалось прочитать изображение.';
     }
 
-    $full = sample_resize($src, SAMPLE_MAX_SIDE);
-    imagedestroy($src);
-
     $base = bin2hex(random_bytes(12));
-    $filename = $base . '.jpg';
+    $filename = $base . '.' . $exts[$mime];
     $dir = sample_dir();
     $dest = $dir . '/' . $filename;
+    // Оригинал сохраняем как есть (байт в байт), чтобы при скачивании не терялось качество.
+    if (!copy($tmp_path, $dest)) {
+        imagedestroy($src);
+        return $original_name . ': не удалось сохранить файл на сервере.';
+    }
+    $w = imagesx($src);
+    $h = imagesy($src);
 
-    $quality = 85;
+    // Превью для списка: уменьшаем и снижаем качество, пока не станет ≤ 100 КБ.
+    $preview = sample_resize($src, SAMPLE_PREVIEW_SIDE);
+    imagedestroy($src);
+    $pdest = $dir . '/' . sample_preview_name($filename);
+    $quality = 82;
     do {
-        imagejpeg($full, $dest, $quality);
-        clearstatcache(true, $dest);
-        $quality -= 7;
-    } while (filesize($dest) > SAMPLE_MAX_BYTES && $quality >= 55);
-
-    $thumb = sample_resize($full, SAMPLE_THUMB_SIDE);
-    imagejpeg($thumb, $dir . '/thumb_' . $filename, 80);
-    $w = imagesx($full);
-    $h = imagesy($full);
-    imagedestroy($thumb);
-    imagedestroy($full);
+        imagejpeg($preview, $pdest, $quality);
+        clearstatcache(true, $pdest);
+        $quality -= 6;
+    } while (filesize($pdest) > SAMPLE_PREVIEW_BYTES && $quality >= 40);
+    imagedestroy($preview);
 
     if ($title === '') {
         $title = pathinfo($original_name, PATHINFO_FILENAME);
@@ -149,7 +182,7 @@ function sample_delete($id) {
     }
     $dir = sample_dir();
     @unlink($dir . '/' . $s['filename']);
-    @unlink($dir . '/thumb_' . $s['filename']);
+    @unlink($dir . '/' . sample_preview_name($s['filename']));
     db()->prepare('DELETE FROM samples WHERE id = ?')->execute(array($id));
 }
 
@@ -198,7 +231,8 @@ function sample_send_zip($ids) {
         $path = $dir . '/' . $r['filename'];
         if (is_file($path)) {
             $n++;
-            $zip->addFile($path, sprintf('%02d-%s-%s.jpg', $n, sample_translit($r['category_name']), sample_translit($r['title'])));
+            $ext = sample_file_type($r['filename'])[0];
+            $zip->addFile($path, sprintf('%02d-%s-%s.%s', $n, sample_translit($r['category_name']), sample_translit($r['title']), $ext));
         }
     }
     $zip->close();
