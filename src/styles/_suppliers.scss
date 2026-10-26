@@ -150,6 +150,207 @@
     }
 }
 
+.suppliers-items {
+    &__hint {
+        margin: -12px 0 24px;
+        font-size: 17px;
+        line-height: 1.5;
+        color: var(--color-night-rider);
+    }
+
+    // карточка-кнопка, открывающая список
+    &__item--open {
+        padding: 0;
+    }
+
+    &__open {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        padding: 28px 24px;
+        font: inherit;
+        text-align: left;
+        color: inherit;
+        background: transparent;
+        border: 0;
+        border-radius: 16px;
+        cursor: pointer;
+
+        .suppliers-items__name {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.25;
+            color: var(--color-galaxy);
+        }
+
+        .suppliers-items__text {
+            display: block;
+            margin: 0 0 18px;
+            line-height: 1.5;
+            color: var(--color-dim-gray);
+        }
+
+        @media (any-hover: hover) {
+            &:hover .suppliers-items__more {
+                gap: 14px;
+            }
+        }
+
+        &:focus-visible {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+    }
+
+    &__more {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: auto;
+        font-weight: 700;
+        color: var(--color-primary);
+        transition: gap .2s ease;
+
+        &::after {
+            content: '→';
+        }
+    }
+}
+
+.paper-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+
+    &[hidden] {
+        display: none;
+    }
+
+    &__overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(8, 31, 92, 0.6);
+    }
+
+    &__dialog {
+        position: relative;
+        width: 100%;
+        max-width: 880px;
+        max-height: 100%;
+        padding: 40px 36px 32px;
+        overflow-y: auto;
+        background: #fff;
+        border-radius: 24px;
+        box-shadow: 0 30px 80px rgba(8, 31, 92, 0.4);
+
+        @include md {
+            padding: 32px 16px 24px;
+            border-radius: 18px;
+        }
+    }
+
+    &__close {
+        position: absolute;
+        top: 14px;
+        right: 16px;
+        width: 40px;
+        height: 40px;
+        font-size: 30px;
+        line-height: 1;
+        color: var(--color-galaxy);
+        background: #eef3ff;
+        border: 0;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    &__title {
+        margin: 0 40px 12px 0;
+        font-size: 28px;
+        line-height: 1.2;
+        color: var(--color-galaxy);
+
+        @include md {
+            font-size: 22px;
+        }
+    }
+
+    &__lead {
+        margin: 0 0 24px;
+        line-height: 1.5;
+        color: var(--color-dim-gray);
+    }
+
+    &__footer {
+        margin-top: 28px;
+        padding-top: 24px;
+        text-align: center;
+        border-top: 1px solid #e4edff;
+    }
+}
+
+.paper-list {
+    &__section {
+        margin: 28px 0 12px;
+        font-size: 22px;
+        color: var(--color-primary);
+
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+
+    &__group {
+        margin-bottom: 18px;
+    }
+
+    &__subtitle {
+        margin: 0 0 8px;
+        font-size: 17px;
+        color: var(--color-galaxy);
+    }
+
+    &__note {
+        margin: 0 0 8px;
+        font-size: 14px;
+        color: var(--color-dim-gray);
+    }
+
+    &__scroll {
+        overflow-x: auto;
+    }
+
+    &__table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 15px;
+
+        th,
+        td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e4edff;
+        }
+
+        th {
+            font-weight: 700;
+            color: var(--color-galaxy);
+            background: #f3f8ff;
+        }
+
+        td {
+            color: var(--color-night-rider);
+        }
+    }
+}
+
 .suppliers-need {
     background: #f3f8ff;
 

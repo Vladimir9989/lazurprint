@@ -23,6 +23,7 @@
     <link rel="canonical" href="https://lazurprint.ru/suppliers.html">
     <script defer src="inputmask.min.js"></script>
     <script defer src="just-validate.min.js"></script>
+    <script defer src="suppliers.js"></script>
     <script defer src="app.js"></script>
     <title>Поставщикам: запрос предложений — типография Лазурь</title>
 </head>
@@ -56,14 +57,18 @@
             </div>
         </section>
 
-        <!-- ВРЕМЕННЫЙ список позиций: заменить, когда закупщик (Яна) пришлёт настоящий -->
+        <!-- Бумага и картон — настоящий список (модалка #paper-modal); остальные 3 карточки ВРЕМЕННЫЕ, заменить, когда Яна пришлёт списки -->
         <section class="suppliers-items">
             <div class="container">
                 <h2 class="suppliers__h2">Что мы <span>закупаем</span></h2>
+                <p class="suppliers-items__hint">Нажмите на карточку «Бумага и картон», чтобы открыть подробный список: плотность, формат и марки. Остальные списки готовим и скоро добавим.</p>
                 <ul class="suppliers-items__list">
-                    <li class="suppliers-items__item">
-                        <h3 class="suppliers-items__name">Бумага и картон</h3>
-                        <p class="suppliers-items__text">Мелованная и офсетная бумага, картон для упаковки и обложек, переплётный картон.</p>
+                    <li class="suppliers-items__item suppliers-items__item--open">
+                        <button type="button" class="suppliers-items__open" data-paper-open aria-haspopup="dialog">
+                            <span class="suppliers-items__name">Бумага и картон</span>
+                            <span class="suppliers-items__text">Мелованная и офсетная бумага, рулонная бумага, картон для упаковки и обложек, переплётный картон.</span>
+                            <span class="suppliers-items__more">Смотреть список позиций</span>
+                        </button>
                     </li>
                     <li class="suppliers-items__item">
                         <h3 class="suppliers-items__name">Материалы для флексопечати и упаковки</h3>
@@ -154,6 +159,177 @@
         </section>
     </main>
     @@include('html/footer.html', {})
+
+    <div class="paper-modal" id="paper-modal" hidden>
+        <div class="paper-modal__overlay" data-paper-close></div>
+        <div class="paper-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="paper-modal-title">
+            <button type="button" class="paper-modal__close" data-paper-close aria-label="Закрыть">&times;</button>
+            <h2 class="paper-modal__title" id="paper-modal-title">Бумага и картон: что мы закупаем</h2>
+            <p class="paper-modal__lead">Основные позиции, которые нужны типографии постоянно. Если у вас есть аналоги или близкие характеристики, всё равно присылайте предложение.</p>
+            <div class="paper-list">
+                    <h3 class="paper-list__section">Бумага листовая</h3>
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Мелованная глянцевая</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Плотность, г/м²</th><th>Формат, см</th><th>Марка</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Плотность, г/м²">90</td><td data-label="Формат, см">62×94</td><td data-label="Марка">Nevia</td></tr>
+                                <tr><td data-label="Плотность, г/м²">105</td><td data-label="Формат, см">62×94</td><td data-label="Марка">Омела</td></tr>
+                                <tr><td data-label="Плотность, г/м²">115</td><td data-label="Формат, см">62×94</td><td data-label="Марка">Омела</td></tr>
+                                <tr><td data-label="Плотность, г/м²">115</td><td data-label="Формат, см">64×90</td><td data-label="Марка">Омела</td></tr>
+                                <tr><td data-label="Плотность, г/м²">115</td><td data-label="Формат, см">А2 47×65</td><td data-label="Марка">Омела</td></tr>
+                                <tr><td data-label="Плотность, г/м²">130</td><td data-label="Формат, см">62×94</td><td data-label="Марка">Омела</td></tr>
+                                <tr><td data-label="Плотность, г/м²">130</td><td data-label="Формат, см">64×90</td><td data-label="Марка">Омела</td></tr>
+                                <tr><td data-label="Плотность, г/м²">150</td><td data-label="Формат, см">62×94</td><td data-label="Марка">Омела</td></tr>
+                                <tr><td data-label="Плотность, г/м²">150</td><td data-label="Формат, см">64×90</td><td data-label="Марка">Омела</td></tr>
+                                <tr><td data-label="Плотность, г/м²">170</td><td data-label="Формат, см">62×94</td><td data-label="Марка">Омела</td></tr>
+                                <tr><td data-label="Плотность, г/м²">170</td><td data-label="Формат, см">64×90</td><td data-label="Марка">Омела</td></tr>
+                                <tr><td data-label="Плотность, г/м²">200</td><td data-label="Формат, см">62×94</td><td data-label="Марка">Омела</td></tr>
+                                <tr><td data-label="Плотность, г/м²">200</td><td data-label="Формат, см">64×90</td><td data-label="Марка">Омела</td></tr>
+                                <tr><td data-label="Плотность, г/м²">200</td><td data-label="Формат, см">А2 47×65</td><td data-label="Марка">Омела</td></tr>
+                                <tr><td data-label="Плотность, г/м²">250</td><td data-label="Формат, см">62×94</td><td data-label="Марка">Hi-Kote</td></tr>
+                                <tr><td data-label="Плотность, г/м²">300</td><td data-label="Формат, см">62×94</td><td data-label="Марка">Hi-Kote</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Мелованная матовая</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Плотность, г/м²</th><th>Формат, см</th><th>Марка</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Плотность, г/м²">105</td><td data-label="Формат, см">62×94</td><td data-label="Марка">Омела</td></tr>
+                                <tr><td data-label="Плотность, г/м²">115</td><td data-label="Формат, см">62×94</td><td data-label="Марка">Омела</td></tr>
+                                <tr><td data-label="Плотность, г/м²">115</td><td data-label="Формат, см">А2 47×65</td><td data-label="Марка">Омела</td></tr>
+                                <tr><td data-label="Плотность, г/м²">130</td><td data-label="Формат, см">62×94</td><td data-label="Марка">Омела</td></tr>
+                                <tr><td data-label="Плотность, г/м²">130</td><td data-label="Формат, см">64×90</td><td data-label="Марка">Омела</td></tr>
+                                <tr><td data-label="Плотность, г/м²">150</td><td data-label="Формат, см">64×90</td><td data-label="Марка">Омела</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Глянцевая, большой формат</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Плотность, г/м²</th><th>Формат, см</th><th>Марка</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Плотность, г/м²">80</td><td data-label="Формат, см">72×104</td><td data-label="Марка">DIAMOND LABEL (этикеточная)</td></tr>
+                                <tr><td data-label="Плотность, г/м²">115</td><td data-label="Формат, см">72×104</td><td data-label="Марка">Омела</td></tr>
+                                <tr><td data-label="Плотность, г/м²">120</td><td data-label="Формат, см">72×104</td><td data-label="Марка">Невия</td></tr>
+                                <tr><td data-label="Плотность, г/м²">150</td><td data-label="Формат, см">72×104</td><td data-label="Марка">Омела</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Офсетная</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Плотность, г/м²</th><th>Формат, см</th><th>Марка</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Плотность, г/м²">80</td><td data-label="Формат, см">62×94</td><td data-label="Марка">офсетная ВХИ</td></tr>
+                                <tr><td data-label="Плотность, г/м²">80</td><td data-label="Формат, см">64×90</td><td data-label="Марка">офсетная ВХИ</td></tr>
+                                <tr><td data-label="Плотность, г/м²">80</td><td data-label="Формат, см">72×104</td><td data-label="Марка">офсетная ВХИ</td></tr>
+                                <tr><td data-label="Плотность, г/м²">160</td><td data-label="Формат, см">64×90</td><td data-label="Марка">ВХИ</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Для цифровой печати</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Плотность, г/м²</th><th>Формат, см</th><th>Марка</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Плотность, г/м²">300</td><td data-label="Формат, см">А3 45×32</td><td data-label="Марка">Про плюс (или аналоги, бумага для цифровой печати)</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Самоклеящаяся</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Плотность, г/м²</th><th>Формат, см</th><th>Марка</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Плотность, г/м²">—</td><td data-label="Формат, см">В2 50×70</td><td data-label="Марка">самоклеящаяся, без просечек</td></tr>
+                                <tr><td data-label="Плотность, г/м²">—</td><td data-label="Формат, см">В2 50×70</td><td data-label="Марка">самоклеящаяся, с насечками</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+                    <h3 class="paper-list__section">Бумага рулонная</h3>
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Офсетная</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Плотность, г/м²</th><th>Ширина рулона, см</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Плотность, г/м²">80</td><td data-label="Ширина рулона, см">1×62, 1×64, 1×72, 2×44</td></tr>
+                                <tr><td data-label="Плотность, г/м²">100</td><td data-label="Ширина рулона, см">1×62, 1×64, 1×72, 2×44</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Ural Brite LWC</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Плотность, г/м²</th><th>Ширина рулона, см</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Плотность, г/м²">57</td><td data-label="Ширина рулона, см">2×42, 2×44, 2×46</td></tr>
+                                <tr><td data-label="Плотность, г/м²">80</td><td data-label="Ширина рулона, см">1×62, 1×72, 2×45</td></tr>
+                                <tr><td data-label="Плотность, г/м²">105</td><td data-label="Ширина рулона, см">1×62, 1×64, 1×72</td></tr>
+                                <tr><td data-label="Плотность, г/м²">115</td><td data-label="Ширина рулона, см">1×62, 1×64, 1×72</td></tr>
+                                <tr><td data-label="Плотность, г/м²">130</td><td data-label="Ширина рулона, см">1×62, 1×64, 1×72, 1×90</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Ural Brite SATIN плюс</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Плотность, г/м²</th><th>Ширина рулона, см</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Плотность, г/м²">57</td><td data-label="Ширина рулона, см">1×82</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">ВХИ Котлас</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Плотность, г/м²</th><th>Ширина рулона, см</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Плотность, г/м²">120</td><td data-label="Ширина рулона, см">1×62, 1×72</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Газетная</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Плотность, г/м²</th><th>Ширина рулона, см</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Плотность, г/м²">42</td><td data-label="Ширина рулона, см">2×39, 2×42</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+                    <h3 class="paper-list__section">Картон</h3>
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Картон листовой</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Позиция</th><th>Толщина, мм</th><th>Формат, мм</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Позиция">Переплётный</td><td data-label="Толщина, мм">1,25; 1,5; 1,75; 2,0; 2,5</td><td data-label="Формат, мм">В1 1050×920</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Картон в рулонах</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Плотность, г/м²</th><th>Марка</th><th>Ширина рулона, см</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Плотность, г/м²">250</td><td data-label="Марка">Кама Project GC2</td><td data-label="Ширина рулона, см">62, 72</td></tr>
+                                <tr><td data-label="Плотность, г/м²">270</td><td data-label="Марка">Pharma Board GC1</td><td data-label="Ширина рулона, см">72</td></tr>
+                                <tr><td data-label="Плотность, г/м²">295</td><td data-label="Марка">Pharma Board GC1</td><td data-label="Ширина рулона, см">62, 72</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+            </div>
+            <div class="paper-modal__footer">
+                <a href="#offer" class="suppliers__btn" role="button" data-open-form
+                    data-form-title="Предложение для типографии"
+                    data-form-desc="Расскажите, что вы поставляете, и оставьте контакты. Закупщик типографии изучит предложение и свяжется с вами."
+                    data-form-text="Предложение поставщика (бумага и картон).&#10;Компания: &#10;Что поставляем: &#10;Ссылка на прайс-лист: ">Отправить предложение</a>
+            </div>
+        </div>
+    </div>
 
 </body>
 
