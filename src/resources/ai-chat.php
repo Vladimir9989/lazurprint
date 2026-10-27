@@ -198,6 +198,11 @@ $headers = array(
 );
 if ($useRelay) {
     $headers[] = 'X-Relay-Secret: ' . $cfg['relay_secret'];
+    // Запросы крупнее ~13 КБ на пути до Vercel зависают, а инструкция бота ~26 КБ: шлём тело сжатым (русский текст сжимается втрое)
+    if (function_exists('gzencode')) {
+        $body = gzencode($body, 6);
+        $headers[] = 'X-Body-Encoding: gzip';
+    }
 }
 $t = microtime(true);
 // Связь с посредником изредка обрывается без ответа — при обрыве (не при ошибке модели) пробуем ещё раз
