@@ -31,6 +31,7 @@ function render_header($title, $user = null, $active_tab = null) {
             <a href="report-managers.php" class="<?php echo $active_tab === 'report' ? 'is-active' : ''; ?>">Отчёт по менеджерам</a>
             <?php endif; ?>
             <?php if (is_admin_user($user)): ?>
+            <a href="journal.php" class="<?php echo $active_tab === 'journal' ? 'is-active' : ''; ?>">Журнал</a>
             <a href="users.php" class="<?php echo $active_tab === 'users' ? 'is-active' : ''; ?>">Пользователи</a>
             <?php endif; ?>
         </nav>
