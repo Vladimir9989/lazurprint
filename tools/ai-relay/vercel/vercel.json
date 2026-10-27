@@ -1,0 +1,1 @@
+{ "functions": { "api/relay.js": { "maxDuration": 60 } } }

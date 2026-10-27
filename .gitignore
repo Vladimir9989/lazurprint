@@ -16,3 +16,4 @@
 # Обмен заданиями Кодер <-> Тестер (содержимое не в git, README остаётся)
 /qa/tasks/
 /qa/reports/
+/ai-config.php
