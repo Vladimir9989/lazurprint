@@ -17,3 +17,5 @@
 /qa/tasks/
 /qa/reports/
 /ai-config.php
+
+.playwright-mcp/

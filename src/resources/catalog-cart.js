@@ -1,5 +1,5 @@
 /**
- * Корзина в каталоге сувениров (catalog-suvenir.html): поле «шт» и кнопка «В корзину» на карточках,
+ * Корзина в каталоге сувениров (catalog-suvenir.html): степпер «− 1 +» и кнопка «В корзину» на карточках,
  * панель корзины, выгрузка в .xlsx. Корзина хранится в localStorage посетителя, сервер не нужен.
  * ExcelJS (~900 КБ) грузится с CDN только при первом нажатии «Скачать Excel».
  */
@@ -73,13 +73,24 @@
             const box = document.createElement('div');
             box.className = 'cart-add';
             box.innerHTML =
-                '<label class="cart-add__qty"><input type="number" class="cart-add__input" min="1" max="' + MAX_QTY + '" value="1" inputmode="numeric" aria-label="Количество, шт"><span>шт</span></label>' +
+                '<div class="cart-step"><button type="button" class="cart-step__btn" data-step="-1" aria-label="Меньше">−</button>' +
+                '<input type="number" class="cart-add__input" min="1" max="' + MAX_QTY + '" value="1" inputmode="numeric" aria-label="Количество, шт">' +
+                '<button type="button" class="cart-step__btn" data-step="1" aria-label="Больше">+</button></div>' +
                 '<button type="button" class="cart-add__btn">В корзину</button>';
+            // «Цена уточняется», «от N шт…» — не цена, а пометка: в карточке они мельче и серые
+            const priceEl = item.querySelector('.catalog-item__price');
+            if (priceEl && parsePrice(priceEl.textContent) === null) priceEl.classList.add('catalog-item__price--note');
             text.appendChild(box);
         });
     }
 
     function onCatalogClick(e) {
+        const step = e.target.closest('.cart-step__btn');
+        if (step) {
+            const field = step.parentNode.querySelector('.cart-add__input');
+            field.value = clampQty(clampQty(field.value) + Number(step.dataset.step));
+            return;
+        }
         const btn = e.target.closest('.cart-add__btn');
         if (!btn) return;
         const item = btn.closest('.catalog-item');

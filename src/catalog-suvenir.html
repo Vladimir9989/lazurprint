@@ -38,7 +38,7 @@
     @@include('html/main-button.html', {})
     <main>
     <section class="catalog" id="catalog" aria-label="Каталог сувенирной продукции">
-        <div class="container" style="max-width: 1024px;">
+        <div class="container catalog__wrap">
             <nav class="breadcrumbs" aria-label="Хлебные крошки">
                 <ul class="breadcrumbs__list">
                     <li class="breadcrumbs__item">
@@ -56,23 +56,43 @@
                 </ul>
             </nav>
         </div>
-        <div class="catalog__container">
-            <div class="container" style="max-width: 1024px;">
+        <div class="container catalog__wrap">
+            <div class="catalog__container">
                 <div class="catalog__header">
                     <div class="catalog__header-content">
                         <h1 class="catalog__title">Каталог готовой продукции</h1>
-                        <p class="catalog__subtitle-text">Для оптовых покупателей скидка до 30%</p>
+                        <p class="catalog__subtitle-text">Сувениры с символикой Урала и вашего города — от 1 штуки</p>
+                        <ul class="catalog__perks">
+                            <li>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor"/></svg>
+                                Опт — скидка до 30%
+                            </li>
+                            <li>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21V10l6 4v-4l6 4V5h6v16z"/></svg>
+                                Своё производство
+                            </li>
+                            <li>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+                                Нанесение логотипа
+                            </li>
+                        </ul>
+                        <a data-open-form class="catalog__btn btn-reset" href="#" role="button">
+                            <span>Сделать заказ</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
                     </div>
-                    <a data-open-form class="catalog__btn btn-reset" href="#" role="button">
-                        <span>Сделать заказ</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </a>
+                    <div class="catalog__collage">
+                        <div class="catalog__collage-item"><img src="images/img/rs/Magnity/_MG_0391.jpg" alt="Магнит Дом Севостьянова Екб" loading="eager" decoding="async"></div>
+                        <div class="catalog__collage-item"><img src="images/img/rs/Raznoe/kruzhki-ya-lyublyu-rezh/kruzhka-ya-lyublyu-ekaterinburg.jpg" alt="Кружка Я люблю Екатеринбург" loading="eager" decoding="async"></div>
+                        <div class="catalog__collage-item"><img src="images/img/rs/Bloknoty/Puteshestvie po Uralu/_MG_0005.jpg" alt="Блокнот Путешествие по Уралу 80x80" loading="eager" decoding="async"></div>
+                        <div class="catalog__collage-item"><img src="images/img/rs/Futbolki/ural-detskaya-sinyaya/futbolka-ural-detskaya-sinyaya-01.jpg" alt="Футболка детская Урал 140 10-11 лет синяя" loading="eager" decoding="async"></div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="container" style="max-width: 1024px;">
+        <div class="container catalog__wrap">
             <div class="catalog__content" id="catalog-content">
 
                 <div class="catalog__name-block">
@@ -128,17 +148,17 @@
 
                 <!-- Табы категорий -->
                 <div class="catalog__category-tabs" role="tablist" aria-label="Категории товаров">
-                    <button class="catalog__category-btn catalog__category-btn--active" data-category="1" aria-selected="true" role="tab">Магниты</button>
-                    <button class="catalog__category-btn" data-category="2" aria-selected="false" role="tab">Чай</button>
-                    <button class="catalog__category-btn" data-category="3" aria-selected="false" role="tab">Блокноты</button>
-                    <button class="catalog__category-btn" data-category="4" aria-selected="false" role="tab">Открытки</button>
-                    <button class="catalog__category-btn" data-category="9" aria-selected="false" role="tab">Кружки</button>
-                    <button class="catalog__category-btn" data-category="5" aria-selected="false" role="tab">Раскраски</button>
-                    <button class="catalog__category-btn" data-category="6" aria-selected="false" role="tab">Сладкие сувениры</button>
-                    <button class="catalog__category-btn" data-category="7" aria-selected="false" role="tab">Значки</button>
-                    <button class="catalog__category-btn" data-category="8" aria-selected="false" role="tab">Разное</button>
-                    <button class="catalog__category-btn" data-category="10" aria-selected="false" role="tab">Футболки</button>
-                    <button class="catalog__category-btn" data-category="11" aria-selected="false" role="tab">Зонты</button>
+                    <button class="catalog__category-btn catalog__category-btn--active" data-category="1" aria-selected="true" role="tab"><img class="catalog__category-img" src="images/img/rs/Magnity/magnit-nizhniy-tagil-68/magnit-nizhniy-tagil-68-01.jpg" alt="" width="32" height="32" decoding="async"><span class="catalog__category-name">Магниты</span><span class="catalog__category-count"></span></button>
+                    <button class="catalog__category-btn" data-category="2" aria-selected="false" role="tab"><img class="catalog__category-img" src="images/img/rs/Chay/_MG_0684.jpg" alt="" width="32" height="32" decoding="async"><span class="catalog__category-name">Чай</span><span class="catalog__category-count"></span></button>
+                    <button class="catalog__category-btn" data-category="3" aria-selected="false" role="tab"><img class="catalog__category-img" src="images/img/rs/Bloknoty/bloknot-nizhniy-tagil-62/bloknot-nizhniy-tagil-62-01.jpg" alt="" width="32" height="32" decoding="async"><span class="catalog__category-name">Блокноты</span><span class="catalog__category-count"></span></button>
+                    <button class="catalog__category-btn" data-category="4" aria-selected="false" role="tab"><img class="catalog__category-img" src="images/img/rs/Otkrytki/otkrytka-nizhniy-tagil-50/otkrytka-nizhniy-tagil-50-01.jpg" alt="" width="32" height="32" decoding="async"><span class="catalog__category-name">Открытки</span><span class="catalog__category-count"></span></button>
+                    <button class="catalog__category-btn" data-category="9" aria-selected="false" role="tab"><img class="catalog__category-img" src="images/img/rs/Raznoe/_MG_0675.jpg" alt="" width="32" height="32" decoding="async"><span class="catalog__category-name">Кружки</span><span class="catalog__category-count"></span></button>
+                    <button class="catalog__category-btn" data-category="5" aria-selected="false" role="tab"><img class="catalog__category-img" src="images/img/rs/Raskraski/_MG_0627.jpg" alt="" width="32" height="32" decoding="async"><span class="catalog__category-name">Раскраски</span><span class="catalog__category-count"></span></button>
+                    <button class="catalog__category-btn" data-category="6" aria-selected="false" role="tab"><img class="catalog__category-img" src="images/img/rs/Shokolad/Katalog_Shokolad-1739.jpg" alt="" width="32" height="32" decoding="async"><span class="catalog__category-name">Сладкие сувениры</span><span class="catalog__category-count"></span></button>
+                    <button class="catalog__category-btn" data-category="7" aria-selected="false" role="tab"><img class="catalog__category-img" src="images/img/rs/Znachki/znachok-nizhniy-tagil-55/znachok-nizhniy-tagil-55-01.jpg" alt="" width="32" height="32" decoding="async"><span class="catalog__category-name">Значки</span><span class="catalog__category-count"></span></button>
+                    <button class="catalog__category-btn" data-category="8" aria-selected="false" role="tab"><img class="catalog__category-img" src="images/img/rs/Raznoe/_MG_0080+.jpg" alt="" width="32" height="32" decoding="async"><span class="catalog__category-name">Разное</span><span class="catalog__category-count"></span></button>
+                    <button class="catalog__category-btn" data-category="10" aria-selected="false" role="tab"><img class="catalog__category-img" src="images/img/rs/Futbolki/ural-detskaya-krasnaya/futbolka-ural-detskaya-krasnaya-01.jpg" alt="" width="32" height="32" decoding="async"><span class="catalog__category-name">Футболки</span><span class="catalog__category-count"></span></button>
+                    <button class="catalog__category-btn" data-category="11" aria-selected="false" role="tab"><img class="catalog__category-img" src="images/img/rs/Zonty/kogda-ty-s-urala/zont-kogda-ty-s-urala-01.jpg" alt="" width="32" height="32" decoding="async"><span class="catalog__category-name">Зонты</span><span class="catalog__category-count"></span></button>
                 </div>
 
                 <!-- Мобильная кнопка выбора категории (резерв) -->

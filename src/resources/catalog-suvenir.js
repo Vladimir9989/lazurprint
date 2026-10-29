@@ -8,7 +8,11 @@
 
     // Конфигурация
     const CONFIG = {
-        debounceDelay: 300
+        debounceDelay: 300,
+        // «Показать ещё»: сколько товаров во вкладке без фильтров и сколько добавляет нажатие
+        pageSize: 24,
+        pageSizeMobile: 12,
+        mobileQuery: '(max-width: 676px)'
     };
 
     // Состояние приложения
@@ -17,7 +21,8 @@
         searchQuery: '',
         sortBy: 'default',
         currentCity: '',
-        hitOnly: false
+        hitOnly: false,
+        shownCount: 0
     };
 
     // DOM элементы
@@ -27,7 +32,8 @@
         sortSelect: null,
         citySelect: null,
         hitToggle: null,
-        paginationContainer: null
+        moreWrap: null,
+        moreButton: null
     };
 
     /**
@@ -41,8 +47,12 @@
         initCityFilter();
         initHitFilter();
         initTshirtSliders();
+        initMoreButton();
+        initCategoryCounts();
         rememberOriginalOrder();
         restoreCategoryFromURL();
+        // Первая порция открытой вкладки (если вкладку из адреса уже показали — просто пересчёт)
+        filterProducts();
         // «Назад»/«Вперёд» браузера между вкладками: адрес меняется — показываем его вкладку
         window.addEventListener('popstate', function () {
             const categoryId = new URLSearchParams(window.location.search).get('category') || '1';
@@ -131,12 +141,133 @@
         elements.sortSelect = document.querySelector('.catalog__sort select');
         elements.citySelect = document.querySelector('.catalog__city-filter select');
         elements.hitToggle = document.querySelector('.catalog__hit-toggle');
-        elements.paginationContainer = document.querySelector('.catalog__pagination');
+    }
 
-        // Скрываем пагинацию
-        if (elements.paginationContainer) {
-            elements.paginationContainer.style.display = 'none';
+    /**
+     * «Показать ещё (осталось N)» — под списком вкладки, после .catalog__menu.
+     * Работает только без фильтров (поиск/город/«Хит продаж» показывают все совпадения).
+     */
+    function pageSize() {
+        return window.matchMedia(CONFIG.mobileQuery).matches ? CONFIG.pageSizeMobile : CONFIG.pageSize;
+    }
+
+    function initMoreButton() {
+        const menu = document.querySelector('.catalog__menu');
+        if (!menu) return;
+        elements.moreWrap = document.createElement('div');
+        elements.moreWrap.className = 'catalog__more';
+        elements.moreWrap.hidden = true;
+        elements.moreButton = document.createElement('button');
+        elements.moreButton.type = 'button';
+        elements.moreButton.className = 'catalog__more-btn';
+        elements.moreWrap.appendChild(elements.moreButton);
+        menu.parentNode.insertBefore(elements.moreWrap, menu.nextSibling);
+
+        elements.moreButton.addEventListener('click', function () {
+            const section = document.querySelector(`.catalog__section[data-tab="${state.currentCategory}"]`);
+            if (!section) return;
+            state.shownCount += pageSize();
+            updateMoreButton(applyPortion(section));
+            updateGroups(section);
+        });
+    }
+
+    function updateMoreButton(rest) {
+        if (!elements.moreWrap) return;
+        elements.moreWrap.hidden = rest <= 0;
+        elements.moreButton.textContent = `Показать ещё (осталось ${rest})`;
+    }
+
+    function isFiltered() {
+        return Boolean(state.searchQuery || state.currentCity || state.hitOnly);
+    }
+
+    /**
+     * Порция по всей секции в порядке DOM (через все подгруппы, после сортировки):
+     * первые state.shownCount товаров, прошедших фильтры, видны, остальные — класс
+     * catalog-item--more. Класс, а не style.display: инлайн-стиль — это фильтры.
+     * Возвращает, сколько товаров ещё скрыто.
+     */
+    function applyPortion(section) {
+        const portion = !isFiltered();
+        let shown = 0;
+        let rest = 0;
+        section.querySelectorAll('.catalog__item').forEach(item => {
+            let more = false;
+            if (portion && item.style.display !== 'none') {
+                if (shown < state.shownCount) shown++;
+                else { more = true; rest++; }
+            }
+            item.classList.toggle('catalog-item--more', more);
+        });
+        return rest;
+    }
+
+    function isShown(item) {
+        return item.style.display !== 'none' && !item.classList.contains('catalog-item--more');
+    }
+
+    /**
+     * Прячем подгруппы без видимых товаров: список + подзаголовок + кнопку «Скачать PDF».
+     * Перед списком может стоять подзаголовок (обычный .catalog__subtitle или
+     * стилизованный .catalog__subtitle--style, как у «Детские/Сувенирные/Без принта»
+     * в футболках), а между подзаголовком и списком catalog-pdf.js вставляет свою
+     * кнопку .catalog__pdf-btn. Кнопки PDF появляются позже первого вызова — их
+     * прячет и CSS-правило по соседнему скрытому списку (см. _catalog-suvenir.scss).
+     */
+    function updateGroups(section) {
+        section.querySelectorAll('.catalog__list').forEach(list => {
+            const hidden = !Array.from(list.children).some(isShown);
+            list.classList.toggle('catalog__group--hidden', hidden);
+
+            let sibling = list.previousElementSibling;
+            while (sibling && (
+                sibling.classList.contains('catalog__pdf-btn') ||
+                sibling.classList.contains('catalog__subtitle') ||
+                sibling.classList.contains('catalog__subtitle--style')
+            )) {
+                sibling.classList.toggle('catalog__group--hidden', hidden);
+                const isTitle = sibling.classList.contains('catalog__subtitle') ||
+                    sibling.classList.contains('catalog__subtitle--style');
+                sibling = sibling.previousElementSibling;
+                if (isTitle) break;
+            }
+        });
+    }
+
+    /**
+     * Число товаров на плитках категорий — считаем по разметке, не хардкодим.
+     */
+    function initCategoryCounts() {
+        document.querySelectorAll('.catalog__category-btn').forEach(btn => {
+            const count = btn.querySelector('.catalog__category-count');
+            if (!count) return;
+            const section = document.querySelector(`.catalog__section[data-tab="${btn.dataset.category}"]`);
+            count.textContent = section ? section.querySelectorAll('.catalog__item').length : '';
+        });
+    }
+
+    function plural(n) {
+        const m10 = n % 10;
+        const m100 = n % 100;
+        if (m10 === 1 && m100 !== 11) return 'товар';
+        if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return 'товара';
+        return 'товаров';
+    }
+
+    /**
+     * Строка над сеткой: «Магниты · 200 товаров» (с фильтрами — число найденных).
+     * Узел #current-category остаётся заголовком h2 — меняется только текст.
+     */
+    function updateTitle(matching) {
+        const title = document.getElementById('current-category');
+        if (!title) return;
+        let name = 'Хит продаж';
+        if (!state.hitOnly) {
+            const nameEl = document.querySelector(`.catalog__category-btn[data-category="${state.currentCategory}"] .catalog__category-name`);
+            name = nameEl ? nameEl.textContent.trim() : '';
         }
+        title.textContent = `${name} · ${matching} ${plural(matching)}`;
     }
 
     /**
@@ -182,13 +313,10 @@
             btn.setAttribute('aria-selected', btn.dataset.category === categoryId);
         });
 
-        // Обновляем заголовок категории
-        const categoryTitle = document.getElementById('current-category');
-        if (categoryTitle) {
-            const activeBtn = document.querySelector(`.catalog__category-btn[data-category="${categoryId}"]`);
-            if (activeBtn) {
-                categoryTitle.textContent = activeBtn.textContent.trim();
-            }
+        // Клик по плитке: докручиваем её в видимую область (на телефоне вкладки — прокручиваемая строка)
+        if (historyMode === 'push') {
+            const activeTab = document.querySelector(`.catalog__category-btn[data-category="${categoryId}"]`);
+            if (activeTab && activeTab.scrollIntoView) activeTab.scrollIntoView({ inline: 'center', block: 'nearest' });
         }
 
         // Обновляем URL
@@ -245,11 +373,16 @@
      * показать все сразу, а не только внутри одной открытой вкладки.
      */
     function filterProducts() {
+        // Любая смена фильтра, вкладки или сортировки — снова первая порция
+        state.shownCount = pageSize();
+        let rest = 0;
+
         const sections = state.hitOnly
             ? Array.from(document.querySelectorAll('.catalog__section'))
             : [document.querySelector(`.catalog__section[data-tab="${state.currentCategory}"]`)].filter(Boolean);
 
         let anyVisible = false;
+        let matching = 0;
 
         sections.forEach(section => {
             const items = section.querySelectorAll('.catalog__item');
@@ -287,7 +420,7 @@
                 const visible = matchesSearch && matchesCity && matchesHit;
                 item.style.display = visible ? '' : 'none';
                 if (visible) sectionHasVisible = true;
-                if (visible) anyVisible = true;
+                if (visible) { anyVisible = true; matching++; }
             });
 
             if (state.hitOnly) {
@@ -305,35 +438,13 @@
             // считаем после неё, а не до.
             sortProducts(section);
 
-            if (state.hitOnly) {
-                // Прячем пустые подгруппы (подзаголовок + список), чтобы
-                // не было пустых заголовков без единого товара под ними.
-                section.querySelectorAll('.catalog__list').forEach(list => {
-                    const hasVisibleItem = Array.from(list.children).some(li => li.style.display !== 'none');
-                    list.style.display = hasVisibleItem ? '' : 'none';
-
-                    // Перед списком может стоять подзаголовок (обычный
-                    // .catalog__subtitle или стилизованный .catalog__subtitle--style,
-                    // как у «Детские/Сувенирные/Без принта» в футболках), а между
-                    // подзаголовком и списком скрипт catalog-pdf.js вставляет свою
-                    // кнопку «Скачать PDF» (.catalog__pdf-btn). Прячем всю эту
-                    // цепочку целиком, если под ней не осталось ни одного товара.
-                    let sibling = list.previousElementSibling;
-                    while (sibling && (
-                        sibling.classList.contains('catalog__pdf-btn') ||
-                        sibling.classList.contains('catalog__subtitle') ||
-                        sibling.classList.contains('catalog__subtitle--style')
-                    )) {
-                        sibling.style.display = hasVisibleItem ? '' : 'none';
-                        const isTitle = sibling.classList.contains('catalog__subtitle') ||
-                            sibling.classList.contains('catalog__subtitle--style');
-                        sibling = sibling.previousElementSibling;
-                        if (isTitle) break;
-                    }
-                });
-            }
+            // Порция и пустые подгруппы — после сортировки: она переставляет товары
+            rest += applyPortion(section);
+            updateGroups(section);
         });
 
+        updateMoreButton(rest);
+        updateTitle(matching);
         updateEmptyMessage(!anyVisible && sections.length > 0);
     }
 
@@ -392,16 +503,6 @@
             elements.hitToggle.classList.toggle('catalog__hit-toggle--active', state.hitOnly);
             elements.hitToggle.setAttribute('aria-pressed', String(state.hitOnly));
 
-            const categoryTitle = document.getElementById('current-category');
-            if (categoryTitle) {
-                if (state.hitOnly) {
-                    categoryTitle.textContent = 'Хит продаж';
-                } else {
-                    const activeBtn = document.querySelector(`.catalog__category-btn[data-category="${state.currentCategory}"]`);
-                    categoryTitle.textContent = activeBtn ? activeBtn.textContent.trim() : '';
-                }
-            }
-
             if (!state.hitOnly) {
                 resetHitModeStyles();
             }
@@ -412,7 +513,8 @@
 
     /**
      * Сброс инлайновых стилей, выставленных в режиме «Хит продаж»
-     * (скрытые секции/подгруппы других категорий), при выходе из него.
+     * (показанные секции других категорий), при выходе из него.
+     * Пустые подгруппы скрыты классом — его пересчитает filterProducts.
      */
     function resetHitModeStyles() {
         const menu = document.querySelector('.catalog__menu');
@@ -420,15 +522,6 @@
 
         menu.querySelectorAll('.catalog__section').forEach(section => {
             section.style.display = '';
-        });
-        menu.querySelectorAll('.catalog__list').forEach(list => {
-            list.style.display = '';
-        });
-        menu.querySelectorAll('.catalog__subtitle, .catalog__subtitle--style').forEach(subtitle => {
-            subtitle.style.display = '';
-        });
-        menu.querySelectorAll('.catalog__pdf-btn').forEach(btn => {
-            btn.style.display = '';
         });
     }
 
