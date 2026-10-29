@@ -412,7 +412,9 @@
         const el = compact ? sticky.tabs : sticky.panel;
         const other = compact ? sticky.panel : sticky.tabs;
         const rect = el.getBoundingClientRect();
-        const stuck = rect.top <= headerBottom + 1;
+        // у панели на ПК top = низ шапки + зазор — сравниваем с её собственным top
+        const stickTop = parseFloat(getComputedStyle(el).top);
+        const stuck = rect.top <= (isNaN(stickTop) ? headerBottom : stickTop) + 1;
 
         el.classList.toggle('is-stuck', stuck);
         other.classList.remove('is-stuck');

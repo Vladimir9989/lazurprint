@@ -149,95 +149,163 @@
         }
     }
 
+    // Строка фильтров внутри панели-«пульта»: поля с заливкой и значками
     &__controls {
-        display: flex;
-        gap: 15px;
-        margin-bottom: 30px;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 200px 220px auto;
+        gap: 10px;
         align-items: center;
+
+        @include xl {
+            grid-template-columns: minmax(0, 1fr) 180px 190px auto;
+        }
+
+        @include lg {
+            grid-template-columns: 1fr 1fr auto;
+
+            & .catalog__search {
+                grid-column: 1 / -1;
+            }
+        }
+
+        // телефон: поиск, ниже сортировка и город пополам, «Хит» на всю ширину
+        @include mg {
+            grid-template-columns: 1fr 1fr;
+
+            & .catalog__hit-toggle {
+                grid-column: 1 / -1;
+            }
+        }
     }
 
     &__search {
-        flex: 1;
-        min-width: 250px;
         position: relative;
-        
+        min-width: 0;
+
         & input {
             width: 100%;
-            height: 44px;
-            padding: 0 40px 0 15px;
-            border: 1px solid #dfe7f5;
-            border-radius: 12px;
-            box-shadow: 0 1px 2px rgba(8, 31, 92, 0.04);
-            font-size: 14px;
-            transition: border-color 0.2s;
-            
+            height: 48px;
+            box-sizing: border-box;
+            padding: 0 16px 0 46px;
+            border: 1px solid transparent;
+            border-radius: 14px;
+            background-color: #f3f6fd;
+            font: inherit;
+            font-size: 15px;
+            color: var(--color-galaxy);
+            transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+
+            &::placeholder {
+                color: #8391ab;
+            }
+
+            &:hover {
+                background-color: #edf2fc;
+            }
+
             &:focus {
                 outline: none;
                 border-color: var(--color-primary);
+                background-color: #fff;
                 box-shadow: 0 0 0 4px rgba(62, 119, 251, 0.12);
             }
         }
-        
+
         & svg {
             position: absolute;
-            right: 12px;
+            left: 15px;
             top: 50%;
             transform: translateY(-50%);
             width: 20px;
             height: 20px;
-            opacity: 0.5;
+            color: var(--color-primary);
+            pointer-events: none;
         }
     }
 
+    // значок слева в ::before: сортировка — стрелки, город — булавка
     &__sort,
     &__city-filter {
+        position: relative;
+        min-width: 0;
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            z-index: 1;
+            width: 18px;
+            height: 18px;
+            transform: translateY(-50%);
+            background: center / contain no-repeat;
+            pointer-events: none;
+        }
+
         & select {
-            height: 44px;
-            padding: 0 35px 0 15px;
-            border: 1px solid #dfe7f5;
-            border-radius: 12px;
-            box-shadow: 0 1px 2px rgba(8, 31, 92, 0.04);
+            width: 100%;
+            height: 48px;
+            box-sizing: border-box;
+            padding: 0 36px 0 42px;
+            border: 1px solid transparent;
+            border-radius: 14px;
+            background: #f3f6fd url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233E77FB' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") right 14px center / 14px no-repeat;
+            font: inherit;
             font-size: 14px;
-            background-color: white;
+            color: var(--color-galaxy);
+            text-overflow: ellipsis;
             cursor: pointer;
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
+            transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+
+            &:hover {
+                background-color: #edf2fc;
+            }
 
             &:focus {
                 outline: none;
                 border-color: var(--color-primary);
+                background-color: #fff;
                 box-shadow: 0 0 0 4px rgba(62, 119, 251, 0.12);
             }
         }
+    }
+
+    &__sort::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233E77FB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 4v16M4 7l3-3 3 3M17 20V4M14 17l3 3 3-3'/%3E%3C/svg%3E");
+    }
+
+    &__city-filter::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233E77FB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z'/%3E%3Ccircle cx='12' cy='9.5' r='2.5'/%3E%3C/svg%3E");
     }
 
     &__hit-toggle {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        height: 44px;
-        padding: 0 18px;
-        border: 1px solid #ff6b6b;
-        background-color: #fff1f1;
-        color: #ff3b3b;
-        border-radius: 10px;
+        justify-content: center;
+        gap: 8px;
+        height: 48px;
+        padding: 0 20px;
+        border: 1px solid rgba(255, 59, 59, 0.3);
+        border-radius: 14px;
+        background: linear-gradient(135deg, #fff5f5, #ffe8e8);
+        color: #e02424;
+        font: inherit;
         font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
+        font-weight: 700;
         white-space: nowrap;
-        transition: all 0.2s;
+        cursor: pointer;
+        transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
 
         & svg {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             flex-shrink: 0;
         }
 
         &:hover {
-            background-color: #ffe0e0;
+            border-color: #ff3b3b;
+            box-shadow: 0 8px 18px -10px rgba(255, 59, 59, 0.7);
         }
 
         &:focus-visible {
@@ -246,14 +314,10 @@
         }
 
         &--active {
-            background: #ff3b3b;
-            border-color: #ff3b3b;
+            border-color: transparent;
+            background: linear-gradient(135deg, #ff3b3b, #ff7a59);
             color: var(--color-white);
-            box-shadow: 0 2px 8px rgba(255, 59, 59, 0.35);
-
-            &:hover {
-                background: #e62f2f;
-            }
+            box-shadow: 0 10px 22px -10px rgba(255, 59, 59, 0.9);
         }
     }
 
@@ -290,56 +354,55 @@
         }
     }
 
-    // Плитки категорий; на телефоне — одна прокручиваемая строка
+    // Разделы — плитки со значком (SVG в разметке) и числом товаров (ставит JS)
     &__category-tabs {
-        display: flex;
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(84px, 1fr);
         gap: 8px;
-        flex-wrap: wrap;
-        margin-bottom: 30px;
-
-        @include mg {
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            scroll-snap-type: x proximity;
-            margin-right: -15px;
-            padding-right: 15px;
-            padding-bottom: 6px;
-            scrollbar-width: none;
-
-            &::-webkit-scrollbar {
-                display: none;
-            }
-        }
+        margin-top: 14px;
+        padding: 14px 2px 12px; // запас, чтобы тень активной плитки и рамка фокуса не обрезались
+        border-top: 1px dashed #e4ebf7;
+        overflow-x: auto;
+        scroll-snap-type: x proximity;
+        scroll-padding-inline: 2px;
+        scrollbar-width: thin;
+        scrollbar-color: #cfdaf0 transparent;
     }
 
     &__category-btn {
-        display: inline-flex;
+        display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 8px;
-        flex-shrink: 0;
-        scroll-snap-align: center;
-        padding: 5px 16px 5px 5px;
-        border: 1px solid #e1e7f2;
-        background-color: var(--color-white);
+        gap: 6px;
+        scroll-snap-align: start;
+        padding: 12px 6px 10px;
+        border: 1px solid transparent;
+        border-radius: 16px;
+        background: transparent;
         color: var(--color-galaxy);
-        border-radius: 999px;
-        font-size: 14px;
+        font: inherit;
+        font-size: 13px;
+        line-height: 1.2;
+        text-align: center;
         cursor: pointer;
-        transition: border-color 0.2s, box-shadow 0.2s;
+        transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
 
         &:hover {
-            border-color: var(--color-primary);
+            border-color: #e1e8f6;
+            background-color: #f3f6fd;
         }
 
-        &--active {
-            border-color: transparent;
-            background: linear-gradient(135deg, #3E77FB, #6de2eb);
-            color: var(--color-white);
-            box-shadow: 0 4px 12px rgba(62, 119, 251, 0.3);
+        &:hover .catalog__category-icon {
+            transform: translateY(-2px);
+        }
 
-            &:hover {
-                border-color: transparent;
-            }
+        &--active,
+        &--active:hover {
+            border-color: transparent;
+            background: linear-gradient(135deg, #3E77FB, #4fb3f3);
+            color: var(--color-white);
+            box-shadow: 0 8px 18px -10px rgba(62, 119, 251, 0.9);
         }
 
         &:focus-visible {
@@ -348,23 +411,36 @@
         }
     }
 
-    &__category-img {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        object-fit: cover;
-        background-color: #f4f6fa;
+    &__category-icon {
+        display: grid;
+        place-items: center;
         flex-shrink: 0;
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        background: linear-gradient(145deg, #eef3ff, #e0eafd);
+        color: var(--color-primary);
+        transition: transform 0.2s ease;
+
+        & svg {
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+    &__category-btn--active &__category-icon {
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+        color: var(--color-white);
     }
 
     &__category-name {
-        font-weight: 500;
-        white-space: nowrap;
+        font-weight: 700;
     }
 
     &__category-count {
-        font-size: 13px;
-        color: #8a95a8;
+        font-size: 12px;
+        color: #8391ab;
 
         &:empty {
             display: none;
@@ -1437,70 +1513,140 @@ body.cart-open {
     }
 }
 
-// ---------- Липкая панель: поиск + вкладки (catalog-suvenir.js, initStickyPanel) ----------
-// Откат: убрать этот блок, обёртку .catalog__sticky в HTML и initStickyPanel в JS.
+// ---------- Панель-«пульт»: поиск, фильтры, разделы; липкая (catalog-suvenir.js, initStickyPanel) ----------
+// Откат липкости: убрать position/top у .catalog__sticky и .catalog__category-tabs (телефон), initStickyPanel в JS.
+// Компактный вид при «прилипании» — плитки разделов становятся таблетками «значок + название».
+@mixin catalog-tabs-compact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    & .catalog__category-btn {
+        flex-direction: row;
+        gap: 8px;
+        padding: 4px 12px 4px 4px;
+        border-radius: 999px;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    & .catalog__category-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+
+        & svg {
+            width: 18px;
+            height: 18px;
+        }
+    }
+
+    & .catalog__category-count {
+        display: none;
+    }
+}
+
 .catalog__sticky {
     position: sticky;
-    top: var(--sticky-top, 83px); // низ фиксированной шапки, значение ставит JS
+    top: calc(var(--sticky-top, 83px) + 10px); // низ фиксированной шапки (ставит JS) + зазор
     z-index: 14; // шапка — 15, корзина — 90
-    margin: 0 -15px 16px;
-    padding: 10px 15px 0;
-    background-color: rgba(247, 249, 254, 0.86);
-    backdrop-filter: blur(12px);
+    margin: 0 0 24px;
+    padding: 16px;
+    border: 1px solid #e4ebf7;
+    border-radius: 22px;
+    background-color: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 18px 40px -28px rgba(8, 31, 92, 0.35);
     transition: box-shadow 0.2s ease;
 
-    & .catalog__controls {
-        margin-bottom: 12px;
-    }
-
-    & .catalog__category-tabs {
-        margin-bottom: 0;
-        padding-bottom: 12px;
-    }
-
-    // «Прилипла»: плитки без фото и числа — вкладки умещаются в одну строку, панель ниже
     &.is-stuck {
-        box-shadow: 0 8px 16px -8px rgba(8, 31, 92, 0.2);
+        padding: 10px 12px;
+        box-shadow: 0 18px 40px -16px rgba(8, 31, 92, 0.35);
 
-        & .catalog__controls {
-            margin-bottom: 8px;
+        & .catalog__search input,
+        & .catalog__sort select,
+        & .catalog__city-filter select,
+        & .catalog__hit-toggle {
+            height: 42px;
         }
 
+        // на ПК — только названия: 11 разделов умещаются в одну строку
         & .catalog__category-tabs {
-            padding-bottom: 10px;
-        }
+            @include catalog-tabs-compact;
+            margin-top: 10px;
+            padding: 10px 0 2px;
+            overflow: visible;
 
-        & .catalog__category-btn {
-            padding: 8px 14px;
-        }
+            & .catalog__category-btn {
+                padding: 7px 14px;
+            }
 
-        & .catalog__category-img,
-        & .catalog__category-count {
-            display: none;
+            & .catalog__category-icon {
+                display: none;
+            }
         }
     }
 
-    // Телефон: липкая только строка вкладок, обёртка «растворяется»
+    // Телефон: обёртка «растворяется», фильтры — своей карточкой, липкая только строка разделов
     @include mg {
         display: contents;
 
         & .catalog__controls {
-            margin-bottom: 14px;
+            margin-bottom: 12px;
+            padding: 12px;
+            border: 1px solid #e4ebf7;
+            border-radius: 18px;
+            background-color: #fff;
+        }
+
+        & .catalog__search input,
+        & .catalog__sort select,
+        & .catalog__city-filter select,
+        & .catalog__hit-toggle {
+            height: 44px;
+        }
+
+        & .catalog__hit-toggle {
+            padding: 0 14px;
         }
 
         & .catalog__category-tabs {
             position: sticky;
             top: var(--sticky-top, 71px);
             z-index: 14;
+            grid-auto-columns: 84px;
             margin: 0 -15px 16px;
-            padding: 8px 15px;
-            background-color: rgba(247, 249, 254, 0.9);
+            padding: 8px 15px 10px;
+            border-top: 0;
+            background-color: rgba(247, 249, 254, 0.92);
             backdrop-filter: blur(12px);
+            scroll-padding-inline: 15px; // иначе «примагничивание» прижимает первую плитку к краю экрана
+            scrollbar-width: none;
             transition: box-shadow 0.2s ease;
 
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
             &.is-stuck {
+                @include catalog-tabs-compact;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding: 8px 15px;
                 box-shadow: 0 8px 16px -8px rgba(8, 31, 92, 0.2);
             }
+        }
+
+        & .catalog__category-btn {
+            padding: 10px 4px 8px;
+            border-color: #e4ebf7;
+            background-color: #fff;
+            font-size: 12px;
+        }
+
+        & .catalog__category-btn--active {
+            border-color: transparent;
+            background: linear-gradient(135deg, #3E77FB, #4fb3f3);
         }
     }
 }
