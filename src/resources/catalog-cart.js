@@ -47,7 +47,8 @@
         if (!name) return null;
         const priceText = (item.querySelector('.catalog-item__price')?.textContent || '').replace(/\s+/g, ' ').trim();
         const article = (item.querySelector('.catalog-item__number')?.textContent || '').replace(/^арт\.:\s*/i, '').replace(/\s+/g, ' ').trim();
-        return { name: name, article: article, priceText: priceText, price: parsePrice(priceText) };
+        const img = item.querySelector('.catalog-item__img-cnt img');
+        return { name: name, article: article, priceText: priceText, price: parsePrice(priceText), img: img ? img.currentSrc || img.src : '' };
     }
 
     function addToCart(product, qty) {
@@ -204,6 +205,7 @@
         listEl.innerHTML = cart.map(function(p, i) {
             const sum = p.price !== null ? fmtMoney(p.price * p.qty) : 'цену уточнит менеджер';
             return '<li class="cart-row">' +
+                '<img class="cart-row__img" src="' + esc(p.img || '') + '" alt="" width="56" height="56"' + (p.img ? '' : ' hidden') + '>' +
                 '<div class="cart-row__main"><div class="cart-row__name">' + esc(p.name) + '</div>' +
                 '<div class="cart-row__meta">' + (p.article ? 'арт.: ' + esc(p.article) + ' · ' : '') + esc(p.priceText) + '</div></div>' +
                 '<div class="cart-row__side"><label class="cart-add__qty"><input type="number" class="cart-add__input" min="1" max="' + MAX_QTY + '" value="' + p.qty + '" inputmode="numeric" data-cart-qty="' + i + '" aria-label="Количество, шт"><span>шт</span></label>' +
@@ -241,26 +243,52 @@
         return 'Заказ_Лазурь_' + d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + '.xlsx';
     }
 
+    // Фото для Excel: перерисовываем в маленький JPEG на белом фоне; не загрузилось — строка без фото
+    function imageToJpegBase64(src) {
+        return new Promise(function(resolve) {
+            if (!src) { resolve(null); return; }
+            const img = new Image();
+            const timer = setTimeout(function() { resolve(null); }, 5000);
+            img.onload = function() {
+                clearTimeout(timer);
+                try {
+                    const k = Math.min(1, 160 / Math.max(img.naturalWidth, img.naturalHeight));
+                    const c = document.createElement('canvas');
+                    c.width = Math.max(1, Math.round(img.naturalWidth * k));
+                    c.height = Math.max(1, Math.round(img.naturalHeight * k));
+                    const ctx = c.getContext('2d');
+                    ctx.fillStyle = '#fff';
+                    ctx.fillRect(0, 0, c.width, c.height);
+                    ctx.drawImage(img, 0, 0, c.width, c.height);
+                    resolve(c.toDataURL('image/jpeg', 0.85));
+                } catch (e) { resolve(null); }
+            };
+            img.onerror = function() { clearTimeout(timer); resolve(null); };
+            img.src = src;
+        });
+    }
+
     function downloadExcel(btn) {
         if (!cart.length) return;
         btn.disabled = true;
         statusEl.textContent = 'Готовим файл…';
-        loadExcelJS().then(function() {
+        Promise.all([loadExcelJS(), Promise.all(cart.map(function(p) { return imageToJpegBase64(p.img); }))]).then(function(res) {
+            const photos = res[1];
             const wb = new window.ExcelJS.Workbook();
             const ws = wb.addWorksheet('Заказ', { views: [{ state: 'frozen', ySplit: 4 }] });
             ws.columns = [
-                { width: 5 }, { width: 14 }, { width: 58 }, { width: 14 }, { width: 10 }, { width: 16 }, { width: 30 }
+                { width: 5 }, { width: 14 }, { width: 13 }, { width: 58 }, { width: 14 }, { width: 10 }, { width: 16 }, { width: 30 }
             ];
 
-            ws.mergeCells('A1:G1');
+            ws.mergeCells('A1:H1');
             ws.getCell('A1').value = 'Заказ с сайта lazurprint.ru — типография «Лазурь»';
             ws.getCell('A1').font = { bold: true, size: 14 };
-            ws.mergeCells('A2:G2');
+            ws.mergeCells('A2:H2');
             ws.getCell('A2').value = 'Дата: ' + new Date().toLocaleDateString('ru-RU');
             ws.getCell('A2').font = { color: { argb: 'FF666666' } };
 
             const head = ws.getRow(4);
-            head.values = ['№', 'Артикул', 'Название', 'Цена, руб.', 'Кол-во, шт', 'Сумма, руб.', 'Примечание'];
+            head.values = ['№', 'Артикул', 'Фото', 'Название', 'Цена, руб.', 'Кол-во, шт', 'Сумма, руб.', 'Примечание'];
             head.font = { bold: true, color: { argb: 'FFFFFFFF' } };
             head.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
             head.height = 24;
@@ -279,25 +307,30 @@
                 if (priced) total += sum;
                 row.getCell(1).value = i + 1;
                 row.getCell(2).value = p.article;
-                row.getCell(3).value = p.name;
-                row.getCell(4).value = priced ? p.price : null;
-                row.getCell(5).value = p.qty;
-                row.getCell(6).value = priced ? { formula: 'D' + r + '*E' + r, result: sum } : null;
-                row.getCell(7).value = priced ? '' : p.priceText + ' — цену уточнит менеджер';
-                row.getCell(4).numFmt = '#,##0.00';
-                row.getCell(6).numFmt = '#,##0.00';
-                row.alignment = { vertical: 'top', wrapText: true };
-                row.getCell(1).alignment = { vertical: 'top', horizontal: 'center' };
-                row.getCell(5).alignment = { vertical: 'top', horizontal: 'center' };
-                for (let c = 1; c <= 7; c++) row.getCell(c).border = { top: thin, left: thin, bottom: thin, right: thin };
+                row.getCell(4).value = p.name;
+                row.getCell(5).value = priced ? p.price : null;
+                row.getCell(6).value = p.qty;
+                row.getCell(7).value = priced ? { formula: 'E' + r + '*F' + r, result: sum } : null;
+                row.getCell(8).value = priced ? '' : p.priceText + ' — цену уточнит менеджер';
+                row.getCell(5).numFmt = '#,##0.00';
+                row.getCell(7).numFmt = '#,##0.00';
+                row.height = photos[i] ? 62 : 22;
+                row.alignment = { vertical: 'middle', wrapText: true };
+                row.getCell(1).alignment = { vertical: 'middle', horizontal: 'center' };
+                row.getCell(6).alignment = { vertical: 'middle', horizontal: 'center' };
+                if (photos[i]) {
+                    const id = wb.addImage({ base64: photos[i], extension: 'jpeg' });
+                    ws.addImage(id, { tl: { col: 2.08, row: r - 1 + 0.06 }, ext: { width: 76, height: 76 }, editAs: 'oneCell' });
+                }
+                for (let c = 1; c <= 8; c++) row.getCell(c).border = { top: thin, left: thin, bottom: thin, right: thin };
             });
 
             const last = 4 + cart.length;
             const tr = ws.getRow(last + 1);
-            tr.getCell(5).value = 'Итого:';
-            tr.getCell(5).alignment = { horizontal: 'right' };
-            tr.getCell(6).value = { formula: 'SUM(F5:F' + last + ')', result: total };
-            tr.getCell(6).numFmt = '#,##0.00';
+            tr.getCell(6).value = 'Итого:';
+            tr.getCell(6).alignment = { horizontal: 'right' };
+            tr.getCell(7).value = { formula: 'SUM(G5:G' + last + ')', result: total };
+            tr.getCell(7).numFmt = '#,##0.00';
             tr.font = { bold: true };
 
             const hint = ws.getRow(last + 3);

@@ -907,8 +907,8 @@
 
 .cart-fab {
     position: fixed;
-    left: 20px;
-    bottom: 20px;
+    right: 20px;
+    top: 98px; // под фиксированной шапкой (82px)
     z-index: 90;
     width: 56px;
     height: 56px;
@@ -921,6 +921,13 @@
     color: #fff;
     box-shadow: 0 6px 18px rgba(62, 119, 251, 0.45);
     cursor: pointer;
+
+    @include sm {
+        top: 70px; // шапка на телефоне 55px
+        right: 12px;
+        width: 48px;
+        height: 48px;
+    }
 
     &__count {
         position: absolute;
@@ -1125,5 +1132,18 @@ body.cart-open {
         line-height: 1;
         color: #aaa;
         cursor: pointer;
+    }
+}
+
+.cart-row__img {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    border-radius: 6px;
+    background: #fff;
+
+    &[hidden] {
+        display: none;
     }
 }
