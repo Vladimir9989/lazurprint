@@ -48,6 +48,7 @@
         initHitFilter();
         initTshirtSliders();
         initMoreButton();
+        initStickyPanel();
         initCategoryCounts();
         rememberOriginalOrder();
         restoreCategoryFromURL();
@@ -334,6 +335,61 @@
 
         // Фильтр по городу не сбрасывается при смене категории — применяем его к новой секции
         filterProducts();
+        if (historyMode === 'push') keepListInView();
+    }
+
+    /**
+     * Липкая панель (поиск + вкладки). Позицию под шапкой и место кнопки корзины задают
+     * CSS-переменные: --sticky-top (низ фиксированной шапки — высота меняется по брейкпоинтам)
+     * и --cart-top (корзина всегда под панелью, а не поверх неё). На телефоне (≤ 676 px)
+     * липкая только строка вкладок: обёртка там display: contents.
+     */
+    const sticky = { panel: null, tabs: null, header: null, stuck: false, bottom: 0, ticking: false };
+
+    function initStickyPanel() {
+        sticky.panel = document.querySelector('.catalog__sticky');
+        sticky.tabs = document.querySelector('.catalog__category-tabs');
+        sticky.header = document.querySelector('header');
+        if (!sticky.panel || !sticky.tabs) return;
+        const schedule = function () {
+            if (sticky.ticking) return;
+            sticky.ticking = true;
+            requestAnimationFrame(updateSticky);
+        };
+        window.addEventListener('scroll', schedule, { passive: true });
+        window.addEventListener('resize', schedule);
+        sticky.schedule = schedule;
+        updateSticky();
+    }
+
+    function updateSticky() {
+        sticky.ticking = false;
+        const root = document.documentElement;
+        const headerBottom = sticky.header ? Math.max(0, Math.round(sticky.header.getBoundingClientRect().bottom)) : 0;
+        const compact = getComputedStyle(sticky.panel).display === 'contents';
+        const el = compact ? sticky.tabs : sticky.panel;
+        const other = compact ? sticky.panel : sticky.tabs;
+        const rect = el.getBoundingClientRect();
+        const stuck = rect.top <= headerBottom + 1;
+
+        el.classList.toggle('is-stuck', stuck);
+        other.classList.remove('is-stuck');
+        sticky.stuck = stuck;
+        sticky.bottom = stuck ? Math.max(rect.bottom, headerBottom) : headerBottom;
+
+        root.style.setProperty('--sticky-top', headerBottom + 'px');
+        root.style.setProperty('--cart-top', (stuck ? sticky.bottom + 12 : headerBottom + 15) + 'px');
+    }
+
+    // Смена вкладки при прокрутке вниз: панель липкая, а список другой высоты — возвращаем его начало под панель
+    function keepListInView() {
+        if (!sticky.panel) return;
+        updateSticky();
+        if (!sticky.stuck) return;
+        const menu = document.querySelector('.catalog__menu');
+        if (!menu) return;
+        const target = window.scrollY + menu.getBoundingClientRect().top - sticky.bottom - 8;
+        if (window.scrollY > target) window.scrollTo(0, Math.max(0, target));
     }
 
     /**

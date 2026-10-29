@@ -1207,8 +1207,9 @@
 .cart-fab {
     position: fixed;
     right: 20px;
-    top: 98px; // под фиксированной шапкой (82px)
+    top: var(--cart-top, 98px); // под шапкой и под липкой панелью — значение считает catalog-suvenir.js
     z-index: 90;
+    transition: top 0.2s ease;
     width: 56px;
     height: 56px;
     display: flex;
@@ -1222,7 +1223,7 @@
     cursor: pointer;
 
     @include sm {
-        top: 70px; // шапка на телефоне 55px
+        top: var(--cart-top, 86px);
         right: 12px;
         width: 48px;
         height: 48px;
@@ -1444,5 +1445,71 @@ body.cart-open {
 
     &[hidden] {
         display: none;
+    }
+}
+
+// ---------- Липкая панель: поиск + вкладки (catalog-suvenir.js, initStickyPanel) ----------
+// Откат: убрать этот блок, обёртку .catalog__sticky в HTML и initStickyPanel в JS.
+.catalog__sticky {
+    position: sticky;
+    top: var(--sticky-top, 83px); // низ фиксированной шапки, значение ставит JS
+    z-index: 14; // шапка — 15, корзина — 90
+    margin: 0 -15px 16px;
+    padding: 10px 15px 0;
+    background-color: var(--color-white);
+    transition: box-shadow 0.2s ease;
+
+    & .catalog__controls {
+        margin-bottom: 12px;
+    }
+
+    & .catalog__category-tabs {
+        margin-bottom: 0;
+        padding-bottom: 12px;
+    }
+
+    // «Прилипла»: плитки без фото и числа — вкладки умещаются в одну строку, панель ниже
+    &.is-stuck {
+        box-shadow: 0 8px 16px -8px rgba(8, 31, 92, 0.2);
+
+        & .catalog__controls {
+            margin-bottom: 8px;
+        }
+
+        & .catalog__category-tabs {
+            padding-bottom: 10px;
+        }
+
+        & .catalog__category-btn {
+            padding: 8px 14px;
+        }
+
+        & .catalog__category-img,
+        & .catalog__category-count {
+            display: none;
+        }
+    }
+
+    // Телефон: липкая только строка вкладок, обёртка «растворяется»
+    @include mg {
+        display: contents;
+
+        & .catalog__controls {
+            margin-bottom: 14px;
+        }
+
+        & .catalog__category-tabs {
+            position: sticky;
+            top: var(--sticky-top, 71px);
+            z-index: 14;
+            margin: 0 -15px 16px;
+            padding: 8px 15px;
+            background-color: var(--color-white);
+            transition: box-shadow 0.2s ease;
+
+            &.is-stuck {
+                box-shadow: 0 8px 16px -8px rgba(8, 31, 92, 0.2);
+            }
+        }
     }
 }
