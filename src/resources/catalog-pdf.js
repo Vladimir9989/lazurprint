@@ -133,7 +133,8 @@
                 btn.className = 'catalog__pdf-btn';
                 btn.setAttribute('data-initialized', 'true');
                 btn.setAttribute('data-category-name', categoryName);
-                btn.style.cssText = 'display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:#5da5db;color:white;border:none;border-radius:6px;font-size:13px;cursor:pointer;margin:5px 0 10px 0;';
+                btn.type = 'button';
+                // оформление — .catalog__pdf-btn в _catalog-suvenir.scss
                 btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M14 2H6C4.9 2 4 2.9 4 4v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6z" stroke="currentColor" stroke-width="2"/><path d="M14 2v6h6" stroke="currentColor" stroke-width="2"/><path d="M8 13h8" stroke="currentColor" stroke-width="2"/></svg> Скачать PDF';
                 
                 btn.addEventListener('click', function() {

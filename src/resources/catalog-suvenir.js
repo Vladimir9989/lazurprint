@@ -50,6 +50,7 @@
         initMoreButton();
         initStickyPanel();
         initCategoryCounts();
+        initCityChips();
         rememberOriginalOrder();
         restoreCategoryFromURL();
         // Первая порция открытой вкладки (если вкладку из адреса уже показали — просто пересчёт)
@@ -155,28 +156,37 @@
     function initMoreButton() {
         const menu = document.querySelector('.catalog__menu');
         if (!menu) return;
+        // «Показано 24 из 200» + полоска прогресса + кнопка
         elements.moreWrap = document.createElement('div');
         elements.moreWrap.className = 'catalog__more';
         elements.moreWrap.hidden = true;
-        elements.moreButton = document.createElement('button');
-        elements.moreButton.type = 'button';
-        elements.moreButton.className = 'catalog__more-btn';
-        elements.moreWrap.appendChild(elements.moreButton);
+        elements.moreWrap.innerHTML =
+            '<div class="catalog__more-progress"><span class="catalog__more-text"></span>' +
+            '<div class="catalog__more-bar"><span></span></div></div>' +
+            '<button type="button" class="catalog__more-btn"></button>';
+        elements.moreText = elements.moreWrap.querySelector('.catalog__more-text');
+        elements.moreBar = elements.moreWrap.querySelector('.catalog__more-bar span');
+        elements.moreButton = elements.moreWrap.querySelector('.catalog__more-btn');
         menu.parentNode.insertBefore(elements.moreWrap, menu.nextSibling);
 
         elements.moreButton.addEventListener('click', function () {
             const section = document.querySelector(`.catalog__section[data-tab="${state.currentCategory}"]`);
             if (!section) return;
             state.shownCount += pageSize();
-            updateMoreButton(applyPortion(section));
+            const portion = applyPortion(section);
+            updateMoreButton(portion.rest, portion.shown);
             updateGroups(section);
         });
     }
 
-    function updateMoreButton(rest) {
+    function updateMoreButton(rest, shown) {
         if (!elements.moreWrap) return;
         elements.moreWrap.hidden = rest <= 0;
-        elements.moreButton.textContent = `Показать ещё (осталось ${rest})`;
+        if (rest <= 0) return;
+        const total = shown + rest;
+        elements.moreText.textContent = `Показано ${shown} из ${total}`;
+        elements.moreBar.style.width = Math.round(shown / total * 100) + '%';
+        elements.moreButton.textContent = `Показать ещё ${Math.min(pageSize(), rest)}`;
     }
 
     function isFiltered() {
@@ -187,7 +197,7 @@
      * Порция по всей секции в порядке DOM (через все подгруппы, после сортировки):
      * первые state.shownCount товаров, прошедших фильтры, видны, остальные — класс
      * catalog-item--more. Класс, а не style.display: инлайн-стиль — это фильтры.
-     * Возвращает, сколько товаров ещё скрыто.
+     * Возвращает { shown, rest } — сколько показано и сколько ещё скрыто.
      */
     function applyPortion(section) {
         const portion = !isFiltered();
@@ -201,7 +211,7 @@
             }
             item.classList.toggle('catalog-item--more', more);
         });
-        return rest;
+        return { shown, rest };
     }
 
     function isShown(item) {
@@ -246,6 +256,32 @@
             const section = document.querySelector(`.catalog__section[data-tab="${btn.dataset.category}"]`);
             count.textContent = section ? section.querySelectorAll('.catalog__item').length : '';
         });
+        // цифры на первом экране
+        const total = document.querySelector('[data-catalog-total]');
+        if (total) total.textContent = document.querySelectorAll('.catalog__section .catalog__item').length;
+        const sections = document.querySelector('[data-catalog-sections]');
+        if (sections) sections.textContent = document.querySelectorAll('.catalog__section').length;
+    }
+
+    /**
+     * Метка города на фото товара — по data-city и подписям из фильтра «Все города».
+     * Несколько городов — первый и «+N».
+     */
+    function initCityChips() {
+        if (!elements.citySelect) return;
+        const names = {};
+        elements.citySelect.querySelectorAll('option').forEach(opt => {
+            if (opt.value && opt.value !== 'universal') names[opt.value] = opt.textContent.replace(/\s*\(.*\)\s*$/, '').trim();
+        });
+        document.querySelectorAll('.catalog__item[data-city]').forEach(item => {
+            const box = item.querySelector('.catalog-item__img-cnt');
+            const codes = item.dataset.city.split(' ').filter(code => names[code]);
+            if (!box || !codes.length || box.querySelector('.catalog-item__city')) return;
+            const chip = document.createElement('span');
+            chip.className = 'catalog-item__city';
+            chip.textContent = names[codes[0]] + (codes.length > 1 ? ` +${codes.length - 1}` : '');
+            box.appendChild(chip);
+        });
     }
 
     function plural(n) {
@@ -257,8 +293,8 @@
     }
 
     /**
-     * Строка над сеткой: «Магниты · 200 товаров» (с фильтрами — число найденных).
-     * Узел #current-category остаётся заголовком h2 — меняется только текст.
+     * Заголовок над сеткой: «Магниты» + метка «200 товаров» (с фильтрами — число найденных).
+     * Узел #current-category остаётся заголовком h2 — меняется только содержимое.
      */
     function updateTitle(matching) {
         const title = document.getElementById('current-category');
@@ -268,7 +304,13 @@
             const nameEl = document.querySelector(`.catalog__category-btn[data-category="${state.currentCategory}"] .catalog__category-name`);
             name = nameEl ? nameEl.textContent.trim() : '';
         }
-        title.textContent = `${name} · ${matching} ${plural(matching)}`;
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'catalog__current-name';
+        nameSpan.textContent = name;
+        const countSpan = document.createElement('span');
+        countSpan.className = 'catalog__current-count';
+        countSpan.textContent = `${matching} ${plural(matching)}`;
+        title.replaceChildren(nameSpan, countSpan);
     }
 
     /**
@@ -432,6 +474,7 @@
         // Любая смена фильтра, вкладки или сортировки — снова первая порция
         state.shownCount = pageSize();
         let rest = 0;
+        let shown = 0;
 
         const sections = state.hitOnly
             ? Array.from(document.querySelectorAll('.catalog__section'))
@@ -495,11 +538,13 @@
             sortProducts(section);
 
             // Порция и пустые подгруппы — после сортировки: она переставляет товары
-            rest += applyPortion(section);
+            const portion = applyPortion(section);
+            rest += portion.rest;
+            shown += portion.shown;
             updateGroups(section);
         });
 
-        updateMoreButton(rest);
+        updateMoreButton(rest, shown);
         updateTitle(matching);
         updateEmptyMessage(!anyVisible && sections.length > 0);
     }
