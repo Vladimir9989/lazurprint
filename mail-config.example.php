@@ -6,5 +6,6 @@
 return array(
     'smtp_user'        => 'noreply@info.lazurprint.ru',
     'smtp_password'    => '',
+    'life_book_dir'    => '/home/c112136/lazurprint.ru/life-book', // заявки «Книга о жизни» (life-book.php); папку создать вручную
     'recaptcha_secret' => '', // секретный ключ reCAPTCHA (для сервера)
 );

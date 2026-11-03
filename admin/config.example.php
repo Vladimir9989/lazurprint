@@ -26,6 +26,10 @@ return array(
     // Куда уходят письма админу (новая заявка на регистрацию, карточка готова к публикации)
     'admin_email' => 'agapov_89@bk.ru',
 
+    // Папка заявок «Книга о вашей жизни» (их создаёт сайт, src/resources/life-book.php; ключ life_book_dir должен
+    // совпадать с ключом в mail-config.php). На хостинге: /home/c112136/lazurprint.ru/life-book. Локально — любая папка.
+    'life_book_dir' => __DIR__ . '/uploads/life-book',
+
     // Путь к catalog-suvenir.html для разбора реального каталога сайта (этап 2).
     // На хостинге: /home/c112136/lazurprint.ru/www/catalog-suvenir.html
     // Локально — собранный gulp'ом dist/catalog-suvenir.html (у пользователя свой dev-сервер,

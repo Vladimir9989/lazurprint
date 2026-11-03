@@ -14,6 +14,7 @@ require_once __DIR__ . '/site_catalog.php';
 require_once __DIR__ . '/leads_schema.php';
 require_once __DIR__ . '/leads.php';
 require_once __DIR__ . '/samples.php';
+require_once __DIR__ . '/life_books.php';
 require_once __DIR__ . '/../templates/layout.php';
 
 $is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
@@ -36,7 +37,7 @@ session_start();
 auth_bootstrap($is_https);
 
 // Страницы, доступные роли «менеджер» (остальные require_login() отправляют его на leads.php).
-define('MANAGER_PAGES', array('leads.php', 'lead.php', 'lead-action.php', 'samples.php', 'sample.php', 'sample-zip.php', 'profile.php'));
+define('MANAGER_PAGES', array('leads.php', 'lead.php', 'lead-action.php', 'samples.php', 'sample.php', 'sample-zip.php', 'life-books.php', 'life-book.php', 'life-book-file.php', 'profile.php'));
 
 function h($value) {
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');

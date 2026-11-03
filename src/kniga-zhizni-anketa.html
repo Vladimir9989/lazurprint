@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    @@include('html/counters.html', {})
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анкета «Книга о вашей жизни» | Типография «Лазурь»</title>
+    <meta name="description" content="Анкета из 50 вопросов для личной книги: отвечайте в своём темпе, добавляйте фото и отправляйте нам.">
+    <meta name="robots" content="noindex, follow">
+    <link rel="canonical" href="https://lazurprint.ru/kniga-zhizni-anketa.html">
+    <link rel="stylesheet" href="main.css">
+    <link rel="icon" href="images/img/favicon.ico">
+    <script defer src="inputmask.min.js"></script>
+    <script defer src="just-validate.min.js"></script>
+    <script defer src="life-book-anketa.js"></script>
+    <script defer src="app.js"></script>
+</head>
+
+<body>
+    @@include('html/header.html', {})
+    @@include('html/main-button.html', {})
+    <section class="news lb-page lb-anketa">
+        <div class="news__container container">
+            <ol class="vacancy__nav-cnt">
+                <li>
+                    <a href="index.html" class="vacancy__nav-link">Главная </a>/
+                </li>
+                <li>
+                    <a href="kniga-zhizni.html" class="vacancy__nav-link">Книга о вашей жизни</a>/
+                </li>
+                <li>
+                    <a href="kniga-zhizni-anketa.html" class="vacancy__nav-link">Анкета</a>
+                </li>
+            </ol>
+
+            <div class="lb-app" id="lb-app">
+                <noscript>
+                    <p class="lb-error">Для работы анкеты нужен включённый JavaScript. Включите его в настройках браузера или позвоните нам.</p>
+                </noscript>
+                <p class="lb-lead">Загружаем вопросы…</p>
+            </div>
+        </div>
+    </section>
+    @@include('html/footer.html', {})
+</body>
+
+</html>

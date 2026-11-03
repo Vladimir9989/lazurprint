@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    @@include('html/counters.html', {})
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Книга о вашей жизни: 50 вопросов — и история семьи станет книгой | Типография «Лазурь»</title>
+    <meta name="description" content="Ответьте на 50 вопросов о своей жизни, добавьте фото — а типография «Лазурь» вычитает, сверстает и напечатает вашу личную книгу. Подарок родителям, бабушкам и дедушкам.">
+    <meta name="robots" content="noindex, follow">
+    <link rel="canonical" href="https://lazurprint.ru/kniga-zhizni.html">
+    <link rel="stylesheet" href="main.css">
+    <link rel="icon" href="images/img/favicon.ico">
+    <script defer src="inputmask.min.js"></script>
+    <script defer src="just-validate.min.js"></script>
+    <script defer src="app.js"></script>
+</head>
+
+<body>
+    @@include('html/header.html', {})
+    @@include('html/main-button.html', {})
+    <section class="news lb-page">
+        <div class="news__container container">
+            <ol class="vacancy__nav-cnt">
+                <li>
+                    <a href="index.html" class="vacancy__nav-link">Главная </a>/
+                </li>
+                <li>
+                    <a href="kniga-zhizni.html" class="vacancy__nav-link">Книга о вашей жизни</a>
+                </li>
+            </ol>
+
+            <!-- HERO -->
+            <div class="lb-hero">
+                <span class="lb-hero__blob lb-hero__blob--1" aria-hidden="true"></span>
+                <span class="lb-hero__blob lb-hero__blob--2" aria-hidden="true"></span>
+                <div class="lb-hero__text">
+                    <span class="lb-hero__eyebrow">Личная книга из ваших воспоминаний</span>
+                    <h1 class="lb-hero__title">Книга о вашей жизни</h1>
+                    <p class="lb-hero__lead">
+                        50 вопросов — и история вашей семьи станет настоящей книгой. Никто не пишет книгу — все
+                        отвечают на вопросы.
+                    </p>
+                    <p>
+                        Вы рассказываете, мы вычитываем, верстаем и печатаем. Не нужно уметь писать: пишите так, как
+                        рассказали бы за семейным столом.
+                    </p>
+                    <div class="lb-hero__actions">
+                        <a href="kniga-zhizni-anketa.html" class="lb-btn lb-btn--primary">Начать отвечать</a>
+                        <a href="#lb-price" class="lb-btn lb-btn--ghost">Узнать цены</a>
+                    </div>
+                </div>
+                <div class="lb-hero__media" aria-hidden="true">
+                    <svg class="lb-book" viewBox="0 0 360 300" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path class="lb-book__shadow" d="M40 268c60 14 220 14 280 0" stroke-width="10"/>
+                        <path class="lb-book__page" d="M180 70c-34-22-86-26-130-10v196c44-16 96-12 130 10z"/>
+                        <path class="lb-book__page" d="M180 70c34-22 86-26 130-10v196c-44-16-96-12-130 10z"/>
+                        <path class="lb-book__line" d="M72 104c26-6 56-4 84 8M72 130c26-6 56-4 84 8M72 156c26-6 56-4 84 8M72 182c26-6 56-4 84 8" stroke-width="3"/>
+                        <rect class="lb-book__photo" x="214" y="100" width="70" height="86" rx="8"/>
+                        <circle class="lb-book__photo-dot" cx="249" cy="134" r="12"/>
+                        <path class="lb-book__photo-dot" d="M226 178c4-18 14-24 23-24s19 6 23 24"/>
+                        <path class="lb-book__line" d="M214 208h70M214 226h50" stroke-width="3"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Кому -->
+            <article class="lb-section" id="lb-for">
+                <h2 class="news__subtitle lb-section__title">Кому такая книга</h2>
+                <div class="lb-cards">
+                    <div class="lb-card">
+                        <h3 class="lb-card__title">В подарок родителям, бабушкам и дедушкам</h3>
+                        <p>Подарок, который нельзя купить в магазине: их собственная история, записанная их словами и
+                            сохранённая на много лет.</p>
+                    </div>
+                    <div class="lb-card">
+                        <h3 class="lb-card__title">Себе — чтобы оставить детям и внукам</h3>
+                        <p>Те истории, которые обычно остаются несказанными: как вы жили, чему научились, что считаете
+                            важным.</p>
+                    </div>
+                    <div class="lb-card">
+                        <h3 class="lb-card__title">К юбилею и семейным датам</h3>
+                        <p>Книга, которую приятно подарить и интересно читать всей семьёй за праздничным столом.</p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Как это работает -->
+            <article class="lb-section" id="lb-how">
+                <h2 class="news__subtitle lb-section__title">Как это работает</h2>
+                <ol class="lb-steps">
+                    <li class="lb-step">
+                        <span class="lb-step__num">1</span>
+                        <div>
+                            <h3 class="lb-step__title">Отвечаете на вопросы</h3>
+                            <p>На сайте, в своём темпе: пять вопросов сегодня, остальные завтра. Любой вопрос можно
+                                пропустить, можно добавить свой.</p>
+                        </div>
+                    </li>
+                    <li class="lb-step">
+                        <span class="lb-step__num">2</span>
+                        <div>
+                            <h3 class="lb-step__title">Добавляете фотографии</h3>
+                            <p>До 40 снимков из семейного архива — с подписями. Одну фотографию можно выбрать на обложку.</p>
+                        </div>
+                    </li>
+                    <li class="lb-step">
+                        <span class="lb-step__num">3</span>
+                        <div>
+                            <h3 class="lb-step__title">Выбираете оформление</h3>
+                            <p>Вид переплёта, объём, шрифт и надпись на обложке.</p>
+                        </div>
+                    </li>
+                    <li class="lb-step">
+                        <span class="lb-step__num">4</span>
+                        <div>
+                            <h3 class="lb-step__title">Мы вычитываем и верстаем</h3>
+                            <p>Исправляем орфографию и пунктуацию, голос автора не меняем. Присылаем вам макет книги.</p>
+                        </div>
+                    </li>
+                    <li class="lb-step">
+                        <span class="lb-step__num">5</span>
+                        <div>
+                            <h3 class="lb-step__title">Вы утверждаете — мы печатаем</h3>
+                            <p>Ничего не печатается без вашего утверждения. Вносим правки, пока макет вас не устроит.</p>
+                        </div>
+                    </li>
+                </ol>
+            </article>
+
+            <!-- Примеры вопросов -->
+            <article class="lb-section" id="lb-questions">
+                <h2 class="news__subtitle lb-section__title">Какие вопросы вас ждут</h2>
+                <p class="lb-section__lead">
+                    Вопросы конкретные: они возвращают в живую картину, а не требуют «рассказать о детстве вообще».
+                    Всего их 50, в девяти главах — от детства до слов близким.
+                </p>
+                <ul class="lb-quotes">
+                    <li class="lb-quote">Чем пахло на кухне обычным утром? Какое блюдо из детства вы помните до сих пор?</li>
+                    <li class="lb-quote">Какая фраза или поговорка звучала в вашей семье постоянно?</li>
+                    <li class="lb-quote">Какую самую смелую вещь вы сделали в юности?</li>
+                    <li class="lb-quote">Как вы познакомились с любимым человеком? Что подумалось при первой встрече?</li>
+                    <li class="lb-quote">Какой самый лучший совет вам когда-либо давали?</li>
+                    <li class="lb-quote">Если эту книгу через сто лет прочитают ваши правнуки — что вы хотите, чтобы они о вас знали?</li>
+                </ul>
+            </article>
+
+            <!-- Цены -->
+            <article class="lb-section" id="lb-price">
+                <h2 class="news__subtitle lb-section__title">Переплёты и цены</h2>
+                <p class="lb-notice">
+                    <strong>Цены примерные (тестовые)</strong> — окончательные уточняются.
+                </p>
+                <!-- ЦЕНЫ-ЗАГЛУШКИ: заменить на реальные (docs/life-book-spec.md, этап 7) -->
+                <div class="lb-prices">
+                    <div class="lb-price">
+                        <h3 class="lb-price__title">Скрепка</h3>
+                        <p class="lb-price__sub">Мягкая обложка, тонкая книга-брошюра</p>
+                        <ul class="lb-price__list">
+                            <li><span>до 48 страниц</span><b>1 500 ₽</b></li>
+                            <li><span>до 64 страниц</span><b>1 900 ₽</b></li>
+                        </ul>
+                    </div>
+                    <div class="lb-price">
+                        <h3 class="lb-price__title">Термоклей</h3>
+                        <p class="lb-price__sub">Мягкая обложка, как у обычной книги</p>
+                        <ul class="lb-price__list">
+                            <li><span>до 96 страниц</span><b>2 500 ₽</b></li>
+                            <li><span>до 160 страниц</span><b>3 200 ₽</b></li>
+                            <li><span>до 240 страниц</span><b>3 900 ₽</b></li>
+                        </ul>
+                    </div>
+                    <div class="lb-price lb-price--top">
+                        <h3 class="lb-price__title">Шитьё нитками</h3>
+                        <p class="lb-price__sub">Твёрдая обложка, книга на десятилетия</p>
+                        <ul class="lb-price__list">
+                            <li><span>до 96 страниц</span><b>4 500 ₽</b></li>
+                            <li><span>до 160 страниц</span><b>5 500 ₽</b></li>
+                            <li><span>до 240 страниц</span><b>6 500 ₽</b></li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="lb-price__note">
+                    Цена указана за один экземпляр. Дополнительный экземпляр стоит дешевле — цену назовём при
+                    согласовании макета.
+                </p>
+            </article>
+
+            <!-- Фото -->
+            <article class="lb-section" id="lb-photo">
+                <h2 class="news__subtitle lb-section__title">Как подготовить фотографии</h2>
+                <ul class="lb-tips">
+                    <li>Подойдёт до 40 снимков. Лучше меньше, но чётче.</li>
+                    <li>Старые фотографии лучше отсканировать. Если сканера нет — переснимите телефоном при дневном
+                        свете, без вспышки, ровно сверху, чтобы не было бликов.</li>
+                    <li>Для обложки подойдёт вертикальный снимок, где лицо видно крупно.</li>
+                    <li>Подпишите каждую фотографию: кто на ней, где и когда. Это поможет правильно разместить её в книге.</li>
+                    <li>Фотографии мелкого размера (меньше 1200 пикселей по длинной стороне) в печати могут получиться
+                        нечёткими — мы предупредим об этом при загрузке.</li>
+                </ul>
+            </article>
+
+            <!-- Пример книги -->
+            <article class="lb-section" id="lb-example">
+                <h2 class="news__subtitle lb-section__title">Пример книги</h2>
+                <div class="lb-placeholder">
+                    Здесь будут фотографии разворотов готовой книги — как выглядят обложка, страницы с текстом и фото.
+                </div>
+            </article>
+
+            <!-- FAQ -->
+            <article class="lb-section" id="lb-faq">
+                <h2 class="news__subtitle lb-section__title">Частые вопросы</h2>
+                <div class="lb-faq">
+                    <details class="lb-faq__item">
+                        <summary>Сколько времени нужно, чтобы ответить на все вопросы?</summary>
+                        <p>Столько, сколько вам удобно. Многие отвечают по несколько вопросов в день — за две-три недели
+                            получается вся книга. Ответы сохраняются на вашем устройстве, и можно продолжить завтра.</p>
+                    </details>
+                    <details class="lb-faq__item">
+                        <summary>Можно ли пропустить вопрос?</summary>
+                        <p>Да, на любой вопрос можно не отвечать. Если какая-то тема кажется слишком личной — просто
+                            переходите к следующему.</p>
+                    </details>
+                    <details class="lb-faq__item">
+                        <summary>Где хранятся мои ответы?</summary>
+                        <p>Пока вы отвечаете — только на вашем компьютере или телефоне, в этом же браузере. Поэтому
+                            периодически нажимайте «Скачать копию ответов». Нам ответы попадают, только когда вы нажмёте
+                            «Отправить».</p>
+                    </details>
+                    <details class="lb-faq__item">
+                        <summary>Можно ли заполнить анкету за маму или папу?</summary>
+                        <p>Конечно. Можно сесть рядом и записывать рассказ, а можно распечатать вопросы и заполнить их
+                            вместе. Перед началом анкета спрашивает, чья это книга.</p>
+                    </details>
+                    <details class="lb-faq__item">
+                        <summary>Сколько страниц получится?</summary>
+                        <p>Зависит от длины ответов и числа фотографий. В среднем на полные ответы на все вопросы
+                            уходит около 100–160 страниц. Мы подскажем, какой объём выбрать, когда увидим ответы.</p>
+                    </details>
+                    <details class="lb-faq__item">
+                        <summary>Сколько экземпляров можно заказать?</summary>
+                        <p>Любое количество — от одного. Для каждого члена семьи можно заказать свою книгу, дополнительные
+                            экземпляры дешевле первого.</p>
+                    </details>
+                    <details class="lb-faq__item">
+                        <summary>Что будет с моими данными после печати?</summary>
+                        <p>Ваши материалы видят только сотрудники типографии, которые работают над книгой. После выдачи
+                            заказа мы храним их 90 дней, затем удаляем.</p>
+                    </details>
+                </div>
+            </article>
+
+            <!-- Призыв -->
+            <div class="lb-cta">
+                <div>
+                    <h2 class="lb-cta__title">Начните с одного вопроса</h2>
+                    <p>Не нужно решать всё сразу. Ответьте на первый вопрос — остальное придёт само.</p>
+                </div>
+                <a href="kniga-zhizni-anketa.html" class="lb-btn lb-btn--light">Начать отвечать</a>
+            </div>
+        </div>
+    </section>
+    @@include('html/footer.html', {})
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Главная", "item": "https://lazurprint.ru/" },
+            { "@type": "ListItem", "position": 2, "name": "Книга о вашей жизни", "item": "https://lazurprint.ru/kniga-zhizni.html" }
+          ]
+        }
+      ]
+    }
+    </script>
+</body>
+
+</html>

@@ -26,6 +26,7 @@ function render_header($title, $user = null, $active_tab = null) {
             <?php if (in_array($user['role'], array('admin', 'manager', 'viewer'), true)): ?>
             <a href="leads.php" class="<?php echo $active_tab === 'leads' ? 'is-active' : ''; ?>">Клиенты для писем</a>
             <a href="samples.php" class="<?php echo $active_tab === 'samples' ? 'is-active' : ''; ?>">Образцы</a>
+            <a href="life-books.php" class="<?php echo $active_tab === 'lifebooks' ? 'is-active' : ''; ?>">Книги о жизни</a>
             <?php endif; ?>
             <?php if ($user['role'] === 'admin' || $user['role'] === 'viewer'): ?>
             <a href="report-managers.php" class="<?php echo $active_tab === 'report' ? 'is-active' : ''; ?>">Отчёт по менеджерам</a>

@@ -214,7 +214,7 @@ const sitemapTask = (done) => {
     const site = 'https://lazurprint.ru'
     const EOL = String.fromCharCode(10)
     // служебные страницы, которые не должны попадать в индекс
-    const exclude = /^(google.*|yandex_.*|thanks|forms).html$/
+    const exclude = /^(google.*|yandex_.*|thanks|forms|kniga-zhizni.*).html$/
     const lastmod = (file) => {
         try {
             const d = execSync(`git log -1 --format=%cs -- "src/${file}"`, { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim()
