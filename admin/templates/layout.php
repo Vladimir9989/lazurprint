@@ -19,9 +19,12 @@ function render_header($title, $user = null, $active_tab = null) {
         <a href="index.php" class="topbar__logo">Лазурь — учёт продукции</a>
         <?php if ($user): ?>
         <nav class="topbar__nav">
-            <?php if ($user['role'] !== 'manager'): ?>
+            <?php if ($user['role'] !== 'manager' && $user['role'] !== 'prepress'): ?>
             <a href="index.php" class="<?php echo $active_tab === 'work' ? 'is-active' : ''; ?>">В работе</a>
             <a href="site-catalog.php" class="<?php echo $active_tab === 'site' ? 'is-active' : ''; ?>">Что на сайте</a>
+            <?php endif; ?>
+            <?php if (in_array($user['role'], array('admin', 'viewer', 'prepress'), true)): ?>
+            <a href="prepress.php" class="<?php echo $active_tab === 'prepress' ? 'is-active' : ''; ?>">Допечатка</a>
             <?php endif; ?>
             <?php if (in_array($user['role'], array('admin', 'manager', 'viewer'), true)): ?>
             <a href="leads.php" class="<?php echo $active_tab === 'leads' ? 'is-active' : ''; ?>">Клиенты для писем</a>
@@ -37,7 +40,7 @@ function render_header($title, $user = null, $active_tab = null) {
             <?php endif; ?>
         </nav>
         <div class="topbar__user">
-            <?php if ($user['role'] === 'admin' || $user['role'] === 'manager'): ?>
+            <?php if ($user['role'] === 'admin' || $user['role'] === 'manager' || $user['role'] === 'prepress'): ?>
             <a href="profile.php" title="Профиль: должность, телефон, почта"><?php echo h($user['first_name']); ?> · <?php echo h(role_label($user['role'])); ?></a>
             <?php else: ?>
             <span><?php echo h($user['first_name']); ?> · <?php echo h(role_label($user['role'])); ?></span>

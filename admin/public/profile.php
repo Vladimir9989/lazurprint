@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../src/bootstrap.php';
 
-$user = require_role(array('admin', 'manager'));
+$user = require_role(array('admin', 'manager', 'prepress'));
 
 $stmt = db()->prepare('SELECT * FROM users WHERE id = ? LIMIT 1');
 $stmt->execute(array($user['id']));

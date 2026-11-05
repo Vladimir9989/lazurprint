@@ -7,6 +7,7 @@ define('ROLE_LABELS', array(
     'accounting' => 'Бухгалтерия',
     'viewer' => 'Руководитель',
     'manager' => 'Менеджер по продажам',
+    'prepress' => 'Допечатка',
 ));
 
 define('REMEMBER_COOKIE', 'lazur_remember');

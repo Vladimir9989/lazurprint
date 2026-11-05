@@ -15,6 +15,7 @@ require_once __DIR__ . '/leads_schema.php';
 require_once __DIR__ . '/leads.php';
 require_once __DIR__ . '/samples.php';
 require_once __DIR__ . '/life_books.php';
+require_once __DIR__ . '/prepress.php';
 require_once __DIR__ . '/../templates/layout.php';
 
 $is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
@@ -22,6 +23,8 @@ $is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
 
 // Таблицы раздела «Клиенты» и роль «менеджер» создаются сами при первом заходе после обновления.
 leads_ensure_schema();
+// Доска «Допечатка»: таблицы, роль prepress и флаг оператора.
+prepress_ensure_schema();
 
 session_set_cookie_params(array(
     'lifetime' => 0,
@@ -82,6 +85,10 @@ function require_login() {
     // Менеджер видит только свой раздел; учёт продукции для него закрыт.
     if ($user['role'] === 'manager' && !in_array(basename($_SERVER['SCRIPT_NAME']), MANAGER_PAGES, true)) {
         redirect('leads.php');
+    }
+    // Допечатка видит только свою доску.
+    if ($user['role'] === 'prepress' && !in_array(basename($_SERVER['SCRIPT_NAME']), PREPRESS_PAGES, true)) {
+        redirect('prepress.php');
     }
     return $user;
 }
