@@ -74,6 +74,7 @@
         state.model = select.value;
         select.addEventListener('change', function () { state.model = select.value; save(); });
         bar.appendChild(select);
+        if (select.options.length < 2) bar.style.display = 'none'; // одна модель — выбирать нечего
 
         const list = el('div', 'lzai-list');
         const form = el('form', 'lzai-form');
@@ -186,12 +187,14 @@
 
         function open() {
             panel.classList.add('lzai-open');
+            document.body.classList.add('lzai-active');
             fab.style.display = 'none';
             render();
             input.focus();
         }
         function shut() {
             panel.classList.remove('lzai-open');
+            document.body.classList.remove('lzai-active');
             fab.style.display = '';
         }
         fab.addEventListener('click', open);

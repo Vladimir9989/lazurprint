@@ -31,7 +31,6 @@ const AI_MAX_TOKENS = 700;
 // Модели, которые можно выбрать в окне (slug OpenRouter) — других сервер не принимает
 $AI_MODELS = array(
     'anthropic/claude-haiku-4.5'  => 'Claude Haiku 4.5 (быстрая, дешёвая)',
-    'anthropic/claude-sonnet-4.5' => 'Claude Sonnet 4.5 (умнее, дороже)',
 );
 
 function aiOut($data, $status = 200)

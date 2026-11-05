@@ -22,4 +22,4 @@
 .lzai-form textarea{flex:1;resize:none;height:44px;padding:8px;border:1px solid #c9d6f5;border-radius:8px;font:14px/1.3 system-ui,Arial,sans-serif}
 .lzai-form button{border:0;background:#3E77FB;color:#fff;border-radius:8px;padding:0 14px;font-weight:600;cursor:pointer}
 .lzai-form button:disabled{opacity:.5;cursor:default}
-@media (max-width:480px){.lzai-panel{left:8px;bottom:8px;width:calc(100vw - 16px);height:calc(100vh - 16px)}.lzai-fab{left:8px;bottom:8px}}
+@media (max-width:480px){.lzai-active .bx-livechat-wrapper,.lzai-active .b24-widget-button-wrapper{display:none!important}.lzai-panel{left:8px;bottom:8px;width:calc(100vw - 16px);height:calc(100vh - 16px)}.lzai-fab{left:8px;bottom:8px}}
