@@ -16,7 +16,7 @@
 
     var S = { orders: [], rem: {}, ops: [], names: {}, now: Date.now(), today: '' };
     var offset = 0; // серверное время минус часы этого компьютера
-    var view = '', filter = 'all', cfilter = 'all', lastJson = '', pending = false, remT = null, remDirty = {};
+    var Q = '', view = '', filter = 'all', cfilter = 'all', lastJson = '', pending = false, remT = null, remDirty = {};
 
     function $(id) { return document.getElementById(id); }
     function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
@@ -72,6 +72,20 @@
         if (el) { el.textContent = 'Общая доска: изменения видят все и они обновляются сами' + (extra ? ' · ' + extra : ''); }
     }
 
+    function rowHtml(o, meta) {
+        var n = o.card, ct = isCt(o), g = '';
+        var c = CLS[o.st] || 'work', main = o.no || o.cm, sub = o.no ? o.cm : '';
+        var canDel = CAN_EDIT;
+        g += '<div class="row r-' + c + '"><div><span class="no">' + esc(main) + '</span>' +
+            (o.from && !isDone(o) ? '<span class="carry">с ' + fmt(o.from).slice(0, 5) + '</span>' : '') +
+            (meta ? ' <span class="meta">' + esc(o.card) + ' · ' + fmt(o.date) + '</span>' : '') + '</div>' +
+            '<div class="ctl"><select class="s-' + c + '" data-id="' + o.id + '" aria-label="Статус"' + (CAN_EDIT ? '' : ' disabled') + '>' +
+            setFor(n).map(function (s) { return '<option value="' + s[0] + '"' + (s[0] === o.st ? ' selected' : '') + '>' + s[1] + '</option>'; }).join('') +
+            '</select>' + (canDel ? '<button class="x noprint" data-del="' + o.id + '" aria-label="Удалить">×</button>' : '') + '</div>' +
+            (sub ? '<div class="cm">' + esc(sub) + '</div>' : '') + (ct ? '' : opRow(o)) + '</div>';
+        return g;
+    }
+
     function render() {
         var ae = document.activeElement, fi = (ae && ae.dataset) ? ae.dataset.rem : undefined, ss = fi !== undefined ? ae.selectionStart : 0;
         $('pp-dlabel').textContent = longFmt(view) + (view === S.today ? ' (сегодня)' : '');
@@ -85,22 +99,22 @@
                 (l.length ? l.map(function (o) { return esc(o.no || o.cm); }).join(', ') : 'свободен') + '</span>';
         }).join('');
         var g = '';
+        var q = Q.trim().toLowerCase();
+        if (q) {
+            var found = S.orders.filter(function (o) { return (o.no + ' ' + o.cm).toLowerCase().indexOf(q) > -1; })
+                .sort(function (a, b) { return a.date < b.date ? 1 : -1; });
+            g = '<section class="card" style="grid-column:1/-1"><div class="ch"><h2>Найдено: ' + found.length + '</h2></div>' +
+                (found.length ? found.map(function (o) { return rowHtml(o, true); }).join('') : '<div class="empty">Ничего не найдено (ищу за последний год)</div>') + '</section>';
+            $('pp-grid').innerHTML = g;
+            return;
+        }
         CARDS.forEach(function (n, i) {
             var ct = n === CTP, all = day.filter(function (o) { return o.card === n; }), f = ct ? cfilter : filter;
             var list = all.filter(function (o) { return f === 'all' || o.st === f; });
             g += '<section class="card"><div class="ch"><h2>' + esc(n) + '</h2><input class="rem" data-rem="' + i + '" placeholder="Напоминание" maxlength="500" value="' +
                 esc(S.rem[n] || '') + '" aria-label="Напоминание для ' + esc(n) + '"' + (CAN_EDIT ? '' : ' readonly') + '><span class="cnt">' + all.length + '</span></div>';
             if (!list.length) { g += '<div class="empty">' + (ct ? 'Записей нет' : 'Заказов нет') + '</div>'; }
-            list.forEach(function (o) {
-                var c = CLS[o.st] || 'work', main = o.no || o.cm, sub = o.no ? o.cm : '';
-                var canDel = CAN_EDIT;
-                g += '<div class="row r-' + c + '"><div><span class="no">' + esc(main) + '</span>' +
-                    (o.from && !isDone(o) ? '<span class="carry">с ' + fmt(o.from).slice(0, 5) + '</span>' : '') + '</div>' +
-                    '<div class="ctl"><select class="s-' + c + '" data-id="' + o.id + '" aria-label="Статус"' + (CAN_EDIT ? '' : ' disabled') + '>' +
-                    setFor(n).map(function (s) { return '<option value="' + s[0] + '"' + (s[0] === o.st ? ' selected' : '') + '>' + s[1] + '</option>'; }).join('') +
-                    '</select>' + (canDel ? '<button class="x noprint" data-del="' + o.id + '" aria-label="Удалить">×</button>' : '') + '</div>' +
-                    (sub ? '<div class="cm">' + esc(sub) + '</div>' : '') + (ct ? '' : opRow(o)) + '</div>';
-            });
+            list.forEach(function (o) { g += rowHtml(o, false); });
             g += '</section>';
         });
         $('pp-grid').innerHTML = g;
@@ -179,6 +193,8 @@
         $('pp-add').addEventListener('keydown', function (e) { if (e.key === 'Enter' && e.target.tagName === 'INPUT') { add(); } });
         fillSt();
     }
+    $('pp-q').addEventListener('input', function (e) { Q = e.target.value; $('pp-qx').style.display = Q ? '' : 'none'; render(); });
+    $('pp-qx').onclick = function () { $('pp-q').value = ''; Q = ''; $('pp-qx').style.display = 'none'; render(); };
     $('pp-prev').onclick = function () { view = shift(view, -1); render(); };
     $('pp-next').onclick = function () { view = shift(view, 1); render(); };
     $('pp-today').onclick = function () { view = S.today; render(); };

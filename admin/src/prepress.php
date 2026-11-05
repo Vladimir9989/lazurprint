@@ -120,7 +120,7 @@ function pp_can_delete($user, $o) {
 function pp_state() {
     pp_rollover();
     $orders = array();
-    $rows = db()->query("SELECT * FROM prepress_orders WHERE work_date >= (CURDATE() - INTERVAL 60 DAY) ORDER BY created_at, id")->fetchAll();
+    $rows = db()->query("SELECT * FROM prepress_orders WHERE work_date >= (CURDATE() - INTERVAL 365 DAY) ORDER BY created_at, id")->fetchAll();
     foreach ($rows as $r) {
         $o = pp_row_to_order($r);
         $orders[] = array(

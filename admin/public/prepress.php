@@ -29,6 +29,7 @@ flash_messages();
 </div>
 <?php endif; ?>
 <div class="pp-err noprint" id="pp-err"></div>
+<div class="pp-search noprint"><input type="search" id="pp-q" placeholder="Поиск по номеру заказа или комментарию (по всем дням)" aria-label="Поиск по номеру заказа" maxlength="100"><button class="btn btn--secondary btn--sm" id="pp-qx" style="display:none">Сбросить</button></div>
 <div class="pp-bar noprint" id="pp-bar"></div>
 <div class="pp-ops noprint" id="pp-ops"></div>
 <div class="pp-mode noprint" id="pp-mode"></div>

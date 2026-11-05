@@ -7,6 +7,9 @@
 #pp .pp-add{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;grid-template-columns:200px 160px 1fr 190px auto;gap:8px;margin-bottom:14px}
 #pp select,#pp input{font:inherit;color:inherit}
 #pp .pp-add select,#pp .pp-add input{border:1px solid var(--line);background:var(--soft);border-radius:8px;padding:8px 10px;min-width:0;width:100%}
+#pp .pp-search{display:flex;gap:8px;margin-bottom:12px}
+#pp .pp-search input{flex:1;border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 12px;min-width:0}
+#pp .meta{font-size:12px;color:var(--mut)}
 #pp .pp-err{color:var(--wait);font-size:14px;min-height:1em;margin-bottom:6px}
 #pp .pp-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center}
 #pp .pp-sp{color:var(--mut);font-size:13px;margin:0 2px 0 8px}
