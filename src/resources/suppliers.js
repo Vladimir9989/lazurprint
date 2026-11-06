@@ -1,12 +1,12 @@
-// suppliers.html: окно со списком «Бумага и картон»
+// suppliers.html: окна со списками закупаемых позиций (кнопка data-paper-open="id окна")
 document.addEventListener('DOMContentLoaded', function () {
-    var modal = document.getElementById('paper-modal');
-    if (!modal) return;
-
     var lastFocus = null;
+    var current = null;
 
-    function open() {
+    function open(modal) {
+        if (!modal) return;
         lastFocus = document.activeElement;
+        current = modal;
         modal.hidden = false;
         document.body.style.overflow = 'hidden';
         var dialog = modal.querySelector('.paper-modal__dialog');
@@ -16,24 +16,29 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function close() {
-        if (modal.hidden) return;
-        modal.hidden = true;
+        if (!current || current.hidden) return;
+        current.hidden = true;
+        current = null;
         document.body.style.overflow = '';
         if (lastFocus && lastFocus.focus) lastFocus.focus();
     }
 
     document.querySelectorAll('[data-paper-open]').forEach(function (btn) {
-        btn.addEventListener('click', open);
+        btn.addEventListener('click', function () {
+            open(document.getElementById(btn.getAttribute('data-paper-open') || 'paper-modal'));
+        });
     });
 
-    modal.addEventListener('click', function (e) {
-        if (e.target.closest('[data-paper-close]')) {
-            close();
-        } else if (e.target.closest('[data-open-form]')) {
-            // форма заявки откроется своим обработчиком; список убираем, чтобы не наслаивались окна
-            lastFocus = null;
-            close();
-        }
+    document.querySelectorAll('.paper-modal').forEach(function (modal) {
+        modal.addEventListener('click', function (e) {
+            if (e.target.closest('[data-paper-close]')) {
+                close();
+            } else if (e.target.closest('[data-open-form]')) {
+                // форма заявки откроется своим обработчиком; список убираем, чтобы не наслаивались окна
+                lastFocus = null;
+                close();
+            }
+        });
     });
 
     document.addEventListener('keydown', function (e) {

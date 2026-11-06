@@ -57,30 +57,25 @@
             </div>
         </section>
 
-        <!-- Бумага и картон — настоящий список (модалка #paper-modal); остальные 3 карточки ВРЕМЕННЫЕ, заменить, когда Яна пришлёт списки -->
+        <!-- Бумага и картон (#paper-modal) и расходные материалы (#supplies-modal) — настоящие списки от Яны; Яна обещала прислать ещё -->
         <section class="suppliers-items">
             <div class="container">
                 <h2 class="suppliers__h2">Что мы <span>закупаем</span></h2>
-                <p class="suppliers-items__hint">Нажмите на карточку «Бумага и картон», чтобы открыть подробный список: плотность, формат и марки. Остальные списки готовим и скоро добавим.</p>
+                <p class="suppliers-items__hint">Нажмите на карточку, чтобы открыть подробный список позиций, размеров и марок.</p>
                 <ul class="suppliers-items__list">
                     <li class="suppliers-items__item suppliers-items__item--open">
-                        <button type="button" class="suppliers-items__open" data-paper-open aria-haspopup="dialog">
+                        <button type="button" class="suppliers-items__open" data-paper-open="paper-modal" aria-haspopup="dialog">
                             <span class="suppliers-items__name">Бумага и картон</span>
                             <span class="suppliers-items__text">Мелованная и офсетная бумага, рулонная бумага, картон для упаковки и обложек, переплётный картон.</span>
                             <span class="suppliers-items__more">Смотреть список позиций</span>
                         </button>
                     </li>
-                    <li class="suppliers-items__item">
-                        <h3 class="suppliers-items__name">Материалы для флексопечати и упаковки</h3>
-                        <p class="suppliers-items__text">Самоклеящиеся материалы, плёнки, флексографские краски и формные пластины.</p>
-                    </li>
-                    <li class="suppliers-items__item">
-                        <h3 class="suppliers-items__name">Краски, лаки и пластины для офсета</h3>
-                        <p class="suppliers-items__text">Офсетные краски и лаки, печатные пластины, офсетные полотна, увлажняющие растворы.</p>
-                    </li>
-                    <li class="suppliers-items__item">
-                        <h3 class="suppliers-items__name">Переплётные и вспомогательные материалы</h3>
-                        <p class="suppliers-items__text">Клей для термопереплёта, ламинационная плёнка, упаковочные материалы, поддоны.</p>
+                    <li class="suppliers-items__item suppliers-items__item--open">
+                        <button type="button" class="suppliers-items__open" data-paper-open="supplies-modal" aria-haspopup="dialog">
+                            <span class="suppliers-items__name">Расходные материалы</span>
+                            <span class="suppliers-items__text">Краски и лаки, пластины и химия для CTP, тонеры, плёнки, биговальные матрицы, марзан, ленты, проволока.</span>
+                            <span class="suppliers-items__more">Смотреть список позиций</span>
+                        </button>
                     </li>
                 </ul>
                 <p class="suppliers-items__note">Нет вашей позиции в списке? Всё равно напишите: если материал нужен типографии, мы его рассмотрим.</p>
@@ -327,6 +322,104 @@
                     data-form-title="Предложение для типографии"
                     data-form-desc="Расскажите, что вы поставляете, и оставьте контакты. Закупщик типографии изучит предложение и свяжется с вами."
                     data-form-text="Предложение поставщика (бумага и картон).&#10;Компания: &#10;Что поставляем: &#10;Ссылка на прайс-лист: ">Отправить предложение</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="paper-modal" id="supplies-modal" hidden>
+        <div class="paper-modal__overlay" data-paper-close></div>
+        <div class="paper-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="supplies-modal-title">
+            <button type="button" class="paper-modal__close" data-paper-close aria-label="Закрыть">&times;</button>
+            <h2 class="paper-modal__title" id="supplies-modal-title">Расходные материалы: что мы закупаем</h2>
+            <p class="paper-modal__lead">Материалы, которые нужны типографии постоянно. Если у вас есть аналоги или близкие характеристики, всё равно присылайте предложение.</p>
+            <div class="paper-list">
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Краски, лаки, увлажнение</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Позиция</th><th>Варианты, размеры</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Позиция">Краска для листовых печатных машин</td><td data-label="Варианты, размеры">—</td></tr>
+                                <tr><td data-label="Позиция">Краска для рулонных печатных машин</td><td data-label="Варианты, размеры">—</td></tr>
+                                <tr><td data-label="Позиция">Краска для флексопечати</td><td data-label="Варианты, размеры">—</td></tr>
+                                <tr><td data-label="Позиция">Лак водно-дисперсионный</td><td data-label="Варианты, размеры">глянцевый; матовый</td></tr>
+                                <tr><td data-label="Позиция">Лак УФ глянцевый</td><td data-label="Варианты, размеры">для трафаретной печати; для лакировальных секций; объёмный для трафаретной печати</td></tr>
+                                <tr><td data-label="Позиция">Добавка в увлажнение</td><td data-label="Варианты, размеры">для листовых и рулонных машин</td></tr>
+                                <tr><td data-label="Позиция">Антисиккатив</td><td data-label="Варианты, размеры">—</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Химия для CTP и пластины</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Позиция</th><th>Варианты, размеры</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Позиция">Гуммирующий раствор для CTP</td><td data-label="Варианты, размеры">—</td></tr>
+                                <tr><td data-label="Позиция">Проявитель для CTP</td><td data-label="Варианты, размеры">—</td></tr>
+                                <tr><td data-label="Позиция">Проявитель-регенератор для CTP</td><td data-label="Варианты, размеры">—</td></tr>
+                                <tr><td data-label="Позиция">Пластины</td><td data-label="Варианты, размеры">708×510×0,3 мм; 730×600×0,3 мм; 745×605×0,3 мм; 945×700×0,3 мм</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Тонеры для цифровой печати</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Позиция</th><th>Варианты, размеры</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Позиция">Тонер-картридж Konica Minolta C4065</td><td data-label="Варианты, размеры">чёрный (Black); жёлтый (Yellow); пурпурный (Magenta); голубой (Cyan)</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Плёнки</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Позиция</th><th>Варианты, размеры</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Позиция">Плёнка для ламинации</td><td data-label="Варианты, размеры">глянцевая, матовая, Silky, Feel Tiger Bond, Soft Touch; ширина 330, 510, 610, 710 мм</td></tr>
+                                <tr><td data-label="Позиция">Плёнка термоусадочная, полурукав</td><td data-label="Варианты, размеры">ширина 250, 300, 350 мм</td></tr>
+                                <tr><td data-label="Позиция">Стрейч-плёнка</td><td data-label="Варианты, размеры">500 мм × 23 мкм, рулон 15 кг; 500 мм × 20 мкм</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Для печатных машин и переплёта</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Позиция</th><th>Варианты, размеры</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Позиция">Полотно для автоматической смывки</td><td data-label="Варианты, размеры">964 мм × 7 м (Lit-GL 37); SM 765×500</td></tr>
+                                <tr><td data-label="Позиция">Проволока</td><td data-label="Варианты, размеры">0,55 мм, бобина 15 кг; круглая 0,55 мм, бобина 2,5 кг</td></tr>
+                                <tr><td data-label="Позиция">Гель для удаления кальциевого налёта</td><td data-label="Варианты, размеры">—</td></tr>
+                                <tr><td data-label="Позиция">Губка прессовая</td><td data-label="Варианты, размеры">вискозная</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Биговка, вырубка</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Позиция</th><th>Варианты, размеры</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Позиция">Биговальная матрица</td><td data-label="Варианты, размеры">0,3×1,3; 0,4×1,3; 0,4×1,5; 1,0×3,2</td></tr>
+                                <tr><td data-label="Позиция">Вырубной канал Cito PLAST OFF-C</td><td data-label="Варианты, размеры">N60/2-3 Gelb, 28 м; со смещённым центром N50/2-3 Gelb, 28 м</td></tr>
+                                <tr><td data-label="Позиция">Марзан</td><td data-label="Варианты, размеры">1159×15×15 мм (красный); 115×15×15×1159 мм; 137,10×4,5×1380 мм (красный волнистый)</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Ленты и плёнки с клеем</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Позиция</th><th>Варианты, размеры</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Позиция">Лента клейкая</td><td data-label="Варианты, размеры">6 мм × 33 м</td></tr>
+                                <tr><td data-label="Позиция">Лента клейкая двусторонняя (скотч)</td><td data-label="Варианты, размеры">0,9 мм × 50 м; 12 мм × 33 м, жёлтая; 19 мм × 100 м</td></tr>
+                                <tr><td data-label="Позиция">Магнитный винил с клеевой основой</td><td data-label="Варианты, размеры">0,4 мм</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+            </div>
+            <div class="paper-modal__footer">
+                <a href="#offer" class="suppliers__btn" role="button" data-open-form
+                    data-form-title="Предложение для типографии"
+                    data-form-desc="Расскажите, что вы поставляете, и оставьте контакты. Закупщик типографии изучит предложение и свяжется с вами."
+                    data-form-text="Предложение поставщика (расходные материалы).&#10;Компания: &#10;Что поставляем: &#10;Ссылка на прайс-лист: ">Отправить предложение</a>
             </div>
         </div>
     </div>
