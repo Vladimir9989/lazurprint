@@ -93,7 +93,7 @@ foreach ($entries as $r) {
     $type = isset($r['type']) ? $r['type'] : '';
     if ($type === 'chat') {
         $d['chats'][] = $r;
-        $d['cost'] += isset($r['cost']) ? (float) $r['cost'] : 0;
+        $d['cost'] += (float) jr_rub($r);
         $d['models'][isset($r['model']) ? str_replace('anthropic/', '', $r['model']) : '?'] = true;
     } elseif ($type === 'feedback') {
         $d['notes'][] = $r;
@@ -124,6 +124,15 @@ foreach ($dialogs as $d) {
 }
 $limit = 150;
 $shown = array_slice($dialogs, 0, $limit);
+
+// Расход в рублях. До перехода на routerai.ru (2026-11-07 ~18:30) cost в журнале был в долларах OpenRouter (курс 95), после — уже в рублях
+function jr_rub($r) {
+    if (!isset($r['cost']) || $r['cost'] === null) {
+        return null;
+    }
+    $c = (float) $r['cost'];
+    return (isset($r['ts']) && $r['ts'] < '2026-11-07 18:30:00') ? $c * 95 : $c;
+}
 
 function jr_url($over = array()) {
     global $preset, $from, $to, $onlyUser, $onlyFlag;
@@ -187,7 +196,7 @@ flash_messages();
     <div class="stat"><div class="stat__n"><?php echo count($dialogs); ?></div><div class="stat__l">диалогов</div></div>
     <div class="stat"><div class="stat__n"><?php echo (int) $totalAnswers; ?></div><div class="stat__l">ответов бота</div></div>
     <div class="stat"><div class="stat__n"><?php echo (int) $totalNotes; ?></div><div class="stat__l">замечаний «неверно»</div></div>
-    <div class="stat"><div class="stat__n">$<?php echo number_format($totalCost, 4, '.', ''); ?></div><div class="stat__l">расход (≈ <?php echo round($totalCost * 95, 1); ?> ₽)</div></div>
+    <div class="stat"><div class="stat__n"><?php echo number_format($totalCost, 2, '.', ''); ?> ₽</div><div class="stat__l">расход</div></div>
     <?php if ($totalErrors): ?><div class="stat"><div class="stat__n"><?php echo (int) $totalErrors; ?></div><div class="stat__l">сбоев связи</div></div><?php endif; ?>
 </div>
 
@@ -209,7 +218,7 @@ flash_messages();
 <details class="panel journal__dialog" style="margin-bottom:10px;">
     <summary style="cursor:pointer;">
         <strong><?php echo h($d['user']); ?></strong>
-        <span class="dim"> · <?php echo h(jr_time($d['start'])); ?> · сообщений: <?php echo count($d['chats']); ?> · <?php echo h(implode(', ', array_keys($d['models']))); ?> · $<?php echo number_format($d['cost'], 4, '.', ''); ?></span>
+        <span class="dim"> · <?php echo h(jr_time($d['start'])); ?> · сообщений: <?php echo count($d['chats']); ?> · <?php echo h(implode(', ', array_keys($d['models']))); ?> · <?php echo number_format($d['cost'], 2, '.', ''); ?> ₽</span>
         <?php if ($d['notes']): ?><span class="badge badge--due-late">замечаний: <?php echo count($d['notes']); ?></span><?php endif; ?>
         <br><span><?php echo h($preview); ?></span>
     </summary>
@@ -218,7 +227,7 @@ flash_messages();
         <div style="margin-bottom:12px;">
             <div style="color:#081f5c;font-weight:600;white-space:pre-wrap;"><?php echo h($c['q']); ?></div>
             <div style="white-space:pre-wrap;margin-top:4px;"><?php echo h($c['a']); ?></div>
-            <div class="dim" style="font-size:12px;margin-top:4px;"><?php echo h(jr_time($c['ts'])); ?> · <?php echo h(str_replace('anthropic/', '', isset($c['model']) ? $c['model'] : '?')); ?> · вход <?php echo (int) $c['tin']; ?> / выход <?php echo (int) $c['tout']; ?> · <?php echo isset($c['cost']) && $c['cost'] !== null ? '$' . h($c['cost']) : '?'; ?> · <?php echo round(((int) $c['ms']) / 1000, 1); ?> с</div>
+            <div class="dim" style="font-size:12px;margin-top:4px;"><?php echo h(jr_time($c['ts'])); ?> · <?php echo h(str_replace('anthropic/', '', isset($c['model']) ? $c['model'] : '?')); ?> · вход <?php echo (int) $c['tin']; ?> / выход <?php echo (int) $c['tout']; ?> · <?php echo jr_rub($c) !== null ? number_format(jr_rub($c), 3, '.', '') . ' ₽' : '?'; ?> · <?php echo round(((int) $c['ms']) / 1000, 1); ?> с</div>
         </div>
     <?php endforeach; ?>
     <?php foreach ($d['notes'] as $n): ?>

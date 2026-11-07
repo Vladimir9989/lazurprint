@@ -23,10 +23,10 @@
     window.lzAiCode = code;
     const css = document.createElement('link');
     css.rel = 'stylesheet';
-    css.href = '/ai-chat.css?v=1';
+    css.href = '/ai-chat.css?v=2';
     document.head.appendChild(css);
     const js = document.createElement('script');
-    js.src = '/ai-chat.js?v=1';
+    js.src = '/ai-chat.js?v=2';
     js.defer = true;
     document.head.appendChild(js);
 })();

@@ -74,7 +74,9 @@
         state.model = select.value;
         select.addEventListener('change', function () { state.model = select.value; save(); });
         bar.appendChild(select);
-        if (select.options.length < 2) bar.style.display = 'none'; // одна модель — выбирать нечего
+        if (select.options.length < 2) { // одна модель — выбирать нечего, просто подпись
+            bar.replaceChild(el('div', 'lzai-model', select.options[0].textContent), select);
+        }
 
         const list = el('div', 'lzai-list');
         const form = el('form', 'lzai-form');
@@ -113,7 +115,7 @@
         }
 
         function metaText(d) {
-            const cost = d.cost === null || d.cost === undefined ? '' : ' · $' + Number(d.cost).toFixed(5);
+            const cost = d.cost === null || d.cost === undefined ? '' : ' · ' + Number(d.cost).toFixed(3) + ' ₽';
             return d.model.replace('anthropic/', '') + ' · ' + d.tin + '/' + d.tout + ' ток.' + cost + ' · ' + (d.ms / 1000).toFixed(1) + ' с';
         }
 

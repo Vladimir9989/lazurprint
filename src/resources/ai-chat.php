@@ -25,12 +25,12 @@ const AI_LIMIT_CODE_DAY = 200;
 const AI_LIMIT_IP_HOUR = 60;
 const AI_LIMIT_TOTAL_DAY = 1500;
 const AI_MAX_CHARS = 1000;
-const AI_MAX_HISTORY = 24;
+const AI_MAX_HISTORY = 60;
 const AI_MAX_TOKENS = 700;
 
 // Модели, которые можно выбрать в окне (slug OpenRouter) — других сервер не принимает
 $AI_MODELS = array(
-    'anthropic/claude-haiku-4.5'  => 'Claude Haiku 4.5 (быстрая, дешёвая)',
+    'anthropic/claude-haiku-5.5'  => 'Claude Haiku 5.5 (быстрая, дешёвая)',
 );
 
 function aiOut($data, $status = 200)
@@ -141,7 +141,7 @@ if (!is_array($cfg) || empty($cfg['api_key']) || !function_exists('curl_init')) 
 
 $model = isset($in['model']) && is_string($in['model']) && isset($AI_MODELS[$in['model']])
     ? $in['model']
-    : (!empty($cfg['model']) && isset($AI_MODELS[$cfg['model']]) ? $cfg['model'] : 'anthropic/claude-haiku-4.5');
+    : (!empty($cfg['model']) && isset($AI_MODELS[$cfg['model']]) ? $cfg['model'] : 'anthropic/claude-haiku-5.5');
 
 $messages = array();
 if (isset($in['messages']) && is_array($in['messages'])) {
@@ -178,7 +178,8 @@ $system = is_file($promptFile) ? trim(file_get_contents($promptFile)) : '';
 if ($system === '') {
     $system = 'Ты тестовый помощник сайта типографии «Лазурь» (lazurprint.ru). Отвечай по-русски, коротко и вежливо.';
 }
-array_unshift($messages, array('role' => 'system', 'content' => $system));
+// cache_control: инструкция (~10 тыс. токенов) кэшируется у провайдера на 5 минут — повторные ответы дешевле в ~9 раз (проверено 2026-11-07)
+array_unshift($messages, array('role' => 'system', 'content' => array(array('type' => 'text', 'text' => $system, 'cache_control' => array('type' => 'ephemeral')))));
 
 $body = json_encode(array(
     'model'      => $model,
@@ -187,7 +188,7 @@ $body = json_encode(array(
     'usage'      => array('include' => true),
 ), JSON_UNESCAPED_UNICODE);
 
-// Прямой доступ к openrouter.ai с хостинга (РФ) закрыт, поэтому идём через посредника на ai.lazurprint.ru (Vercel)
+// С 2026-11-07 — напрямую в routerai.ru (api_url в ai-config.php можно переопределить). Посредник Vercel (relay_url) остаётся только как запасной путь: нет relay_url в конфиге — он не используется
 $useRelay = !empty($cfg['relay_url']) && !empty($cfg['relay_secret']);
 $headers = array(
     'Authorization: Bearer ' . $cfg['api_key'],
@@ -209,7 +210,7 @@ $resp = false;
 $http = 0;
 $curlErr = '';
 for ($try = 0; $try < 2 && $resp === false; $try++) {
-    $ch = curl_init($useRelay ? $cfg['relay_url'] : 'https://openrouter.ai/api/v1/chat/completions');
+    $ch = curl_init($useRelay ? $cfg['relay_url'] : (!empty($cfg['api_url']) ? $cfg['api_url'] : 'https://routerai.ru/api/v1/chat/completions'));
     curl_setopt_array($ch, array(
         CURLOPT_POST           => true,
         CURLOPT_POSTFIELDS     => $body,
