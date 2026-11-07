@@ -25,7 +25,7 @@ const AI_LIMIT_CODE_DAY = 200;
 const AI_LIMIT_IP_HOUR = 60;
 const AI_LIMIT_TOTAL_DAY = 1500;
 const AI_MAX_CHARS = 1000;
-const AI_MAX_HISTORY = 60;
+const AI_MAX_HISTORY = 120;
 const AI_MAX_TOKENS = 700;
 
 // Модели, которые можно выбрать в окне (slug OpenRouter) — других сервер не принимает
