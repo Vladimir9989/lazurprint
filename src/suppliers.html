@@ -57,7 +57,7 @@
             </div>
         </section>
 
-        <!-- Бумага и картон (#paper-modal) и расходные материалы (#supplies-modal) — настоящие списки от Яны; Яна обещала прислать ещё -->
+        <!-- Бумага и картон (#paper-modal), расходные материалы (#supplies-modal) — списки от Яны, флексопечать (#flexo-modal) — от Надежды -->
         <section class="suppliers-items">
             <div class="container">
                 <h2 class="suppliers__h2">Что мы <span>закупаем</span></h2>
@@ -74,6 +74,13 @@
                         <button type="button" class="suppliers-items__open" data-paper-open="supplies-modal" aria-haspopup="dialog">
                             <span class="suppliers-items__name">Расходные материалы</span>
                             <span class="suppliers-items__text">Краски и лаки, пластины и химия для CTP, тонеры, плёнки, биговальные матрицы, марзан, ленты, проволока.</span>
+                            <span class="suppliers-items__more">Смотреть список позиций</span>
+                        </button>
+                    </li>
+                    <li class="suppliers-items__item suppliers-items__item--open">
+                        <button type="button" class="suppliers-items__open" data-paper-open="flexo-modal" aria-haspopup="dialog">
+                            <span class="suppliers-items__name">Флексопечать и упаковка</span>
+                            <span class="suppliers-items__text">Самоклеящиеся бумага и плёнка, УФ-краска и УФ-лак, гофрокороба, картонные шпули, ленты для монтажа форм, УФ-лампы.</span>
                             <span class="suppliers-items__more">Смотреть список позиций</span>
                         </button>
                     </li>
@@ -420,6 +427,55 @@
                     data-form-title="Предложение для типографии"
                     data-form-desc="Расскажите, что вы поставляете, и оставьте контакты. Закупщик типографии изучит предложение и свяжется с вами."
                     data-form-text="Предложение поставщика (расходные материалы).&#10;Компания: &#10;Что поставляем: &#10;Ссылка на прайс-лист: ">Отправить предложение</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="paper-modal" id="flexo-modal" hidden>
+        <div class="paper-modal__overlay" data-paper-close></div>
+        <div class="paper-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="flexo-modal-title">
+            <button type="button" class="paper-modal__close" data-paper-close aria-label="Закрыть">&times;</button>
+            <h2 class="paper-modal__title" id="flexo-modal-title">Флексопечать и упаковка: что мы закупаем</h2>
+            <p class="paper-modal__lead">Материалы для флексографской печати и упаковки, которые нужны типографии постоянно. Если у вас есть аналоги или близкие характеристики, всё равно присылайте предложение.</p>
+            <div class="paper-list">
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Материалы для печати</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Позиция</th><th>Варианты, размеры</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Позиция">Самоклеящаяся бумага</td><td data-label="Варианты, размеры">полуглянец, каучуковый клей</td></tr>
+                                <tr><td data-label="Позиция">Плёнка полипропиленовая самоклеящаяся</td><td data-label="Варианты, размеры">—</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Краски и лаки</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Позиция</th><th>Варианты, размеры</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Позиция">УФ-краска для флексопечати</td><td data-label="Варианты, размеры">—</td></tr>
+                                <tr><td data-label="Позиция">УФ-лак для флексопечати</td><td data-label="Варианты, размеры">—</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+                    <section class="paper-list__group">
+                        <h4 class="paper-list__subtitle">Упаковка и вспомогательные материалы</h4>
+                        <div class="paper-list__scroll"><table class="paper-list__table">
+                            <thead><tr><th>Позиция</th><th>Варианты, размеры</th></tr></thead>
+                            <tbody>
+                                <tr><td data-label="Позиция">Гофрокороба для упаковки</td><td data-label="Варианты, размеры">—</td></tr>
+                                <tr><td data-label="Позиция">Шпуля картонная</td><td data-label="Варианты, размеры">внутренний диаметр 40 мм</td></tr>
+                                <tr><td data-label="Позиция">Лента клейкая двусторонняя для монтажа флексоформ</td><td data-label="Варианты, размеры">0,38 мм × 370 мм</td></tr>
+                                <tr><td data-label="Позиция">УФ-лампа GEW</td><td data-label="Варианты, размеры">артикул 47691</td></tr>
+                            </tbody>
+                        </table></div>
+                    </section>
+            </div>
+            <div class="paper-modal__footer">
+                <a href="#offer" class="suppliers__btn" role="button" data-open-form
+                    data-form-title="Предложение для типографии"
+                    data-form-desc="Расскажите, что вы поставляете, и оставьте контакты. Закупщик типографии изучит предложение и свяжется с вами."
+                    data-form-text="Предложение поставщика (флексопечать и упаковка).&#10;Компания: &#10;Что поставляем: &#10;Ссылка на прайс-лист: ">Отправить предложение</a>
             </div>
         </div>
     </div>
