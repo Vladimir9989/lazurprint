@@ -172,8 +172,12 @@ if (preg_match('~<\s*a\s|\[url|\[/?link~i', $allText)) {
 
 // --- 6. Письмо ---
 
-require_once('phpmailer/PHPMailerAutoload.php');
-$mail = new PHPMailer;
+// PHPMailer 6 напрямую, без PHPMailerAutoload.php: тот объявляет __autoload() — на PHP 8 (хостинг с 2026-10-14)
+// это фатальная ошибка, и с переезда письма с формы не уходили.
+require_once(__DIR__ . '/phpmailer/Exception.php');
+require_once(__DIR__ . '/phpmailer/PHPMailer.php');
+require_once(__DIR__ . '/phpmailer/SMTP.php');
+$mail = new \PHPMailer\PHPMailer\PHPMailer();
 $mail->CharSet = 'utf-8';
 
 $mail->isSMTP();
