@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // Сценарный тест формы заявки в jsdom (src/js/components/form-modal.js + submitHandler в src/js/main.js):
-// открытие кнопками, ленивая капча, правила полей, сообщения об ошибках, ответы mail.php (в т.ч. лимит, сбой,
-// обрыв связи), двойное нажатие, закрытие, Esc, фокус и Tab, WhatsApp-ссылка в articles3.
-// Капча Google и отправка подменяются заглушками — настоящую отправку проверяет только человек.
+// открытие кнопками, пропуск формы (GET mail.php?token) вместо капчи, правила полей, сообщения об ошибках,
+// ответы mail.php (лимит, сбой, устаревшая страница), повтор при обрыве связи, двойное нажатие, закрытие, Esc,
+// фокус и Tab, WhatsApp-ссылка в articles3. Сеть подменяется заглушкой — настоящую отправку проверяет только человек.
 //
 //   npx gulp scripts && JSDOM_DIR=<папка с jsdom> node tools/js-form-test.js
 //
@@ -28,43 +28,67 @@ function load(page) {
 const ok = (c, m) => console.log((c ? 'OK  ' : 'FAIL') + ' ' + m);
 // how-to-order
 let { w, errors, submit } = load('how-to-order.html');
-const d = w.document, modal = d.querySelector('.form__modal'), msg = d.getElementById('captcha');
+const d = w.document, modal = d.querySelector('.form__modal'), msg = d.getElementById('form-status');
 const defTitle = d.querySelector('.form__title').textContent;
-ok(!d.querySelector('script[src*="recaptcha"]'), 'нет капчи до открытия');
+// сеть: GET mail.php?token отдаёт пропуск (или обрыв, пока tokenFail > 0), POST — answer; obryv — сколько POST оборвать
+let log = [], answer = '', tokenFail = 0, obryv = 0, hold = false, pending = null;
+w.XMLHttpRequest = function () {
+  const x = this;
+  x.open = (m, u) => { x.m = m; x.u = u; };
+  x.send = (body) => {
+    log.push(x.m + ' ' + x.u.split('?')[0]); x.body = body;
+    const fin = (st, txt) => { x.readyState = 4; x.status = st; x.responseText = txt; x.onreadystatechange(); };
+    if (x.m === 'GET') { if (tokenFail > 0) { tokenFail--; fin(0, ''); } else fin(200, Math.floor(Date.now() / 1000) + '.' + 'a'.repeat(32)); return; }
+    if (hold) { pending = x; return; }
+    if (obryv > 0) { obryv--; fin(0, ''); return; }
+    fin(200, answer);
+  };
+};
+// таймеры — мгновенно (паузы 2,5 с и повторы не ждём)
+w.setTimeout = (fn) => { fn(); return 0; };
+const posts = () => log.filter(l => l.startsWith('POST')).length;
+const tokens = () => log.filter(l => l.startsWith('GET')).length;
+ok(!d.querySelector('.g-recaptcha') && !d.querySelector('script[src*="recaptcha"]'), 'капчи Google нет');
 d.querySelector('.ord-cta').click();
 ok(modal.classList.contains('modal--active'), 'ord-cta открывает');
-ok(d.querySelectorAll('script[src*="recaptcha/api.js"]').length === 1, 'капча подгружена 1 раз');
+ok(tokens() === 1 && /^\d+\.a{32}$/.test(d.querySelector('input[name=form_token]').value), 'пропуск получен при открытии');
 d.querySelector('.footer__contacts-btn').click();
-ok(d.querySelectorAll('script[src*="recaptcha/api.js"]').length === 1, 'повторно не грузится');
-submit(); ok(/ещё не загрузилась/.test(msg.textContent), 'без капчи: ' + msg.textContent);
-let resp = '';
-w.grecaptcha = { render: (el) => { el.appendChild(d.createElement('iframe')); return 0; }, getResponse: () => resp, reset: () => { w.__reset = 1; } };
-w.lazurCaptchaOnload();
-ok(d.querySelector('.g-recaptcha iframe'), 'виджет отрисован');
-submit(); ok(/галочку/.test(msg.textContent), 'пустая галочка: ' + msg.textContent);
-resp = 'tok'; let sent = [], answer = 'ВЫ РОБОТ';
-w.XMLHttpRequest = function () { const x = this; x.open = (m, u) => x.u = u; x.send = () => { sent.push(x.u); x.readyState = 4; x.status = 200; x.responseText = answer; x.onreadystatechange(); }; };
-submit(); ok(sent.length === 1 && /не пройдена/.test(msg.textContent) && w.__reset, 'ответ ВЫ РОБОТ: ' + msg.textContent);
-ok(!d.querySelector('.form__btn').disabled, 'кнопка снова активна');
-answer = '';
+ok(tokens() === 1, 'повторно пропуск не запрашивается');
+ok(d.querySelector('input[name=page]').value === '/how-to-order.html', 'адрес страницы уходит в заявке');
+ok(d.querySelector('input[name=form_hi]').value === '', 'без нажатий признака человека нет');
+d.getElementById('name').dispatchEvent(new w.KeyboardEvent('keydown', { key: 'a', bubbles: true }));
+ok(d.querySelector('input[name=form_hi]').value === '1', 'нажатие в форме ставит признак человека');
+ok(d.querySelector('input[name=website]'), 'ловушка для ботов на месте');
+answer = 'Обновите страницу';
+submit(); ok(posts() === 1 && /Обновите её/.test(msg.textContent) && !d.querySelector('.form__btn').disabled, 'нет пропуска на сервере: ' + msg.textContent);
+answer = 'Слишком быстро';
+submit(); ok(/ещё раз/.test(msg.textContent), 'слишком быстро: ' + msg.textContent);
 ok(w.__rules && w.__rules.email && w.__rules.email.email === true && !w.__rules.email.required, 'email необязателен, но проверяется по формату');
 ok(w.__rules.name.maxLength === 50, 'имя — до 50 символов');
 answer = 'Слишком много заявок';
 submit(); ok(/несколько заявок за последний час/.test(msg.textContent) && !d.querySelector('.form__btn').disabled, 'лимит заявок: ' + msg.textContent);
 answer = '<br /><b>Fatal error</b>: PHPMailer';
-submit(); ok(sent.length === 3 && /Не удалось/.test(msg.textContent) && !d.querySelector('.form__btn').disabled, 'непонятный ответ сервера — ошибка, не «спасибо»: ' + msg.textContent);
-// повторное нажатие, пока заявка уходит, — второй запрос не создаётся
-let pending = null;
-const RealXHR = w.XMLHttpRequest;
-w.XMLHttpRequest = function () { const x = this; x.open = () => {}; x.send = () => { pending = x; sent.push('p'); }; };
+submit(); ok(/Не удалось/.test(msg.textContent) && !d.querySelector('.form__btn').disabled, 'непонятный ответ сервера — ошибка, не «спасибо»: ' + msg.textContent);
+// обрыв связи: 2 обрыва — третья попытка проходит; 3 обрыва — ошибка
+answer = 'Слишком много заявок'; let before = posts(); obryv = 2;
+submit(); ok(posts() - before === 3 && /несколько заявок/.test(msg.textContent), 'обрыв связи 2 раза — заявка всё же ушла с 3-й попытки');
+before = posts(); obryv = 3;
+submit(); ok(posts() - before === 3 && /Не удалось/.test(msg.textContent) && !d.querySelector('.form__btn').disabled, 'обрыв 3 раза — ошибка, кнопка активна');
+// пропуск не получен (обрывы) — повторно берётся при отправке
+d.querySelector('input[name=form_token]').value = ''; tokenFail = 3; before = posts();
+submit(); ok(posts() === before && /связаться с сайтом/.test(msg.textContent) && !d.querySelector('.form__btn').disabled, 'нет связи для пропуска: ' + msg.textContent);
+tokenFail = 1; let t0 = tokens();
+submit(); ok(tokens() - t0 === 2 && posts() === before + 1, 'пропуск взят со 2-й попытки, заявка ушла');
+// двойное нажатие
+hold = true; before = posts();
 submit(); submit();
-ok(sent.length === 4 && pending.timeout === 30000, 'двойное нажатие — один запрос, таймаут 30 с');
+ok(posts() - before === 1 && pending.timeout === 30000, 'двойное нажатие — один запрос, таймаут 30 с');
 ok(msg.style.color !== 'red', '«Отправляем…» не красным');
-pending.readyState = 4; pending.status = 0; pending.responseText = ''; pending.onreadystatechange();
-ok(/Не удалось/.test(msg.textContent) && !d.querySelector('.form__btn').disabled && msg.style.color === 'red', 'обрыв связи/таймаут — ошибка, кнопка снова активна');
-w.XMLHttpRequest = RealXHR;
-answer = '';
-submit(); ok(sent.length === 5 && !d.querySelector('.form__btn').disabled, 'успешная отправка ушла, кнопка не заблокирована'); ok(!modal.classList.contains('modal--active'), 'модалка закрыта после успеха');
+pending.ontimeout(); pending.readyState = 4; pending.status = 0; pending.responseText = ''; pending.onreadystatechange();
+ok(posts() - before === 1 && /Не удалось/.test(msg.textContent) && !d.querySelector('.form__btn').disabled, 'таймаут — без повтора, ошибка, кнопка активна');
+hold = false; answer = ''; before = posts();
+submit(); ok(posts() - before === 1 && !d.querySelector('.form__btn').disabled, 'успешная отправка ушла, кнопка не заблокирована');
+ok(!modal.classList.contains('modal--active'), 'модалка закрыта после успеха');
 console.log('   errors:', errors.filter(e => !/navigation/i.test(e)));
 // banner / close / escape
 d.querySelector('.footer__contacts-btn').click();

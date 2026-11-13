@@ -15,7 +15,7 @@
 // const/let с тем же именем даёт SyntaxError, падение одного скрипта видно как ошибка.
 // Внешние скрипты не грузятся: Swiper с CDN заменяется локальным swiper-bundle.min.js, остальное пропускается.
 // После загрузки кликается каждая кнопка [data-open-form] — форма заявки должна открыться,
-// а скрипт капчи — добавиться в страницу ровно один раз.
+// а пропуск формы (GET mail.php?token, в тесте — заглушка) — запроситься ровно один раз; капчи Google на странице быть не должно.
 //
 // Перед тестом бандл должен быть свежим: npx gulp scripts.
 // jsdom в зависимости проекта не входит: поставить в любую папку (npm i jsdom@24) и указать её
@@ -102,7 +102,11 @@ async function run(page, verbose) {
     let win = null
     const dom = new JSDOM(build(page, verbose), {
         runScripts: 'dangerously', virtualConsole: vc, pretendToBeVisual: true,
-        beforeParse(w) { win = w },
+        beforeParse(w) {
+            win = w
+            // пропуск формы (GET mail.php?token) — заглушка, чтобы тест не ходил на живой сайт
+            w.XMLHttpRequest = function () { const x = this; x.open = (m, u) => { x.u = u; w.__tokenRequests = (w.__tokenRequests || 0) + 1 }; x.send = () => { x.readyState = 4; x.status = 200; x.responseText = Math.floor(Date.now() / 1000) + "." + "0".repeat(32); x.onreadystatechange && x.onreadystatechange() } }
+        },
         url: 'https://lazurprint.ru/' + page,
     })
     const w = dom.window
@@ -113,7 +117,7 @@ async function run(page, verbose) {
         w.addEventListener('load', () => resolve())
         setTimeout(resolve, 3000)
     })
-    const res = { page, errors, openers: 0, notOpened: 0, captcha: 0, hasForm: !!d.querySelector('.form__modal') }
+    const res = { page, errors, openers: 0, notOpened: 0, token: 0, hasForm: !!d.querySelector('.form__modal') }
     const modal = d.querySelector('.form__modal')
     const openers = [...d.querySelectorAll('[data-open-form]')]
     res.openers = openers.length
@@ -122,7 +126,11 @@ async function run(page, verbose) {
         try { b.click() } catch (e) { errors.push('клик: ' + e.message) }
         if (!modal || !modal.classList.contains('modal--active')) res.notOpened++
     }
-    res.captcha = d.querySelectorAll('script[src*="recaptcha/api.js"]').length
+    // пропуск формы получен ровно одним запросом, капча Google не подгружается (с 2026-11-13 её нет)
+    res.token = w.__tokenRequests || 0
+    if (d.querySelector('script[src*="recaptcha"]')) errors.push('на странице капча Google — её убрали 2026-11-13')
+    const tok = d.querySelector('#form input[name="form_token"]')
+    if (res.openers && (!tok || !tok.value)) errors.push('после открытия формы нет пропуска form_token')
     // видео «Коротко о нас» (about.js)
     const play = d.querySelector('.play-1')
     const video = d.querySelector('.video-1')
@@ -169,10 +177,10 @@ let bad = 0
 for (const page of pages) {
     if (verbose) console.log(page)
     let r
-    try { r = await run(page, verbose) } catch (e) { r = { page, errors: ['тест упал: ' + e.message], openers: 0, notOpened: 0, captcha: 0, hasForm: false } }
+    try { r = await run(page, verbose) } catch (e) { r = { page, errors: ['тест упал: ' + e.message], openers: 0, notOpened: 0, token: 0, hasForm: false } }
     const problems = [...r.errors]
     if (r.notOpened) problems.push(`кнопок не открыли форму: ${r.notOpened} из ${r.openers}`)
-    if (r.openers && r.captcha !== 1) problems.push(`скриптов капчи после открытия: ${r.captcha}`)
+    if (r.openers && r.token !== 1) problems.push(`запросов пропуска формы после открытия: ${r.token} (должен быть 1)`)
     if (problems.length) {
         bad++
         console.log(`FAIL ${page}`)

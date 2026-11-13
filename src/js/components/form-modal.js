@@ -1,8 +1,12 @@
 // Модальная форма заявки «Рассчитать стоимость» (разметка — html/footer.html, есть на всех страницах).
 // Открывается любой кнопкой с атрибутом data-open-form; необязательные data-form-title / data-form-desc /
 // data-form-text подменяют заголовок, описание и текст комментария. При закрытии всё возвращается к тексту из разметки.
-// Капча reCAPTCHA грузится лениво — при первом открытии формы (или фокусе в ней), а не со страницей.
-// Наружу — window.lazurForm: open / close / loadCaptcha / getCaptchaResponse / resetCaptcha (их использует main.js).
+//
+// Антиспам (с 2026-11-13 вместо reCAPTCHA Google, серверная часть — mail.php):
+//   - при открытии формы (или фокусе в ней) берётся «пропуск» GET mail.php?token → скрытое поле form_token;
+//   - любое нажатие/касание/ввод в форме ставит form_hi=1 (признак живого человека);
+//   - в поле page уходит адрес страницы (виден в письме менеджерам).
+// Наружу — window.lazurForm: open / close / ensureToken / tokenAge (их использует main.js).
 (function () {
     const modal = document.querySelector('.form__modal');
     const form = modal && modal.querySelector('.form');
@@ -11,13 +15,32 @@
     const title = form.querySelector('.form__title');
     const desc = form.querySelector('.form__desc');
     const textarea = form.querySelector('#textarea');
-    const captchaBox = form.querySelector('.g-recaptcha');
-    const captchaMsg = form.querySelector('#captcha');
 
     const defaults = {
         title: title ? title.textContent : '',
         desc: desc ? desc.textContent : '',
     };
+
+    // скрытые поля антиспама
+    function hidden(name) {
+        let el = form.querySelector('input[name="' + name + '"]');
+        if (!el) {
+            el = document.createElement('input');
+            el.type = 'hidden';
+            el.name = name;
+            form.appendChild(el);
+        }
+        return el;
+    }
+    const tokenInput = hidden('form_token');
+    const humanInput = hidden('form_hi');
+    hidden('page').value = location.pathname + location.search;
+
+    ['keydown', 'input', 'pointerdown', 'touchstart', 'mousedown'].forEach(function (type) {
+        form.addEventListener(type, function () {
+            humanInput.value = '1';
+        }, { passive: true });
+    });
 
     // для экранных читалок — это диалоговое окно; сама форма принимает фокус при открытии (без клавиатуры на телефоне)
     modal.setAttribute('role', 'dialog');
@@ -47,8 +70,7 @@
         if (!isOpen()) opener = document.activeElement;
         modal.classList.add('modal--active');
         form.classList.remove('hidden');
-        if (captchaState !== 'error') setCaptchaMsg('');
-        loadCaptcha();
+        ensureToken();
         try {
             form.focus({ preventScroll: true });
         } catch (e) {
@@ -68,69 +90,54 @@
         opener = null;
     }
 
-    // --- reCAPTCHA ---
-    let captchaState = 'idle'; // idle → loading → ready | error
-    let widgetId = null;
+    // --- пропуск формы ---
+    // tokenAt — когда получен (по часам посетителя: нужна только разница, не точное время).
+    // Пропуск живёт сутки; через 20 часов на открытой странице берём новый.
+    let tokenAt = 0;
+    let waiters = null; // колбэки, ждущие текущий запрос; null — запроса нет
 
-    function setCaptchaMsg(text) {
-        if (!captchaMsg) return;
-        captchaMsg.textContent = text;
-        captchaMsg.style.color = 'red';
+    function tokenAge() {
+        return tokenInput.value ? Date.now() - tokenAt : -1;
     }
 
-    function renderCaptcha() {
-        if (!captchaBox || !window.grecaptcha || typeof window.grecaptcha.render !== 'function') return;
-        if (captchaBox.childElementCount === 0) {
-            try {
-                widgetId = window.grecaptcha.render(captchaBox, { sitekey: captchaBox.getAttribute('data-sitekey') });
-            } catch (e) {
-                // уже отрисован
-            }
-        }
-        captchaState = 'ready';
-    }
-
-    function loadCaptcha() {
-        if (!captchaBox || captchaState === 'loading' || captchaState === 'ready') return;
-        if (window.grecaptcha && typeof window.grecaptcha.render === 'function') {
-            renderCaptcha();
+    // cb(true) — пропуск есть, cb(false) — не удалось получить (нет связи). Обрыв соединения — до 3 попыток.
+    function ensureToken(cb) {
+        if (tokenInput.value && tokenAge() < 20 * 3600 * 1000) {
+            if (cb) cb(true);
             return;
         }
-
-        captchaState = 'loading';
-        window.lazurCaptchaOnload = function () {
-            setCaptchaMsg('');
-            renderCaptcha();
-        };
-        const script = document.createElement('script');
-        script.src = 'https://www.google.com/recaptcha/api.js?onload=lazurCaptchaOnload&render=explicit';
-        script.async = true;
-        script.defer = true;
-        script.onerror = function () {
-            captchaState = 'error';
-            script.remove();
-            setCaptchaMsg('Не загрузилась проверка «Я не робот». Проверьте интернет и откройте форму ещё раз или позвоните нам.');
-        };
-        document.head.appendChild(script);
-    }
-
-    // Ответ капчи: строка-токен, '' — галочка не поставлена, null — капча не загружена
-    function getCaptchaResponse() {
-        if (!window.grecaptcha || typeof window.grecaptcha.getResponse !== 'function') return null;
-        try {
-            return widgetId === null ? window.grecaptcha.getResponse() : window.grecaptcha.getResponse(widgetId);
-        } catch (e) {
-            return null;
+        if (waiters) {
+            if (cb) waiters.push(cb);
+            return;
         }
-    }
-
-    function resetCaptcha() {
-        if (!window.grecaptcha || typeof window.grecaptcha.reset !== 'function') return;
-        try {
-            if (widgetId === null) window.grecaptcha.reset(); else window.grecaptcha.reset(widgetId);
-        } catch (e) {
-            // виджета нет
-        }
+        waiters = cb ? [cb] : [];
+        let tries = 0;
+        const done = function (ok) {
+            const list = waiters;
+            waiters = null;
+            list.forEach(function (f) { f(ok); });
+        };
+        const attempt = function () {
+            tries++;
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState !== 4) return;
+                const t = (xhr.responseText || '').trim();
+                if (xhr.status === 200 && /^\d+\.[0-9a-f]{32}$/.test(t)) {
+                    tokenInput.value = t;
+                    tokenAt = Date.now();
+                    done(true);
+                } else if (tries < 3) {
+                    setTimeout(attempt, 1000 * tries);
+                } else {
+                    done(false);
+                }
+            };
+            xhr.open('GET', 'mail.php?token=' + Date.now(), true);
+            xhr.timeout = 15000;
+            xhr.send();
+        };
+        attempt();
     }
 
     // --- события ---
@@ -161,7 +168,7 @@
         // Tab не уходит из открытой формы на страницу под ней
         if (e.key === 'Tab') {
             const items = Array.prototype.filter.call(
-                form.querySelectorAll('input:not([type="hidden"]):not([tabindex="-1"]), textarea:not([name="g-recaptcha-response"]), button, a[href], iframe'),
+                form.querySelectorAll('input:not([type="hidden"]):not([tabindex="-1"]), textarea, button, a[href]'),
                 function (el) { return !el.disabled; }
             );
             if (!items.length) return;
@@ -182,13 +189,14 @@
     });
 
     // на случай, если форма видна без открытия модалки
-    form.addEventListener('focusin', loadCaptcha);
+    form.addEventListener('focusin', function () {
+        ensureToken();
+    });
 
     window.lazurForm = {
         open: open,
         close: close,
-        loadCaptcha: loadCaptcha,
-        getCaptchaResponse: getCaptchaResponse,
-        resetCaptcha: resetCaptcha,
+        ensureToken: ensureToken,
+        tokenAge: tokenAge,
     };
 })();

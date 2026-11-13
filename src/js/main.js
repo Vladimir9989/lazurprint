@@ -117,10 +117,9 @@
         new Inputmask('+7 (999) 999-99-99').mask(telInput);
     }
 
-    // антиспам: запоминаем момент загрузки страницы; при отправке в form_ts уходит, сколько мс прошло
-    // (сервер отсекает слишком быстрые отправки; длительность, а не время — чтобы не зависеть от часов посетителя).
-    // Поля добавляются отсюда, а не в разметку: так защита работает на всех страницах без перевыкладки HTML.
-    const pageLoadedAt = Date.now();
+    // антиспам: поле-ловушка для ботов (honeypot). Пропуск формы, признак живого человека и адрес страницы
+    // добавляет form-modal.js; вся проверка — в mail.php. Поля добавляются из JS, а не в разметку:
+    // так защита работает на всех страницах без перевыкладки HTML.
     (function () {
         const antispamForm = document.getElementById('form');
         if (!antispamForm) return;
@@ -128,12 +127,7 @@
         trap.setAttribute('aria-hidden', 'true');
         trap.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;';
         trap.innerHTML = '<label>Сайт <input type="text" name="website" tabindex="-1" autocomplete="off"></label>';
-        const ts = document.createElement('input');
-        ts.type = 'hidden';
-        ts.name = 'form_ts';
-        ts.id = 'form_ts';
         antispamForm.appendChild(trap);
-        antispamForm.appendChild(ts);
     })();
 
     let validateForms = function (selector, rules) {
@@ -146,41 +140,60 @@
             },
 
             submitHandler: function (form) {
-                // капча и модалка — src/js/components/form-modal.js
+                // модалка и пропуск формы — src/js/components/form-modal.js, проверка — mail.php
                 const lazurForm = window.lazurForm;
-                const captchaMsg = document.getElementById('captcha');
+                const statusMsg = document.getElementById('form-status');
                 const submitBtn = form.querySelector('.form__btn');
-                // ошибки — красным (как задано в разметке), «Отправляем…» — обычным цветом текста
+                // ошибки — красным, «Отправляем…» — обычным цветом текста
                 const say = (text, neutral) => {
-                    if (!captchaMsg) return;
-                    captchaMsg.textContent = text;
-                    captchaMsg.style.color = neutral ? '#333' : 'red';
+                    if (!statusMsg) return;
+                    statusMsg.textContent = text;
+                    statusMsg.style.color = neutral ? '#333' : 'red';
                 };
                 if (form.dataset.sending === '1') return;
-
-                const captcha = lazurForm ? lazurForm.getCaptchaResponse() : null;
-                if (captcha === null) {
-                    if (lazurForm) lazurForm.loadCaptcha();
-                    say('Проверка «Я не робот» ещё не загрузилась. Подождите пару секунд и отправьте снова.');
-                    return;
-                }
-                if (captcha === '') {
-                    say('Поставьте галочку «Я не робот»');
-                    return;
-                }
-
-                const formTs = document.getElementById('form_ts');
-                if (formTs) formTs.value = Date.now() - pageLoadedAt;
-                let formData = new FormData(form);
 
                 say('Отправляем…', true);
                 form.dataset.sending = '1';
                 if (submitBtn) submitBtn.disabled = true;
 
-                let xhr = new XMLHttpRequest();
+                const fail = (text) => {
+                    form.dataset.sending = '';
+                    if (submitBtn) submitBtn.disabled = false;
+                    say(text);
+                };
 
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState !== 4) return;
+                // 1) пропуск (обычно уже взят при открытии формы); 2) не раньше 2,5 с после его получения
+                const withToken = (next) => {
+                    if (!lazurForm) return next();
+                    lazurForm.ensureToken((ok) => {
+                        if (!ok) return fail('Не удалось связаться с сайтом. Проверьте интернет и нажмите «Отправить» ещё раз или позвоните нам.');
+                        const wait = 2500 - lazurForm.tokenAge();
+                        if (wait > 0) setTimeout(next, wait); else next();
+                    });
+                };
+
+                // обрыв соединения (статус 0, не таймаут) — ещё 2 попытки: заявка до сервера не дошла
+                let tries = 0;
+                const send = () => {
+                    tries++;
+                    const xhr = new XMLHttpRequest();
+                    let timedOut = false;
+                    xhr.ontimeout = () => { timedOut = true; };
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState !== 4) return;
+                        setTimeout(() => handle(xhr, timedOut), 0);
+                    };
+                    xhr.open('POST', 'mail.php', true);
+                    // без ответа 30 с — readyState 4 со статусом 0, ветка ошибки ниже разблокирует кнопку
+                    xhr.timeout = 30000;
+                    xhr.send(new FormData(form));
+                };
+
+                const handle = (xhr, timedOut) => {
+                    if (xhr.status === 0 && !timedOut && tries < 3) {
+                        setTimeout(send, 1500 * tries);
+                        return;
+                    }
                     form.dataset.sending = '';
                     // mail.php отвечает статусом 200: при успехе — пустым телом, при ошибке — текстом.
                     // Успех — только пустой ответ: любой другой текст (в т.ч. сообщение PHP о сбое) — ошибка.
@@ -188,8 +201,10 @@
                     let error = '';
                     if (xhr.status !== 200 || answer.indexOf('Произошла ошибка') !== -1) {
                         error = 'Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.';
-                    } else if (answer.indexOf('ВЫ РОБОТ') !== -1) {
-                        error = 'Проверка «Я не робот» не пройдена. Поставьте галочку ещё раз.';
+                    } else if (answer.indexOf('Обновите страницу') !== -1) {
+                        error = 'Страница открыта слишком давно. Обновите её (F5) и отправьте заявку ещё раз.';
+                    } else if (answer.indexOf('Слишком быстро') !== -1) {
+                        error = 'Проверьте данные и нажмите «Отправить» ещё раз.';
                     } else if (answer.indexOf('Слишком много заявок') !== -1) {
                         // лимит считает только ушедшие заявки — значит, предыдущие менеджеры уже получили
                         error = 'Вы уже отправили несколько заявок за последний час — мы их получили и свяжемся с вами. Если вопрос срочный, позвоните нам.';
@@ -203,19 +218,15 @@
                     if (submitBtn) submitBtn.disabled = false;
                     if (!error) {
                         say('', true);
-                        if (lazurForm) lazurForm.resetCaptcha();
                         form.reset();
                         if (lazurForm) lazurForm.close();
                         window.location = 'thanks.html';
                         return;
                     }
-                    if (lazurForm) lazurForm.resetCaptcha();
                     say(error);
                 };
-                xhr.open('POST', 'mail.php', true);
-                // без ответа 30 с (обрыв связи) — readyState 4 со статусом 0, ветка ошибки выше разблокирует кнопку
-                xhr.timeout = 30000;
-                xhr.send(formData);
+
+                withToken(send);
             }
         });
     }
