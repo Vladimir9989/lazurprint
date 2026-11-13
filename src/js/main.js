@@ -114,7 +114,41 @@
         console.error('Форма заявки: не подключены inputmask.min.js / just-validate.min.js перед app.js');
     }
     if (telInput && typeof window.Inputmask !== 'undefined') {
-        new Inputmask('+7 (999) 999-99-99').mask(telInput);
+        // Номер, набранный или вставленный с 8 или 7 впереди (89001234567, +7 900…), — первую цифру срезаем:
+        // маска сама ставит +7, иначе «8» уходила в код города, а последняя цифра терялась.
+        // Срезаем, только пока цифр больше 10: номер из 10 цифр (812…, 343…) не трогаем.
+        // При вставке маска отдаёт сюда и свою «+7 (» перед курсором — она срезается тем же правилом.
+        const normalizeTel = (v) => {
+            let d = String(v || '').replace(/\D/g, '');
+            if (d.length <= 10) return v;
+            while (d.length > 10 && /^[78]/.test(d)) d = d.slice(1);
+            return d.slice(0, 10);
+        };
+        new Inputmask('+7 (999) 999-99-99', {
+            onBeforePaste: (v) => normalizeTel(v),
+            onBeforeMask: (v) => normalizeTel(v),
+        }).mask(telInput);
+        // набор с клавиатуры: поле уже заполнено (10 цифр, первая 8 или 7), курсор в конце, вводят ещё цифру —
+        // значит, первая была «8»/«7» страны: сдвигаем номер. keydown — компьютер, beforeinput — телефоны.
+        const shiftTel = (e, ch) => {
+            if (!/^\d$/.test(ch || '') || !telInput.inputmask) return;
+            const d = telInput.inputmask.unmaskedvalue();
+            const atEnd = telInput.selectionStart === telInput.value.length || telInput.selectionStart === null;
+            if (d.length !== 10 || !/^[78]/.test(d) || !atEnd) return;
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            // после обработчиков маски, иначе она перепишет поле своим буфером
+            setTimeout(() => {
+                telInput.inputmask.setValue(d.slice(1) + ch);
+                const end = telInput.value.length;
+                if (telInput.setSelectionRange) telInput.setSelectionRange(end, end);
+            }, 0);
+        };
+        // capture — раньше обработчиков маски: заполненная маска иначе съедает нажатие
+        telInput.addEventListener('keydown', (e) => shiftTel(e, e.key), true);
+        telInput.addEventListener('beforeinput', (e) => {
+            if (e.inputType === 'insertText') shiftTel(e, e.data);
+        }, true);
     }
 
     // антиспам: поле-ловушка для ботов (honeypot). Пропуск формы, признак живого человека и адрес страницы
@@ -134,7 +168,12 @@
         new window.JustValidate(selector, {
             rules: rules,
             messages: {
-                name: 'Введите ваше имя',
+                // для имени: свой текст на каждое правило — длинное название организации иначе получало «Введите ваше имя»
+                name: {
+                    required: 'Введите ваше имя',
+                    minLength: 'Введите ваше имя',
+                    maxLength: 'Слишком длинно: напишите только имя, название организации — в комментарии',
+                },
                 tel: 'Введите ваш телефон',
                 email: 'Введите правильный Email',
             },
