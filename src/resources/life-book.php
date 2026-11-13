@@ -1,7 +1,7 @@
 <?php
 
 // Приём заявок «Книга о вашей жизни» (kniga-zhizni-anketa.html → life-book-anketa.js).
-// Загрузка идёт по шагам: action=start (ответы, контакты, капча) → action=photo (по одному фото) → action=finish (письмо).
+// Загрузка идёт по шагам: action=start (ответы, контакты, пропуск формы) → action=photo (по одному фото) → action=finish (письмо).
 // Ответ — всегда JSON: {"ok":true,...} или {"ok":false,"error":"текст для посетителя"}. (Это не mail.php: тут пустой ответ — не успех.)
 // Заявки лежат вне веб-корня, в папке life_book_dir из mail-config.php (на хостинге /home/c112136/lazurprint.ru/life-book).
 // Хостинг — PHP 7.3-совместимый синтаксис: без match, ??=, стрелочных функций, типизированных свойств.
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $configFile = dirname(__DIR__) . '/mail-config.php';
 $config = is_file($configFile) ? include $configFile : null;
-if (!is_array($config) || empty($config['smtp_password']) || empty($config['recaptcha_secret']) || empty($config['life_book_dir'])) {
+if (!is_array($config) || empty($config['smtp_password']) || empty($config['life_book_dir'])) {
     error_log('life-book.php: не найден или неполон ' . $configFile);
     lb_fail('Произошла ошибка. Позвоните нам, пожалуйста.');
 }
@@ -127,31 +127,25 @@ if ($action === 'start') {
         lb_fail('Слишком много заявок с вашего адреса. Позвоните нам, пожалуйста.');
     }
 
-    // Капча
-    $captchaResponse = lb_field('g-recaptcha-response');
-    if ($captchaResponse === '') {
-        lb_fail('Поставьте галочку «Я не робот».');
+    // Пропуск формы (с 2026-11-13 вместо reCAPTCHA Google): метка времени + HMAC-подпись, выдаёт GET mail.php?token.
+    // Ключ — тот же, что в mail.php: form_secret из конфига или производный от пароля SMTP.
+    $tokenKey = !empty($config['form_secret']) ? $config['form_secret'] : hash('sha256', 'lazur-form|' . $config['smtp_password']);
+    $formToken = lb_field('form_token');
+    if ($formToken === '') {
+        lb_fail('Страница устарела. Обновите её (F5) — ответы сохранятся — и отправьте ещё раз.');
     }
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'https://www.google.com/recaptcha/api/siteverify');
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, array(
-        'secret' => $config['recaptcha_secret'],
-        'response' => $captchaResponse,
-        'remoteip' => $_SERVER['REMOTE_ADDR'],
-    ));
-    $captchaRaw = curl_exec($ch);
-    $curlError = curl_error($ch);
-    curl_close($ch);
-    if ($captchaRaw === false) {
-        error_log('life-book.php: reCAPTCHA недоступна: ' . $curlError);
-        lb_fail('Произошла ошибка. Повторите попытку чуть позже.');
+    $tp = explode('.', $formToken, 2);
+    if (count($tp) !== 2 || !ctype_digit($tp[0])
+        || !hash_equals(substr(hash_hmac('sha256', $tp[0], $tokenKey), 0, 32), $tp[1])) {
+        error_log('life-book.php: spam (bad token) ' . $_SERVER['REMOTE_ADDR']);
+        lb_fail('Произошла ошибка');
     }
-    $captcha = json_decode($captchaRaw, true);
-    if (!is_array($captcha) || empty($captcha['success'])) {
-        lb_fail('Проверка «Я не робот» не пройдена. Поставьте галочку ещё раз.');
+    $tokenAge = time() - (int)$tp[0];
+    if ($tokenAge > 24 * 3600) {
+        lb_fail('Страница устарела. Обновите её (F5) — ответы сохранятся — и отправьте ещё раз.');
+    }
+    if ($tokenAge < 2) {
+        lb_fail('Нажмите «Отправить нам» ещё раз.');
     }
 
     // Данные

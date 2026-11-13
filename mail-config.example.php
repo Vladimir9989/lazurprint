@@ -7,6 +7,6 @@ return array(
     'smtp_user'        => 'noreply@info.lazurprint.ru',
     'smtp_password'    => '',
     'life_book_dir'    => '/home/c112136/lazurprint.ru/life-book', // заявки «Книга о жизни» (life-book.php); папку создать вручную
-    'recaptcha_secret' => '', // секретный ключ reCAPTCHA — только для анкеты «Книга о жизни» (life-book.php); форма заявки с 2026-11-13 без капчи
-    // 'form_secret'   => '', // необязательно: ключ подписи пропуска формы заявки; без него mail.php выводит ключ из smtp_password
+    'recaptcha_secret' => '', // больше не используется: капча Google убрана из формы заявки и анкеты «Книга о жизни» 2026-11-13
+    // 'form_secret'   => '', // необязательно: ключ подписи пропуска форм (mail.php и life-book.php); без него mail.php выводит ключ из smtp_password
 );

@@ -636,41 +636,46 @@
     }
 
     // ---------- отправка ----------
-    var CAPTCHA_KEY = '6LfEyyEnAAAAAEnQZdVkfTk7oS5kLAqzzThE6_H4';
-    var captchaWidget = null;
     var sendCtx = null; // { id, token, photos, next, finished } — чтобы «Повторить» продолжал с места сбоя
 
-    function ensureCaptcha(box) {
-        if (!window.grecaptcha && !document.querySelector('script[src*="recaptcha/api.js"]')) {
-            var s = document.createElement('script');
-            s.src = 'https://www.google.com/recaptcha/api.js?render=explicit';
-            s.async = true;
-            s.defer = true;
-            s.onerror = function () { box.textContent = 'Не загрузилась проверка «Я не робот». Проверьте интернет и обновите страницу.'; };
-            document.head.appendChild(s);
+    // Пропуск формы (с 2026-11-13 вместо капчи Google): GET mail.php?token, проверяет life-book.php.
+    // Берётся при открытии экрана отправки; живёт сутки, через 20 часов — новый. Обрыв связи — до 3 попыток.
+    var formToken = '';
+    var formTokenAt = 0;
+
+    function getFormToken() {
+        if (formToken && Date.now() - formTokenAt < 20 * 3600 * 1000) return Promise.resolve(true);
+        function attempt(n) {
+            return fetch('mail.php?token=' + Date.now(), { cache: 'no-store' })
+                .then(function (r) { return r.ok ? r.text() : ''; })
+                .catch(function () { return ''; })
+                .then(function (t) {
+                    t = (t || '').trim();
+                    if (/^\d+\.[0-9a-f]{32}$/.test(t)) {
+                        formToken = t;
+                        formTokenAt = Date.now();
+                        return true;
+                    }
+                    if (n < 3) return new Promise(function (res) { setTimeout(res, 1000 * n); }).then(function () { return attempt(n + 1); });
+                    return false;
+                });
         }
-        var tries = 0;
-        (function wait() {
-            if (window.grecaptcha && typeof window.grecaptcha.render === 'function') {
-                try { captchaWidget = window.grecaptcha.render(box, { sitekey: CAPTCHA_KEY }); } catch (e) { /* уже отрисован */ }
-                return;
-            }
-            if (++tries < 100) setTimeout(wait, 200);
-        })();
-    }
-
-    function captchaToken() {
-        try { return window.grecaptcha && captchaWidget !== null ? window.grecaptcha.getResponse(captchaWidget) : ''; } catch (e) { return ''; }
-    }
-
-    function resetCaptcha() {
-        try { if (window.grecaptcha && captchaWidget !== null) window.grecaptcha.reset(captchaWidget); } catch (e) { /* нет виджета */ }
+        return attempt(1);
     }
 
     function post(fd) {
         return fetch('life-book.php', { method: 'POST', body: fd })
             .then(function (r) { return r.json(); })
-            .catch(function () { return { ok: false, error: 'Нет связи с сервером. Проверьте интернет и повторите.' }; });
+            .catch(function () { return { ok: false, net: true, error: 'Нет связи с сервером. Проверьте интернет и повторите.' }; });
+    }
+
+    // обрыв связи (запрос не дошёл) — ещё 2 попытки с паузой
+    function postRetry(fd, n) {
+        n = n || 1;
+        return post(fd).then(function (r) {
+            if (r.net && n < 3) return new Promise(function (res) { setTimeout(res, 1500 * n); }).then(function () { return postRetry(fd, n + 1); });
+            return r;
+        });
     }
 
     function screenSend() {
@@ -697,7 +702,6 @@
         var consent = el('input', { type: 'checkbox', id: 'lb-consent' });
         consent.checked = !!c.consent;
         var honey = el('input', { type: 'text', name: 'website', tabindex: '-1', autocomplete: 'off', 'aria-hidden': 'true', class: 'lb-honey' });
-        var captchaBox = el('div', { class: 'lb-captcha' });
         var err = el('p', { class: 'lb-error' });
         var progress = el('p', { class: 'lb-lead lb-sendprogress' });
         var sendBtn = btn('Отправить нам', 'lb-btn--primary', send);
@@ -720,7 +724,6 @@
             if (c.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.email.trim())) return 'Проверьте адрес почты.';
             if (!d.size) return 'Вернитесь и выберите переплёт и объём книги.';
             if (!c.consent) return 'Нужно согласие на обработку данных.';
-            if (!sendCtx && !captchaToken()) return 'Поставьте галочку «Я не робот».';
             return '';
         }
 
@@ -776,19 +779,25 @@
             var begin = Promise.resolve({ ok: true });
             if (!sendCtx) {
                 progress.textContent = 'Отправляем ответы…';
-                var fd = new FormData();
-                fd.append('action', 'start');
-                fd.append('payload', JSON.stringify({
-                    heroName: state.heroName, who: state.who, answers: state.answers, custom: state.custom,
-                    design: state.design, contacts: { name: c.name.trim(), phone: c.phone.trim(), email: c.email.trim(), consent: !!c.consent },
-                    photosCount: photos.length
-                }));
-                fd.append('website', honey.value);
-                fd.append('form_ts', String(Date.now() - pageLoadedAt));
-                fd.append('g-recaptcha-response', captchaToken());
-                begin = post(fd).then(function (r) {
+                begin = getFormToken().then(function (ok) {
+                    if (!ok) return { ok: false, error: 'Не удалось связаться с сайтом. Проверьте интернет и нажмите «Отправить нам» ещё раз.' };
+                    // сервер не принимает пропуск моложе 2 секунд
+                    var wait = 2500 - (Date.now() - formTokenAt);
+                    return new Promise(function (res) { setTimeout(res, wait > 0 ? wait : 0); }).then(function () {
+                        var fd = new FormData();
+                        fd.append('action', 'start');
+                        fd.append('payload', JSON.stringify({
+                            heroName: state.heroName, who: state.who, answers: state.answers, custom: state.custom,
+                            design: state.design, contacts: { name: c.name.trim(), phone: c.phone.trim(), email: c.email.trim(), consent: !!c.consent },
+                            photosCount: photos.length
+                        }));
+                        fd.append('website', honey.value);
+                        fd.append('form_ts', String(Date.now() - pageLoadedAt));
+                        fd.append('form_token', formToken);
+                        return postRetry(fd);
+                    });
+                }).then(function (r) {
                     if (r.ok) sendCtx = { id: r.id, token: r.token, next: 0 };
-                    else resetCaptcha();
                     return r;
                 });
             }
@@ -829,13 +838,11 @@
                     el('a', { href: 'user-agreement.html', target: '_blank', rel: 'noopener', text: 'Пользовательское соглашение' })
                 ])
             ]),
-            captchaBox,
             err,
             progress,
             el('div', { class: 'lb-actions' }, [sendBtn])
         ]);
-        captchaWidget = null;
-        ensureCaptcha(captchaBox);
+        getFormToken(); // заранее, пока посетитель заполняет контакты
     }
 
     function screenDone() {
